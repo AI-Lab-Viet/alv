@@ -10,9 +10,12 @@ aiofiles
 # Development và debugging tools
 python-multipart
 python-dotenv
+pypdf
+supabase
 
 # AI/ML integrations
 google-generativeai
+google-genai
 
 # Logging và monitoring
 loguru
