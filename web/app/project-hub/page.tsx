@@ -159,8 +159,6 @@ const allProjects = [
 export default function ProjectHubPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      {/* Header */}
-      <NavBar currentPath="/project-hub" />
       <div className="max-w-7xl mx-auto px-4 py-8 lg:px-8">
         {/* Hero Section */}
         <div className="text-center mb-16 relative">

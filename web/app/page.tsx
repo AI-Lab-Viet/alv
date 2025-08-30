@@ -16,46 +16,6 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="relative z-10 px-4 py-4 ">
-        <nav className="flex items-center justify-between max-w-7xl mx-auto lg:px-8">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/images/ai-lab-viet-logo.png"
-                alt="AI Lab Việt"
-                width={70}
-                height={70}
-              />
-            </Link>
-            <div>
-              <h1 className="font-bold text-xl">AI Skill Hub</h1>
-              <p className="text-gray-500 text-sm">Trung tâm Kỹ năng AI</p>
-            </div>
-          </div>
-
-          <div className="hidden md:flex items-center gap-8">
-            <a
-              href="/skill-hub"
-              className="hover:text-purple-200 transition-colors"
-            >
-              Dự án
-            </a>
-            <a href="#" className="hover:text-purple-200 transition-colors">
-              Portfolio
-            </a>
-            <Link href="/auth/login">
-              <Button
-                variant="outline"
-                className="border-white/20 hover:bg-white/10 bg-transparent"
-              >
-                Đăng nhập
-              </Button>
-            </Link>
-          </div>
-        </nav>
-      </header>
-
       {/* Hero Section */}
       <section className="hero-gradient relative overflow-hidden">
         {/* Background decorative elements */}

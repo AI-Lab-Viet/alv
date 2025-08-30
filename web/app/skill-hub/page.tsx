@@ -1,363 +1,359 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  MessageSquare,
-  Brain,
-  Lightbulb,
-  Shield,
-  Clock,
-  Play,
+  CheckCircle,
+  Circle,
+  Lock,
   BookOpen,
-  ChevronRight,
-  Star,
-  Search,
-  Filter,
-  Sparkles,
-  Zap,
-} from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import NavBar from "@/components/nav-bar";
+  Trophy,
+  MapPin,
+  Compass,
+  Lightbulb,
+  Crown
+} from 'lucide-react';
+import Link from 'next/link';
 
-const skillCategories = [
+const userProgress = {
+  completedStations: 1,
+  totalStations: 6,
+  currentStation: 2,
+  userName: 'LMQ'
+};
+
+const journeyStations = [
+  // World 1: Genesis of Thought
   {
-    id: "prompting",
-    title: "Kỹ năng Đặt câu hỏi",
-    description: "Học cách tạo ra những câu lệnh hiệu quả cho AI",
-    icon: MessageSquare,
-    gradient: "from-blue-500 to-cyan-400",
-    bgGradient: "from-blue-50 to-cyan-50",
-    lessons: 12,
-    duration: "2.5 giờ",
-    progress: 0,
-    difficulty: "Cơ bản",
-  },
-  {
-    id: "critical-thinking",
-    title: "Tư duy Phản biện",
-    description: "Nhận diện và kiểm chứng thông tin từ AI",
-    icon: Brain,
-    gradient: "from-emerald-500 to-teal-400",
-    bgGradient: "from-emerald-50 to-teal-50",
-    lessons: 10,
-    duration: "2 giờ",
-    progress: 0,
-    difficulty: "Trung bình",
-  },
-  {
-    id: "creativity",
-    title: "Sáng tạo & Giải quyết",
-    description: "Sử dụng AI để brainstorm và lập kế hoạch",
+    id: 1,
+    world: 1,
+    worldName: 'Khởi nguồn Tư duy',
+    name: 'Nền tảng Tư duy',
+    chapter: 'Chương 1',
+    description: 'Hiểu tại sao cần học và những gì đang chờ đợi bạn',
     icon: Lightbulb,
-    gradient: "from-purple-500 to-pink-400",
-    bgGradient: "from-purple-50 to-pink-50",
-    lessons: 14,
-    duration: "3 giờ",
-    progress: 0,
-    difficulty: "Nâng cao",
+    status: 'completed',
+    color: 'from-blue-400 to-purple-600'
+  },
+  // World 2: Realm of Skills
+  {
+    id: 2,
+    world: 2,
+    worldName: 'Lãnh địa Kỹ năng',
+    name: 'Nghệ thuật Phân công',
+    chapter: 'Chương 2',
+    description: 'Rèn luyện tư duy chiến lược và lập kế hoạch',
+    icon: Compass,
+    status: 'current',
+    color: 'from-green-400 to-blue-500'
   },
   {
-    id: "ethics",
-    title: "Đạo đức AI",
-    description: "Sử dụng AI có trách nhiệm và đúng đắn",
-    icon: Shield,
-    gradient: "from-orange-500 to-amber-400",
-    bgGradient: "from-orange-50 to-amber-50",
-    lessons: 8,
-    duration: "1.5 giờ",
-    progress: 0,
-    difficulty: "Cơ bản",
+    id: 3,
+    world: 2,
+    worldName: 'Lãnh địa Kỹ năng',
+    name: 'Nghệ thuật Mô tả',
+    chapter: 'Chương 3',
+    description: 'Rèn luyện kỹ năng giao tiếp chính xác với AI',
+    icon: MapPin,
+    status: 'locked',
+    color: 'from-purple-400 to-pink-500'
   },
+  {
+    id: 4,
+    world: 2,
+    worldName: 'Lãnh địa Kỹ năng',
+    name: 'Nghệ thuật Nhận định',
+    chapter: 'Chương 4',
+    description: 'Rèn luyện tư duy phản biện và đánh giá chất lượng',
+    icon: Trophy,
+    status: 'locked',
+    color: 'from-orange-400 to-red-500'
+  },
+  {
+    id: 5,
+    world: 2,
+    worldName: 'Lãnh địa Kỹ năng',
+    name: 'Nghệ thuật Trách nhiệm',
+    chapter: 'Chương 5',
+    description: 'Rèn luyện ý thức đạo đức và trách nhiệm',
+    icon: Compass,
+    status: 'locked',
+    color: 'from-teal-400 to-green-500'
+  },
+  // World 3: Pinnacle of Creation
+  {
+    id: 6,
+    world: 3,
+    worldName: 'Đỉnh cao Sáng tạo',
+    name: 'Nghệ thuật Tổng hợp',
+    chapter: 'Chương 6',
+    description: 'Biến kết quả AI thành sản phẩm giá trị của riêng bạn',
+    icon: Crown,
+    status: 'locked',
+    color: 'from-yellow-400 to-orange-500'
+  }
 ];
 
-const featuredLessons = [
-  {
-    id: "prompt-basics",
-    title: "Cơ bản về Prompt Engineering",
-    category: "Đặt câu hỏi",
-    duration: "8 phút",
-    difficulty: "Cơ bản",
-    thumbnail: "/ai-prompt-engineering.png",
-    rating: 4.9,
-    students: 2847,
-  },
-  {
-    id: "ai-hallucination",
-    title: "Nhận diện Ảo giác của AI",
-    category: "Tư duy Phản biện",
-    duration: "12 phút",
-    difficulty: "Trung bình",
-    thumbnail: "/ai-hallucination-detection.png",
-    rating: 4.8,
-    students: 1923,
-  },
-  {
-    id: "creative-brainstorm",
-    title: "Brainstorm với AI",
-    category: "Sáng tạo",
-    duration: "10 phút",
-    difficulty: "Cơ bản",
-    thumbnail: "/ai-brainstorming.png",
-    rating: 4.7,
-    students: 3156,
-  },
-];
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case 'completed':
+      return <CheckCircle className='w-6 h-6 text-green-500' />;
+    case 'current':
+      return <Circle className='w-6 h-6 text-primary animate-pulse' />;
+    case 'locked':
+      return <Lock className='w-6 h-6 text-muted-foreground' />;
+    default:
+      return <Circle className='w-6 h-6 text-muted-foreground' />;
+  }
+};
+
+const getNextStation = () => {
+  return journeyStations.find((station) => station.status === 'current');
+};
 
 export default function SkillHubPage() {
+  const progressPercentage = (userProgress.completedStations / userProgress.totalStations) * 100;
+  const nextStation = getNextStation();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      {/* Header */}
-      <NavBar currentPath="/skill-hub" />
-
-      <div className="max-w-7xl mx-auto px-4 py-8 lg:px-8">
-        {/* Hero Section */}
-        <div className="text-center mb-16 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-600/10 to-blue-600/10 rounded-3xl blur-3xl"></div>
-          <div className="relative">
-            <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <Sparkles className="w-4 h-4 text-slate-600" />
-              <span className="text-sm font-medium text-slate-600">
-                Học tập với AI
-              </span>
-            </div>
-
-            <h1 className="font-bold text-4xl lg:text-6xl mb-6">
-              <span className="bg-gradient-to-r from-slate-600 to-blue-600 bg-clip-text text-transparent">
-                Trung tâm Kỹ năng
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Nền tảng kiến thức toàn diện về AI Fluency với các bài học ngắn,
-              tương tác và thực tiễn. Phát triển 4 kỹ năng cốt lõi để thành thạo
-              AI.
-            </p>
-
-            {/* Search and Filter */}
-            <div className="max-w-2xl mx-auto flex gap-4 mb-8">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  placeholder="Tìm kiếm bài học..."
-                  className="pl-10 bg-white/80 backdrop-blur-sm border-white/20 focus:bg-white transition-all"
-                />
-              </div>
-              <Select>
-                <SelectTrigger className="w-48 bg-white/80 backdrop-blur-sm border-white/20">
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Lọc theo kỹ năng" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tất cả kỹ năng</SelectItem>
-                  <SelectItem value="prompting">Đặt câu hỏi</SelectItem>
-                  <SelectItem value="critical-thinking">
-                    Tư duy Phản biện
-                  </SelectItem>
-                  <SelectItem value="creativity">Sáng tạo</SelectItem>
-                  <SelectItem value="ethics">Đạo đức AI</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Overall Progress */}
-            <div className="max-w-md mx-auto bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-gray-700">
-                  Tiến độ tổng thể
-                </span>
-                <span className="text-sm font-bold text-slate-600">
-                  0/44 bài học
-                </span>
-              </div>
-              <Progress value={0} className="h-2" />
-            </div>
-          </div>
+    <div className='bg-background text-foreground transition-colors'>
+      <div className='max-w-7xl mx-auto px-4 py-8 lg:px-8'>
+        {/* Welcome Header */}
+        <div className='mb-8'>
+          <h1 className='text-4xl font-bold mb-2 text-foreground'>
+            Chào mừng trở lại, {userProgress.userName}! 👋
+          </h1>
+          <p className='text-lg text-muted-foreground'>
+            Hành trình rèn luyện năng lực AI của bạn đang tiếp tục
+          </p>
         </div>
 
-        {/* Skill Categories */}
-        <section className="mb-20">
-          <div className="text-center mb-12">
-            <h2 className=" font-bold text-3xl text-gray-900 mb-4">
-              4 Kỹ năng Cốt lõi
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Phát triển toàn diện các kỹ năng cần thiết để thành thạo AI
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {skillCategories.map((category) => {
-              const IconComponent = category.icon;
-
-              return (
-                <Card
-                  key={category.id}
-                  className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer border-0 bg-white/80 backdrop-blur-sm overflow-hidden"
-                >
-                  <CardContent className="p-0">
-                    <div
-                      className={`bg-gradient-to-br ${category.bgGradient} p-6 relative overflow-hidden`}
-                    >
-                      <div className="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full -translate-y-10 translate-x-10"></div>
-                      <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-8 -translate-x-8"></div>
-
-                      <div
-                        className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${category.gradient} flex items-center justify-center mx-auto mb-4 shadow-lg`}
-                      >
-                        <IconComponent className="w-8 h-8 text-white" />
-                      </div>
-
-                      <div className="text-center relative z-10">
-                        <h3 className=" font-bold text-xl mb-2 text-gray-900">
-                          {category.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                          {category.description}
-                        </p>
-
-                        <div className="flex items-center justify-center gap-2 mb-3">
-                          <Badge
-                            className={`bg-gradient-to-r ${category.gradient} text-white border-0 shadow-sm`}
-                          >
-                            {category.lessons} bài học
-                          </Badge>
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
-                            <Clock className="w-3 h-3" />
-                            <span>{category.duration}</span>
-                          </div>
-                        </div>
-
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between text-sm mb-2">
-                            <span className="text-gray-600">Tiến độ</span>
-                            <span className="font-medium">
-                              {category.progress}%
-                            </span>
-                          </div>
-                          <Progress value={category.progress} className="h-2" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-4 bg-white">
-                      <Link href={`/skill-hub/${category.id}`}>
-                        <Button
-                          variant="ghost"
-                          className={`w-full group-hover:bg-gradient-to-r ${category.gradient} group-hover:text-white transition-all duration-300`}
-                        >
-                          {category.progress > 0
-                            ? "Tiếp tục học"
-                            : "Bắt đầu học"}
-                          <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Featured Lessons */}
-        <section>
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className=" font-bold text-3xl text-gray-900 mb-2">
-                Bài học nổi bật
-              </h2>
-              <p className="text-gray-600">
-                Những bài học được yêu thích nhất bởi cộng đồng
+        {/* Progress Summary */}
+        <Card className='mb-8 bg-card text-card-foreground border-border'>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <Trophy className='w-5 h-5 text-primary' />
+              Tóm tắt Tiến trình
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='space-y-4'>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm font-medium'>Tiến độ hoàn thành</span>
+                <span className='text-sm text-muted-foreground'>
+                  {userProgress.completedStations}/{userProgress.totalStations} kỹ năng cốt lõi
+                </span>
+              </div>
+              <Progress value={progressPercentage} className='h-3 bg-muted' />
+              <p className='text-sm text-muted-foreground'>
+                Bạn đã hoàn thành <strong>{userProgress.completedStations}</strong> trong tổng số{' '}
+                <strong>{userProgress.totalStations}</strong> chặng hành trình
               </p>
             </div>
-            <Button
-              variant="ghost"
-              className="text-slate-600 hover:bg-slate-50"
-            >
-              <Zap className="w-4 h-4 mr-2" />
-              Xem tất cả
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Button>
-          </div>
+          </CardContent>
+        </Card>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {featuredLessons.map((lesson) => (
-              <Card
-                key={lesson.id}
-                className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden border-0 bg-white/90 backdrop-blur-sm"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={lesson.thumbnail || "/placeholder.svg"}
-                    alt={lesson.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 bg-gradient-to-r from-sky-300/50 to-blue-500/50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                      <Play className="w-5 h-5 text-white ml-1" />
+        <div className='grid lg:grid-cols-3 gap-8'>
+          {/* Journey Map  */}
+          <div className='lg:col-span-2'>
+            <Card className='bg-card text-card-foreground border-border'>
+              <CardHeader>
+                <CardTitle className='flex items-center gap-2'>
+                  <MapPin className='w-5 h-5 text-primary' />
+                  Bản đồ Hành trình
+                </CardTitle>
+                <CardDescription>
+                  Con đường rèn luyện năng lực AI được chia thành 3 khu vực với 6 chặng đào tạo
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className='relative'>
+                  <svg
+                    className='absolute inset-0 w-full h-full z-0'
+                    viewBox='0 0 600 800'
+                    preserveAspectRatio='xMidYMid meet'>
+                    <path
+                      d='M 100 100 Q 500 150 300 300 Q 100 450 400 600 Q 600 700 500 750'
+                      stroke='currentColor'
+                      strokeWidth='3'
+                      fill='none'
+                      className='text-border opacity-30'
+                      strokeDasharray='10,5'
+                    />
+                  </svg>
+
+                  {/* Journey Stations */}
+                  <div className='relative z-10 space-y-8'>
+                    <div className='text-center mb-6'>
+                      <Badge variant='secondary' className='mb-2'>
+                        Khu vực 1
+                      </Badge>
+                      <h3 className='text-xl font-semibold text-foreground'>
+                        🌅 Khởi nguồn Tư duy
+                      </h3>
+                    </div>
+
+                    <div className='flex justify-center'>
+                      {journeyStations.slice(0, 1).map((station) => (
+                        <StationCard key={station.id} station={station} />
+                      ))}
+                    </div>
+
+                    <div className='text-center mb-6 mt-12'>
+                      <Badge variant='secondary' className='mb-2'>
+                        Khu vực 2
+                      </Badge>
+                      <h3 className='text-xl font-semibold text-foreground'>⚔️ Lãnh địa Kỹ năng</h3>
+                    </div>
+
+                    <div className='grid grid-cols-2 gap-6 max-w-2xl mx-auto'>
+                      {journeyStations.slice(1, 5).map((station, index) => (
+                        <div
+                          key={station.id}
+                          className={`${
+                            index % 2 === 0 ? 'justify-self-start' : 'justify-self-end'
+                          }`}>
+                          <StationCard station={station} />
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className='text-center mb-6 mt-12'>
+                      <Badge variant='secondary' className='mb-2'>
+                        Khu vực 3
+                      </Badge>
+                      <h3 className='text-xl font-semibold text-foreground'>
+                        🏔️ Đỉnh cao Sáng tạo
+                      </h3>
+                    </div>
+
+                    <div className='flex justify-center'>
+                      {journeyStations.slice(5, 6).map((station) => (
+                        <StationCard key={station.id} station={station} />
+                      ))}
                     </div>
                   </div>
-                  <div className="absolute top-4 left-4">
-                    <Badge className="bg-white/90 text-gray-900 backdrop-blur-sm">
-                      {lesson.category}
-                    </Badge>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <Badge
-                      variant="outline"
-                      className="bg-white/90 backdrop-blur-sm border-white/50"
-                    >
-                      {lesson.difficulty}
-                    </Badge>
-                  </div>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
 
-                <CardContent className="p-6">
-                  <h3 className="font-semibold text-lg mb-2 group-hover:text-slate-600 transition-colors">
-                    {lesson.title}
-                  </h3>
-
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {lesson.duration}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <BookOpen className="w-4 h-4" />
-                      {lesson.students.toLocaleString()}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      {lesson.rating}
-                    </span>
+          <div className='space-y-6'>
+            {nextStation && (
+              <Card className='border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5'>
+                <CardHeader>
+                  <CardTitle className='text-lg'>🚀 Tiếp tục Hành trình</CardTitle>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                  <div>
+                    <h4 className='font-semibold text-foreground'>Trạm tiếp theo:</h4>
+                    <p className='text-sm text-muted-foreground'>{nextStation.name}</p>
                   </div>
-
-                  <Link
-                    href={`/skill-hub/${lesson.category.toLowerCase()}/${
-                      lesson.id
-                    }`}
-                  >
-                    <Button className="w-full bg-gradient-to-r from-sky-300 to-blue-500 hover:from-slate-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300">
-                      Bắt đầu học
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
+                  <Button className='w-full' size='lg' asChild>
+                    <Link href={`/skill-hub/dojo/${nextStation.id}`}>Bắt đầu Rèn luyện</Link>
+                  </Button>
                 </CardContent>
               </Card>
-            ))}
+            )}
+
+            {/* Knowledge Treasury Access */}
+            <Card className='bg-card text-card-foreground border-border'>
+              <CardHeader>
+                <CardTitle className='flex items-center gap-2 text-lg'>
+                  <BookOpen className='w-5 h-5 text-secondary' />
+                  Kho Báu Tri thức
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className='text-sm text-muted-foreground mb-4'>
+                  Truy cập thư viện tra cứu và tài liệu hỗ trợ học tập
+                </p>
+                <Button variant='outline' className='w-full' asChild>
+                  <Link href='/skill-hub/knowledge-vault'>Khám phá Kho Báu</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Quick Stats */}
+            <Card className='bg-card text-card-foreground border-border'>
+              <CardHeader>
+                <CardTitle className='text-lg'>📊 Thống kê nhanh</CardTitle>
+              </CardHeader>
+              <CardContent className='space-y-3'>
+                <div className='flex justify-between items-center'>
+                  <span className='text-sm'>Kỹ năng đã thành thạo</span>
+                  <Badge variant='secondary'>{userProgress.completedStations}</Badge>
+                </div>
+                <div className='flex justify-between items-center'>
+                  <span className='text-sm'>Tiến độ hoàn thành</span>
+                  <Badge variant='outline'>{Math.round(progressPercentage)}%</Badge>
+                </div>
+                <div className='flex justify-between items-center'>
+                  <span className='text-sm'>Khu vực hiện tại</span>
+                  <Badge variant='default'>
+                    {nextStation ? nextStation.worldName : 'Hoàn thành'}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </section>
+        </div>
       </div>
     </div>
+  );
+}
+
+function StationCard({ station }: { station: (typeof journeyStations)[0] }) {
+  const IconComponent = station.icon;
+
+  return (
+    <Card
+      className={`
+        relative w-64 transition-all duration-300 hover:scale-105 cursor-pointer
+        ${station.status === 'current' ? 'ring-2 ring-primary ring-offset-2 shadow-lg' : ''}
+        ${station.status === 'locked' ? 'opacity-60 cursor-not-allowed' : ''}
+        ${
+          station.status === 'completed'
+            ? 'bg-gradient-to-br from-chart-1/10 to-chart-2/10 dark:from-chart-1/30 dark:to-chart-2/30'
+            : 'bg-card'
+        }
+        text-card-foreground border-border
+      `}>
+      <Link
+        href={station.status !== 'locked' ? `/skill-hub/dojo/${station.id}` : '#'}
+        className={station.status === 'locked' ? 'pointer-events-none' : ''}>
+        <CardHeader className='pb-3'>
+          <div className='flex items-start justify-between'>
+            <div className={`p-3 rounded-lg bg-gradient-to-br ${station.color} text-white`}>
+              <IconComponent className='w-6 h-6' />
+            </div>
+            {getStatusIcon(station.status)}
+          </div>
+          <div className='space-y-1'>
+            <Badge variant='outline' className='text-xs border-border text-foreground'>
+              {station.chapter}
+            </Badge>
+            <CardTitle className='text-lg leading-tight'>{station.name}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className='text-sm text-muted-foreground'>{station.description}</p>
+          {station.status === 'current' && (
+            <div className='mt-3'>
+              <Button size='sm' className='w-full'>
+                Bắt đầu
+              </Button>
+            </div>
+          )}
+          {station.status === 'completed' && (
+            <div className='mt-3'>
+              <Button size='sm' variant='outline' className='w-full'>
+                Xem lại
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Link>
+    </Card>
   );
 }

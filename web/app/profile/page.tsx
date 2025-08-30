@@ -102,7 +102,6 @@ Góc nhìn độc đáo: Phân tích 3 kỹ năng leadership của Trần Hưng 
 export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <NavBar currentPath="/profile" />
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="bg-white rounded-3xl p-8 mb-8 shadow-lg relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
