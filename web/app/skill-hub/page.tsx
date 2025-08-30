@@ -23,40 +23,29 @@ const userProgress = {
 };
 
 const journeyStations = [
-  // World 1: Genesis of Thought
+  // World 3: Pinnacle of Creation
   {
-    id: 1,
-    world: 1,
-    worldName: 'Khởi nguồn Tư duy',
-    name: 'Nền tảng Tư duy',
-    chapter: 'Chương 1',
-    description: 'Hiểu tại sao cần học và những gì đang chờ đợi bạn',
-    icon: Lightbulb,
-    status: 'completed',
-    color: 'from-blue-400 to-purple-600'
+    id: 6,
+    world: 3,
+    worldName: 'Đỉnh cao Sáng tạo',
+    name: 'Nghệ thuật Tổng hợp',
+    chapter: 'Chương 6',
+    description: 'Biến kết quả AI thành sản phẩm giá trị của riêng bạn',
+    icon: Crown,
+    status: 'locked',
+    color: 'from-yellow-400 to-orange-500'
   },
   // World 2: Realm of Skills
   {
-    id: 2,
+    id: 5,
     world: 2,
     worldName: 'Lãnh địa Kỹ năng',
-    name: 'Nghệ thuật Phân công',
-    chapter: 'Chương 2',
-    description: 'Rèn luyện tư duy chiến lược và lập kế hoạch',
+    name: 'Nghệ thuật Trách nhiệm',
+    chapter: 'Chương 5',
+    description: 'Rèn luyện ý thức đạo đức và trách nhiệm',
     icon: Compass,
-    status: 'current',
-    color: 'from-green-400 to-blue-500'
-  },
-  {
-    id: 3,
-    world: 2,
-    worldName: 'Lãnh địa Kỹ năng',
-    name: 'Nghệ thuật Mô tả',
-    chapter: 'Chương 3',
-    description: 'Rèn luyện kỹ năng giao tiếp chính xác với AI',
-    icon: MapPin,
     status: 'locked',
-    color: 'from-purple-400 to-pink-500'
+    color: 'from-teal-400 to-green-500'
   },
   {
     id: 4,
@@ -70,27 +59,38 @@ const journeyStations = [
     color: 'from-orange-400 to-red-500'
   },
   {
-    id: 5,
+    id: 3,
     world: 2,
     worldName: 'Lãnh địa Kỹ năng',
-    name: 'Nghệ thuật Trách nhiệm',
-    chapter: 'Chương 5',
-    description: 'Rèn luyện ý thức đạo đức và trách nhiệm',
-    icon: Compass,
+    name: 'Nghệ thuật Mô tả',
+    chapter: 'Chương 3',
+    description: 'Rèn luyện kỹ năng giao tiếp chính xác với AI',
+    icon: MapPin,
     status: 'locked',
-    color: 'from-teal-400 to-green-500'
+    color: 'from-purple-400 to-pink-500'
   },
-  // World 3: Pinnacle of Creation
   {
-    id: 6,
-    world: 3,
-    worldName: 'Đỉnh cao Sáng tạo',
-    name: 'Nghệ thuật Tổng hợp',
-    chapter: 'Chương 6',
-    description: 'Biến kết quả AI thành sản phẩm giá trị của riêng bạn',
-    icon: Crown,
-    status: 'locked',
-    color: 'from-yellow-400 to-orange-500'
+    id: 2,
+    world: 2,
+    worldName: 'Lãnh địa Kỹ năng',
+    name: 'Nghệ thuật Phân công',
+    chapter: 'Chương 2',
+    description: 'Rèn luyện tư duy chiến lược và lập kế hoạch',
+    icon: Compass,
+    status: 'current',
+    color: 'from-green-400 to-blue-500'
+  },
+  // World 1: Genesis of Thought
+  {
+    id: 1,
+    world: 1,
+    worldName: 'Khởi nguồn Tư duy',
+    name: 'Nền tảng Tư duy',
+    chapter: 'Chương 1',
+    description: 'Hiểu tại sao cần học và những gì đang chờ đợi bạn',
+    icon: Lightbulb,
+    status: 'completed',
+    color: 'from-blue-400 to-purple-600'
   }
 ];
 
@@ -170,26 +170,28 @@ export default function SkillHubPage() {
                 <div className='relative'>
                   <svg
                     className='absolute inset-0 w-full h-full z-0'
-                    viewBox='0 0 600 800'
+                    viewBox='0 0 600 1400'
                     preserveAspectRatio='xMidYMid meet'>
                     <path
-                      d='M 100 100 Q 500 150 300 300 Q 100 450 400 600 Q 600 700 500 750'
+                      d='M 420 200
+     C 450 100, 150 100, 150 350
+     C 150 600, 450 600, 450 850
+     C 450 950, 150 950, 200 1200'
                       stroke='currentColor'
-                      strokeWidth='3'
+                      strokeWidth='5'
                       fill='none'
-                      className='text-border opacity-30'
-                      strokeDasharray='10,5'
+                      className='text-border opacity-50'
+                      strokeDasharray='15,5'
                     />
                   </svg>
-
                   {/* Journey Stations */}
                   <div className='relative z-10 space-y-8'>
                     <div className='text-center mb-6'>
                       <Badge variant='secondary' className='mb-2'>
-                        Khu vực 1
+                        Khu vực 3
                       </Badge>
                       <h3 className='text-xl font-semibold text-foreground'>
-                        🌅 Khởi nguồn Tư duy
+                        🏔️ Đỉnh cao Sáng tạo
                       </h3>
                     </div>
 
@@ -220,10 +222,10 @@ export default function SkillHubPage() {
 
                     <div className='text-center mb-6 mt-12'>
                       <Badge variant='secondary' className='mb-2'>
-                        Khu vực 3
+                        Khu vực 1
                       </Badge>
                       <h3 className='text-xl font-semibold text-foreground'>
-                        🏔️ Đỉnh cao Sáng tạo
+                        🌅 Khởi nguồn Tư duy
                       </h3>
                     </div>
 

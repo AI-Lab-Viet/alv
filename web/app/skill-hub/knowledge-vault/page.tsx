@@ -31,7 +31,6 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Link from 'next/link';
-import NavBar from '@/components/nav-bar';
 
 const knowledgeConcepts = [
   {
@@ -94,7 +93,7 @@ const knowledgeConcepts = [
     title: 'AI Hallucination (Ảo giác)',
     category: 'Nhận định',
     chapter: 'Chương 4',
-    status: 'locked', 
+    status: 'locked',
     definition: 'Hiện tượng AI tạo ra thông tin không chính xác nhưng trình bày một cách tự tin.',
     explanation:
       'AI có thể tạo ra các trích dẫn sách không tồn tại, thống kê giả mạo, hoặc sự kiện lịch sử không chính xác. Đây là hạn chế tự nhiên của công nghệ AI hiện tại.',
