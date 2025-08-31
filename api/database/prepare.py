@@ -4,6 +4,7 @@ from pypdf import PdfReader
 from db_supabase import DbSupabase
 import asyncio
 import os
+import json
 
 def extract_text_from_pdf(pdf_path):
     reader = PdfReader(pdf_path)
@@ -54,14 +55,16 @@ async def search_similar(query, top_k=5):
     return response.data
 
 async def main():
-    pdf_text = extract_text_from_pdf("./docs/Giao_Trinh_AI_Lab_Viet-6.pdf")
-    for chunk in pdf_text:
-        chunked_text = chunk_text(chunk)
-        for text in chunked_text:
-            print(f"Processing chunk: {text[:50]}...")
-            embedding = embed_text([text])[0]
-            print(f"Embedded chunk: {embedding}")
-            insert_embedding(text, embedding)
+    with open("./docs/curriculum.json", "r", encoding="utf-8") as f:
+        curriculum = json.load(f)
+
+    for key, obj in curriculum.items():
+        content = json.dumps({"key": key, **obj}, ensure_ascii=False)
+        print(f"Processing object: {content[:50]}...")
+        embedding = embed_text([content])[0]
+        with open("log.txt", "a", encoding="utf-8") as log_file:
+            log_file.write(f"{content}\n\n")
+        insert_embedding(content, embedding)
         
 
 asyncio.run(main())

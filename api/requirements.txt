@@ -10,8 +10,8 @@ aiofiles
 # Development và debugging tools
 python-multipart
 python-dotenv
-pypdf
 supabase
+scikit-learn
 
 # AI/ML integrations
 google-generativeai

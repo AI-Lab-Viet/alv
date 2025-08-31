@@ -1,0 +1,163 @@
+{
+  "framework_4d_s": {
+    "title": "Framework 4D+S - Khung tư duy AI Lab Việt",
+    "definition": "Hệ thống tư duy gồm 5 kỹ năng cốt lõi: Delegation (Phân công), Description (Mô tả), Discernment (Nhận định), Diligence (Trách nhiệm), và Synthesis (Tổng hợp).",
+    "components": {
+      "Delegation": "Bạn là trưởng nhóm – quyết định ai làm gì",
+      "Description": "Bạn là người giao việc – mô tả rõ ràng yêu cầu",
+      "Discernment": "Bạn là người phản biện – đánh giá chất lượng",
+      "Diligence": "Bạn là người cầm lái – chịu trách nhiệm cuối cùng",
+      "Synthesis": "Bạn là nhà kiến tạo – tổng hợp và tạo sản phẩm mang dấu ấn cá nhân"
+    },
+    "special_note": "Chữ '+S' (Synthesis) là linh hồn của framework và tượng trưng cho hình ảnh Việt Nam.",
+    "keywords": [
+      "framework",
+      "4D+S",
+      "delegation",
+      "description",
+      "discernment",
+      "diligence",
+      "synthesis"
+    ]
+  },
+  "delegation": {
+    "title": "Delegation - Nghệ thuật Phân công",
+    "definition": "Khả năng phân tích một vấn đề lớn, chia nhỏ thành nhiệm vụ và giao phó hợp lý giữa con người và AI.",
+    "objectives": [
+      "Hiểu tư duy nền tảng để hợp tác với AI",
+      "Phân tích một vấn đề lớn và chia nhỏ",
+      "Quyết định chiến lược phân công AI/con người"
+    ],
+    "steps": [
+      "Bước 1: Biết rõ Đích đến – xác định mục tiêu",
+      "Bước 2: Biết mình, biết ta – phân tích kép năng lực AI và con người",
+      "Bước 3: Kỹ năng Chẻ củi – phân rã nhiệm vụ"
+    ],
+    "examples": [
+      "CLB Sách: AI brainstorm ý tưởng, con người chọn chủ đề",
+      "AI soạn thảo thư mời, con người chỉnh sửa và gửi",
+      "AI tạo checklist, con người bổ sung thủ tục và nhân sự"
+    ],
+    "case_study": "Dự án CLB Sách – Quý làm trưởng nhóm, dùng ALVA brainstorm, viết nháp, và cùng quyết định.",
+    "common_mistakes": [
+      "Phân công mù quáng – giao việc mơ hồ cho AI",
+      "Micromanagement – chỉ giao việc vụn vặt, thiếu tin tưởng AI",
+      "Không 'chẻ củi' trước khi giao việc"
+    ],
+    "keywords": [
+      "delegation",
+      "phân công",
+      "ủy thác",
+      "leadership",
+      "ai collaboration"
+    ]
+  },
+  "description": {
+    "title": "Description - Nghệ thuật Mô tả",
+    "definition": "Kỹ năng giao tiếp với AI bằng prompt chi tiết, rõ ràng, tạo môi trường tư duy chung.",
+    "objectives": [
+      "Hiểu rằng prompting là xây dựng môi trường tư duy",
+      "Nắm vững công thức WHAT - HOW - WHO",
+      "Áp dụng công thức R.C.T.C"
+    ],
+    "principles": [
+      "WHAT – mô tả sản phẩm",
+      "HOW – hướng dẫn tư duy",
+      "WHO – định hình vai trò AI"
+    ],
+    "framework_rctc": {
+      "R - Role": "Vai trò",
+      "C - Context": "Bối cảnh",
+      "T - Task": "Nhiệm vụ",
+      "C - Constraints": "Ràng buộc"
+    },
+    "examples": [
+      "Prompt Facebook post cho CLB Sách áp dụng RCTC",
+      "Email mời khách với vai trò thư ký",
+      "Yêu cầu AI 'nghĩ trước khi trả lời'"
+    ],
+    "common_mistakes": [
+      "Prompt mơ hồ",
+      "Over-constraining – ràng buộc quá mức"
+    ],
+    "keywords": ["description", "prompting", "WHAT-HOW-WHO", "rctc"]
+  },
+  "discernment": {
+    "title": "Discernment - Nghệ thuật Nhận định",
+    "definition": "Khả năng phản biện, đánh giá đầu ra và quy trình tư duy của AI.",
+    "objectives": [
+      "Nhận thức AI không luôn đúng",
+      "Sử dụng Bộ câu hỏi Vàng",
+      "Áp dụng Công thức Phản hồi"
+    ],
+    "principles": [
+      "Kiểm tra CÁI GÌ – chất lượng đầu ra",
+      "Phân tích TẠI SAO – quy trình tư duy",
+      "Tinh chỉnh NHƯ THẾ NÀO – phản hồi"
+    ],
+    "examples": [
+      "Phát hiện ALVA dùng sai tác giả",
+      "Sử dụng Bộ câu hỏi Vàng (chính xác, phù hợp, mạch lạc, đáp ứng, giá trị gia tăng)",
+      "Áp dụng Công thức Phản hồi 4 bước"
+    ],
+    "common_mistakes": ["Tin tưởng mù quáng", "Phản hồi chung chung"],
+    "keywords": ["discernment", "critical thinking", "evaluation", "feedback"]
+  },
+  "diligence": {
+    "title": "Diligence - Nghệ thuật Trách nhiệm",
+    "definition": "Cam kết đảm bảo sản phẩm Người-AI trung thực, minh bạch, an toàn và có đạo đức.",
+    "objectives": [
+      "Nhận thức trách nhiệm cuối cùng thuộc về con người",
+      "Áp dụng trách nhiệm trước-trong-sau",
+      "Sử dụng Checklist Trách nhiệm"
+    ],
+    "principles": [
+      "Trước khi làm – lựa chọn công cụ đúng",
+      "Trong khi làm – minh bạch với cộng đồng/đồng đội",
+      "Sau khi làm – kiểm chứng thông tin, kiểm tra thiên kiến, bản quyền"
+    ],
+    "checklist": [
+      "Kiểm chứng sự thật",
+      "Kiểm tra thiên kiến",
+      "Kiểm tra độ chính xác tổng thể",
+      "Kiểm tra quyền sử dụng nội dung"
+    ],
+    "examples": [
+      "Quý minh bạch với giảng viên khi dùng ALVA",
+      "Kiểm chứng giải thưởng trước khi đăng",
+      "Xem xét bản quyền hình ảnh bìa sách"
+    ],
+    "common_mistakes": [
+      "Tin tưởng mù quáng (ngủ gật sau tay lái)",
+      "Thoái thác trách nhiệm"
+    ],
+    "keywords": ["diligence", "responsibility", "ethics", "transparency"]
+  },
+  "synthesis": {
+    "title": "Synthesis - Nghệ thuật Tổng hợp & Trình bày",
+    "definition": "Kỹ năng kết nối, tinh lọc, kể chuyện để biến kết quả AI thành sản phẩm hoàn chỉnh.",
+    "objectives": [
+      "Hiểu vai trò con người trong sản phẩm cuối cùng",
+      "Áp dụng công thức tổng hợp 3 bước",
+      "Thêm dấu ấn cá nhân"
+    ],
+    "steps": ["Tinh lọc (Refine)", "Kết nối (Connect)", "Kể chuyện (Narrate)"],
+    "examples": [
+      "Biên tập chiến dịch truyền thông nhiều kênh từ bản nháp AI",
+      "Thêm giọng văn cá nhân vào bài đăng Facebook",
+      "Thuyết trình 5 phút từ nhiều đầu ra AI"
+    ],
+    "common_mistakes": [
+      "Sao chép nguyên xi AI (plagiarist mindset)",
+      "Mất dấu ấn cá nhân"
+    ],
+    "keywords": ["synthesis", "tổng hợp", "refine", "connect", "narrate"]
+  },
+  "alva": {
+    "title": "ALVA - AI Lab Việt Assistant",
+    "definition": "Trợ lý AI được thiết kế làm bạn đồng hành, công cụ sư phạm, giúp rèn luyện 4D+S.",
+    "role": ["Người Đồng đội", "Đối tác tư duy"],
+    "special_note": "ALVA không chỉ là chatbot, mà là môi trường thực hành.",
+    "keywords": ["alva", "ai assistant", "tutor"]
+  }
+}

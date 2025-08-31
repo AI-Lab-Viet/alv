@@ -12,7 +12,12 @@ Author: AI Lab Việt
 from typing import Dict, Any, List, Optional, Tuple
 import re
 from dataclasses import dataclass
-
+from database.db_supabase import DbSupabase
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import sys, os, json
+import numpy as np
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 @dataclass
 class RAGResult:
@@ -22,6 +27,11 @@ class RAGResult:
     relevance_score: float
     metadata: Dict[str, Any]
 
+@dataclass
+class DocumentModel:
+    id: str
+    content: Dict[str, Any]  # JSON structured content
+    embedding: List[float]
 
 class CurriculumRAG:
     """
@@ -33,54 +43,17 @@ class CurriculumRAG:
     
     def __init__(self):
         """Khởi tạo với mock curriculum data."""
-        self.curriculum_data = self._load_mock_curriculum()
+        self.curriculum_data: List[DocumentModel] = self._load_curriculum()
         print(f"[CurriculumRAG] Initialized with {len(self.curriculum_data)} curriculum entries")
     
-    def _load_mock_curriculum(self) -> Dict[str, Dict[str, Any]]:
+    def _load_curriculum(self) -> List[DocumentModel]:
         """
         Load mock curriculum data.
         Trong thực tế sẽ load từ vector database hoặc knowledge base.
         """
-        return {
-            "delegation": {
-                "title": "Delegation - Nghệ thuật Ủy thác",
-                "definition": "Delegation là quá trình giao phó trách nhiệm và quyền hạn cho người khác để hoàn thành một nhiệm vụ cụ thể, trong khi vẫn giữ trách nhiệm cuối cùng về kết quả.",
-                "key_principles": [
-                    "Chọn đúng người cho đúng việc",
-                    "Giao phó rõ ràng trách nhiệm và quyền hạn", 
-                    "Thiết lập mốc thời gian và tiêu chí đánh giá",
-                    "Theo dõi tiến độ nhưng không vi quản lý"
-                ],
-                "examples": [
-                    "CEO giao cho Marketing Manager phụ trách chiến dịch Q4",
-                    "Team Lead ủy thác cho Developer senior thiết kế architecture",
-                    "Giám đốc dự án giao cho BA phụ trách thu thập requirements"
-                ],
-                "common_mistakes": [
-                    "Giao việc nhưng không giao quyền",
-                    "Vi quản lý thay vì theo dõi",
-                    "Không thiết lập tiêu chí thành công rõ ràng"
-                ],
-                "keywords": ["delegation", "ủy thác", "giao phó", "phân công", "leadership"]
-            },
-            "rctc_framework": {
-                "title": "R.C.T.C Framework - Khung tư duy Giải quyết vấn đề",
-                "definition": "R.C.T.C là framework 4 bước để giải quyết vấn đề: Recognize (Nhận diện), Clarify (Làm rõ), Think (Suy nghĩ), Choose (Lựa chọn).",
-                "steps": {
-                    "R - Recognize": "Nhận diện và xác định vấn đề thực sự",
-                    "C - Clarify": "Làm rõ nguyên nhân gốc rễ và thu thập thông tin",
-                    "T - Think": "Suy nghĩ và đưa ra các phương án giải quyết",
-                    "C - Choose": "Lựa chọn phương án tối ưu và thực thi"
-                },
-                "examples": [
-                    "Giải quyết xung đột trong team",
-                    "Tối ưu hóa quy trình làm việc",
-                    "Xử lý khiếu nại khách hàng"
-                ],
-                "keywords": ["rctc", "problem solving", "giải quyết vấn đề", "framework", "tư duy"]
-            }
-        }
-    
+        db = DbSupabase()
+        return db.find_all("documents", DocumentModel)
+
     def search(self, query: str, max_results: int = 3) -> List[RAGResult]:
         """
         Tìm kiếm trong curriculum dựa trên query.
@@ -94,58 +67,63 @@ class CurriculumRAG:
         """
         query_lower = query.lower()
         results = []
-        
-        for concept_id, concept_data in self.curriculum_data.items():
+        for concept_data in self.curriculum_data:
             relevance_score = self._calculate_relevance(query_lower, concept_data)
-            
-            if relevance_score > 0:
-                # Tạo content summary từ concept data
-                content = self._format_concept_content(concept_data)
-                
-                result = RAGResult(
-                    source_type="curriculum",
-                    content=content,
-                    relevance_score=relevance_score,
-                    metadata={
-                        "concept_id": concept_id,
-                        "title": concept_data["title"],
-                        "source": "curriculum_database"
-                    }
-                )
-                results.append(result)
+
+            # Tạo content summary từ concept data
+            content = self._format_concept_content(concept_data.content)
+
+            result = RAGResult(
+                source_type="curriculum",
+                content=content,
+                relevance_score=abs(relevance_score),
+                metadata={
+                    "concept_id": concept_data.id,
+                    "title": content.get("title"),
+                    "source": "curriculum_database"
+                }
+            )
+            results.append(result)
         
         # Sắp xếp theo relevance score giảm dần
         results.sort(key=lambda x: x.relevance_score, reverse=True)
         
         return results[:max_results]
     
-    def _calculate_relevance(self, query: str, concept_data: Dict[str, Any]) -> float:
+    def _calculate_relevance(self, query: str, concept_data: DocumentModel) -> float:
         """
         Tính toán độ liên quan giữa query và concept.
         Trong thực tế sẽ sử dụng embedding similarity.
         """
-        score = 0.0
-        
-        # Check keywords
-        keywords = concept_data.get("keywords", [])
-        for keyword in keywords:
-            if keyword.lower() in query:
-                score += 1.0
-        
-        # Check title
-        title_words = concept_data.get("title", "").lower().split()
-        for word in title_words:
-            if word in query:
-                score += 0.8
-        
-        # Check definition
-        definition = concept_data.get("definition", "").lower()
-        query_words = query.split()
-        for word in query_words:
-            if len(word) > 3 and word in definition:
-                score += 0.5
-        
-        return score
+        vectorizer = TfidfVectorizer()
+        query_vec = vectorizer.fit_transform([query]).toarray()[0]
+
+        embedding = concept_data.embedding
+        if isinstance(embedding, str):
+            try:
+                embedding = eval(embedding)
+            except Exception:
+                embedding = []
+        if not isinstance(embedding, list):
+            embedding = []
+
+        target_len = max(len(embedding), len(query_vec))
+        embedding_vec = np.array(embedding[:target_len] + [0.0] * (target_len - len(embedding)))
+        query_vec = np.array(list(query_vec[:target_len]) + [0.0] * (target_len - len(query_vec)))
+
+        def _normalize(vec):
+            norm = np.linalg.norm(vec)
+            return vec if norm == 0 else vec / norm
+
+        embedding_vec = _normalize(embedding_vec)
+        query_vec = _normalize(query_vec)
+
+        if target_len == 0:
+            cos_sim = 0.0
+        else:
+            cos_sim = float(cosine_similarity([embedding_vec], [query_vec])[0][0])
+
+        return cos_sim
     
     def _format_concept_content(self, concept_data: Dict[str, Any]) -> str:
         """Format concept data thành text để đưa vào prompt."""
@@ -163,8 +141,8 @@ class CurriculumRAG:
         
         if "steps" in concept_data:
             content_parts.append("Các bước thực hiện:")
-            for step, desc in concept_data["steps"].items():
-                content_parts.append(f"• {step}: {desc}")
+            for step in concept_data["steps"]:
+                content_parts.append(f"• {step}")
         
         # Examples
         if "examples" in concept_data:

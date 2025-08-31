@@ -1,11 +1,10 @@
 import dotenv
 import os
 from supabase import create_client, Client
-from typing import TypeVar, Generic
+from typing import Type, Generic
 from pydantic import BaseModel
 
 dotenv.load_dotenv()
-T = TypeVar('T', bound=BaseModel)
 
 class DbSupabase:
     def __init__(self):
@@ -20,43 +19,43 @@ class DbSupabase:
     def close(self):
         self.supabase = None
 
-    def create(self, table: str, data: T) -> T:
+    def create(self, table: str, data: BaseModel) -> dict:
         if not self.supabase:
             self.connect()
-        result = self.supabase.table(table).insert(data).execute()
+        result = self.supabase.table(table).insert(data.dict()).execute()
         print("result", result)
         return result.data
 
-    def find_all(self, table: str) -> list[T]:
+    def find_all(self, table: str, model: Type[BaseModel]) -> list[BaseModel]:
         if not self.supabase:
             self.connect()
         result = self.supabase.table(table).select("*").execute()
-        return [T(**item) for item in result.data]
+        return [model(**item) for item in result.data]
 
-    def find_by_id(self, table: str, id: str) -> T | None:
+    def find_by_id(self, table: str, id: str, model: Type[BaseModel]) -> BaseModel | None:
         if not self.supabase:
             self.connect()
         result = self.supabase.table(table).select("*").eq("id", id).execute()
         if result.data:
-            return T(**result.data[0])
+            return model(**result.data[0])
         return None
 
-    def update(self, table: str, id: str, data: T) -> T | None:
+    def update(self, table: str, id: str, data: BaseModel, model: Type[BaseModel]) -> BaseModel | None:
         if not self.supabase:
             self.connect()
-        result = self.supabase.table(table).update(data).eq("id", id).execute()
+        result = self.supabase.table(table).update(data.dict()).eq("id", id).execute()
         if result.data:
-            return T(**result.data[0])
+            return model(**result.data[0])
         return None
 
-    def upsert(self, table: str, data: T) -> T | None:
+    def upsert(self, table: str, data: BaseModel, model: Type[BaseModel]) -> BaseModel | None:
         if not self.supabase:
             self.connect()
-        result = self.supabase.table(table).upsert(data).execute()
+        result = self.supabase.table(table).upsert(data.dict()).execute()
         if result.data:
-            return T(**result.data[0])
+            return model(**result.data[0])
         return None
-
+    
     def delete(self, table: str, id: str):
         if not self.supabase:
             self.connect()
