@@ -101,7 +101,7 @@ export default async function ProjectDetailPage(props: PageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-white/20">
+      {/* <header className="bg-white/80 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 py-4 lg:px-8">
           <div className="flex items-center gap-4">
             <Link
@@ -122,153 +122,51 @@ export default async function ProjectDetailPage(props: PageProps) {
             </Link>
           </div>
         </div>
-      </header>
+      </header> */}
 
-      <div className="max-w-4xl mx-auto px-4 py-8 lg:px-8">
+      <div className="mx-auto px-4 py-8 lg:px-8 grid grid-cols-2 gap-8 h-[calc(100vh-6rem)]">
         {/* Project Header */}
-        <div className="mb-8 bg-white/60 backdrop-blur-sm border border-white/20 shadow-lg rounded-2xl p-8">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <Badge className="bg-gradient-to-r from-sky-300 to-blue-500 text-white border-0">
-              {project.category}
-            </Badge>
-            <Badge className="bg-white/80 text-gray-700 border-white/40">
-              {project.difficulty}
-            </Badge>
-            <div className="flex items-center gap-4 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                {project.duration}
-              </span>
-              <span className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                {project.participants.toLocaleString()} người tham gia
-              </span>
-              <span className="flex items-center gap-1">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                {project.rating}
-              </span>
-            </div>
-          </div>
-
-          <h1 className=" font-bold text-3xl lg:text-4xl bg-gradient-to-r from-sky-300 to-blue-500 bg-clip-text text-transparent mb-4">
-            {project.title}
-          </h1>
-          <p className="text-xl text-gray-700 mb-6">{project.description}</p>
-
-          <div className="flex flex-wrap gap-2 mb-8">
-            {project.skills.map((skill) => (
-              <Badge
-                key={skill}
-                className="bg-white/80 text-gray-700 border-white/40"
-              >
-                {skill}
+        <div className=" border border-zinc-200  rounded-2xl p-2 h-full flex flex-col  bg-white/60 backdrop-blur-sm">
+          <div className="border border-zinc-100 h-full p-6 rounded-xl flex flex-col">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <Badge className="bg-gradient-to-r from-sky-300 to-blue-500 text-white border-0">
+                {project.category}
               </Badge>
-            ))}
-          </div>
+              <Badge className="bg-white/80 text-gray-700 border-white/40">
+                {project.difficulty}
+              </Badge>
+              <div className="flex items-center gap-4 text-xs text-gray-600">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  {project.duration}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  {project.participants.toLocaleString()} người tham gia
+                </span>
+                <span className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  {project.rating}
+                </span>
+              </div>
+            </div>
 
-          <Link href={`/ai-lab/${params.projectId}`}>
-            <Button
-              size="lg"
-              className="gap-2 bg-gradient-to-r from-sky-300 to-blue-500 hover:from-sky-400 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              <Play className="w-5 h-5" />
-              Bắt đầu trong AI Lab
-            </Button>
-          </Link>
-        </div>
+            <h1 className="font-bold text-3xl lg:text-4xl bg-gradient-to-r from-sky-300 to-blue-500 bg-clip-text text-transparent mb-4">
+              {project.title}
+            </h1>
+            <p className="text-xl text-gray-700 mb-6">{project.description}</p>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Context */}
-            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-sky-300 to-blue-500 rounded-lg flex items-center justify-center">
-                    <FileText className="w-4 h-4 text-white" />
-                  </div>
-                  Bối cảnh dự án
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 leading-relaxed">
-                  {project.context}
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Objectives */}
-            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-sky-300 to-blue-500 rounded-lg flex items-center justify-center">
-                    <Target className="w-4 h-4 text-white" />
-                  </div>
-                  Mục tiêu cần đạt
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  {project.objectives.map((objective, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{objective}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Deliverables */}
-            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
-                    <FileText className="w-4 h-4 text-white" />
-                  </div>
-                  Sản phẩm cần nộp
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  {project.deliverables.map((deliverable, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
-                        <span className="text-white text-sm font-semibold">
-                          {index + 1}
-                        </span>
-                      </div>
-                      <span className="text-gray-700">{deliverable}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-            <Card className="bg-gradient-to-r from-blue-50 to-slate-50 border-blue-200/50 backdrop-blur-sm shadow-lg">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <AlertCircle className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-blue-800 mb-2">
-                      Lưu ý quan trọng
-                    </h4>
-                    <p className="text-sm text-blue-700 leading-relaxed">
-                      Toàn bộ quá trình tương tác với AI sẽ được ghi lại để tạo
-                      thành portfolio của bạn. Hãy thực hiện một cách chỉn chu
-                      và sáng tạo.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Tips */}
-            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-lg">
+            <div className="flex flex-wrap gap-2 mb-8">
+              {project.skills.map((skill) => (
+                <Badge
+                  key={skill}
+                  className="bg-white/80 text-gray-700 border-white/40"
+                >
+                  {skill}
+                </Badge>
+              ))}
+            </div>
+            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-none border border-zinc-150  mb-4 h-fit">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
@@ -293,6 +191,116 @@ export default async function ProjectDetailPage(props: PageProps) {
                 </ul>
               </CardContent>
             </Card>
+            <div className="mt-auto">
+              <Link href={`/ai-lab/${params.projectId}`}>
+                <Button
+                  size="lg"
+                  className="gap-2 bg-gradient-to-r from-sky-300 to-blue-500 hover:from-sky-400 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Play className="w-5 h-5" />
+                  Bắt đầu trong AI Lab
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="h-full overflow-y-auto pr-2 w-full">
+          <div className="grid">
+            {/* Main Content */}
+            <div className="lg:col-span-2 grid grid-cols-1 gap-4">
+              {/* Context */}
+              <div className="border border-zinc-200 rounded-2xl p-2 bg-white/60 backdrop-blur-sm">
+                <Card className="border border-zinc-100 shadow-none">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-gradient-to-r from-sky-300 to-blue-500 rounded-lg flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-white" />
+                      </div>
+                      Bối cảnh dự án
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 leading-relaxed">
+                      {project.context}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Objectives */}
+              <div className="border border-zinc-200 rounded-2xl p-2 bg-white/60 backdrop-blur-sm">
+                <Card className="border border-zinc-100 shadow-none">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-gradient-to-r from-sky-300 to-blue-500 rounded-lg flex items-center justify-center">
+                        <Target className="w-4 h-4 text-white" />
+                      </div>
+                      Mục tiêu cần đạt
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {project.objectives.map((objective, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">{objective}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Deliverables */}
+              <div className="border border-zinc-200 rounded-2xl p-2 bg-white/60 backdrop-blur-sm">
+                <Card className="border border-zinc-100 shadow-none">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-white" />
+                      </div>
+                      Sản phẩm cần nộp
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {project.deliverables.map((deliverable, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
+                            <span className="text-white text-sm font-semibold">
+                              {index + 1}
+                            </span>
+                          </div>
+                          <span className="text-gray-700">{deliverable}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="border border-zinc-200 rounded-2xl p-2 bg-gradient-to-r from-blue-50 to-slate-50">
+                <Card className="border border-zinc-100 shadow-none backdrop-blur-sm">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <AlertCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-blue-800 mb-2">
+                          Lưu ý quan trọng
+                        </h4>
+                        <p className="text-sm text-blue-700 leading-relaxed">
+                          Toàn bộ quá trình tương tác với AI sẽ được ghi lại để
+                          tạo thành portfolio của bạn. Hãy thực hiện một cách
+                          chỉn chu và sáng tạo.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>
