@@ -15,9 +15,7 @@ from dataclasses import dataclass
 from database.db_supabase import DbSupabase
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import sys, os, json
 import numpy as np
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 @dataclass
 class RAGResult:

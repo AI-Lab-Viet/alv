@@ -247,3 +247,11 @@ class UpdateJourneyDto(BaseModel):
     """Schema cho dữ liệu cập nhật hành trình người dùng."""
     id: int
     status: str
+
+class ContentBlock(BaseModel):
+    """Schema cho một khối nội dung."""
+    id: Optional[str] = None
+    chapter: int
+    block_type: str
+    content: str
+    display_order: int

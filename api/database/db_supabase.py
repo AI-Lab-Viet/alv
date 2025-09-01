@@ -23,9 +23,8 @@ class DbSupabase:
         if not self.supabase:
             self.connect()
         result = self.supabase.table(table).insert(
-        [item.dict(exclude_none=True) for item in data]
-    ).execute()
-        print("result", result)
+            [item.model_dump(exclude_none=True) for item in data]
+        ).execute()
         return result.data
 
     def find_all(self, table: str, model: Type[BaseModel]) -> list[BaseModel]:

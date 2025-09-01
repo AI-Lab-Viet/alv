@@ -14,6 +14,7 @@ from typing import Dict, Any
 from constants.enum import JourneyEnum
 from database.db_supabase import DbSupabase
 from models.schemas import (
+    ContentBlock,
     InteractionRequest, 
     InteractionResponse,
     KnowledgeVault,
@@ -407,6 +408,12 @@ async def get_knowledge_vault(
             )
         ]
         return db.create("knowledge_vault", vaults)
+    
+@app.get("/lessons")
+def get_lesson(
+    chapter: str = Query(None, description="Lấy nội dung bài học theo chương")
+):
+    return db.find_by("content_blocks", ContentBlock, filters={"chapter": chapter} if chapter else None)
 
 @app.get("/health",
          response_model=SystemHealth,
