@@ -19,10 +19,12 @@ class DbSupabase:
     def close(self):
         self.supabase = None
 
-    def create(self, table: str, data: BaseModel) -> dict:
+    def create(self, table: str, data: list[BaseModel]) -> dict:
         if not self.supabase:
             self.connect()
-        result = self.supabase.table(table).insert(data.dict()).execute()
+        result = self.supabase.table(table).insert(
+        [item.dict(exclude_none=True) for item in data]
+    ).execute()
         print("result", result)
         return result.data
 
@@ -32,13 +34,23 @@ class DbSupabase:
         result = self.supabase.table(table).select("*").execute()
         return [model(**item) for item in result.data]
 
-    def find_by_id(self, table: str, id: str, model: Type[BaseModel]) -> BaseModel | None:
+    def find_by(self, table: str, model: Type[BaseModel], filters: dict = None, select_fields: list[str] = None) -> list[BaseModel]:
         if not self.supabase:
             self.connect()
-        result = self.supabase.table(table).select("*").eq("id", id).execute()
-        if result.data:
-            return model(**result.data[0])
-        return None
+        query = self.supabase.table(table)
+        if select_fields:
+            query = query.select(", ".join(select_fields))
+        else:
+            query = query.select("*")
+        if filters:
+            for key, value in filters.items():
+                if key == "search" and isinstance(value, dict):
+                    for field, search_value in value.items():
+                        query = query.ilike(field, f"%{search_value}%")
+                else:
+                    query = query.eq(key, value)
+        result = query.execute()
+        return [model(**item) for item in result.data] if result.data else []
 
     def update(self, table: str, id: str, data: BaseModel, model: Type[BaseModel]) -> BaseModel | None:
         if not self.supabase:

@@ -4,21 +4,26 @@ FastAPI application chính cho AI Lab Việt Multi-Agent System.
 Cung cấp RESTful API endpoints để tương tác với hệ thống đa tác tử.
 """
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from datetime import datetime
 import uvicorn
 from typing import Dict, Any
 
+from constants.enum import JourneyEnum
+from database.db_supabase import DbSupabase
 from models.schemas import (
     InteractionRequest, 
-    InteractionResponse, 
+    InteractionResponse,
+    KnowledgeVault,
+    SkillProgress, 
     SystemHealth,
     ErrorResponse,
     LearningRequest,
     ProjectRequest,
-    SessionContext
+    UpdateJourneyDto,
+    UserJourney
 )
 from core.dispatcher import SmartDispatcher
 
@@ -61,6 +66,7 @@ app_stats = {
     "failed_requests": 0
 }
 
+db = DbSupabase()
 
 @app.middleware("http")
 async def add_process_time_header(request, call_next):
@@ -212,6 +218,195 @@ async def project_interaction(request: ProjectRequest):
     
     return await interact(interaction_request)
 
+@app.get("/journey/{user_id}")
+async def get_journey(user_id: str):
+    """
+    Khởi tạo hành trình học tập cho người dùng.
+    """
+    user_journey: list[UserJourney] = db.find_by("user_journey", UserJourney, filters={"user_id": user_id})
+    if len(user_journey) > 0:
+        return user_journey
+    else:
+        journey: list[UserJourney] = [
+            UserJourney(
+                user_id=user_id,
+                world=3,
+                world_name="Đỉnh cao Sáng tạo",
+                name="Nghệ thuật Tổng hợp",
+                chapter=6,
+                description="Biến kết quả AI thành sản phẩm giá trị của riêng bạn",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Trách nhiệm",
+                chapter=5,
+                description="Rèn luyện ý thức đạo đức và trách nhiệm",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Nhận định",
+                chapter=4,
+                description="Rèn luyện tư duy phản biện và đánh giá chất lượng",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Mô tả",
+                chapter=3,
+                description="Rèn luyện kỹ năng giao tiếp chính xác với AI",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Phân công",
+                chapter=2,
+                description="Rèn luyện tư duy chiến lược và lập kế hoạch",
+                status=JourneyEnum.CURRENT
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=1,
+                world_name="Khởi nguồn Tư duy",
+                name="Nền tảng Tư duy",
+                chapter=1,
+                description="Hiểu tại sao cần học và những gì đang chờ đợi bạn",
+                status=JourneyEnum.COMPLETED
+            )
+        ]
+        return db.create("user_journey", journey)
+
+@app.patch("/update-journey/{user_id}")
+async def update_journey(user_id: str, update_journey_dto: UpdateJourneyDto):
+    """
+    Cập nhật thông tin hành trình học tập của người dùng.
+    """
+    return db.update("user_journey", update_journey_dto.id, update_journey_dto, UserJourney)
+
+@app.get("/skill-progress/{user_id}")
+async def get_skill_progress(user_id: str):
+    """
+    Lấy thông tin tiến độ học tập của người dùng.
+    """
+    skill_progress: list[SkillProgress] = db.find_by("skill_progress", SkillProgress, filters={"user_id": user_id})
+    
+    if len(skill_progress) > 0:
+        return skill_progress[0]
+    else:
+        progress: SkillProgress = SkillProgress(
+            user_id=user_id,
+        )
+        return db.create("skill_progress", [progress])
+
+@app.get("/knowledge-vault/{user_id}")
+async def get_knowledge_vault(
+    user_id: str, 
+    search: str = Query(None, description="Tìm kiếm theo từ khóa"),
+    skill: str = Query(None, description="Lọc theo kỹ năng"),
+    chapter: str = Query(None, description="Lọc theo chương")
+):
+    """
+    Lấy thông tin kho tri thức của người dùng.
+    """
+    filters = {"user_id": user_id}
+    if search is not None:
+        filters["search"] = {"title": search}
+    if skill is not None:
+        filters["skill"] = skill
+    if chapter is not None:
+        filters["chapter"] = chapter
+
+    knowledge_vault: list[KnowledgeVault] = db.find_by("knowledge_vault", KnowledgeVault, filters=filters)
+    if len(knowledge_vault) > 0:
+        return knowledge_vault
+    else:
+        vaults: list[KnowledgeVault] = [
+            KnowledgeVault(
+                user_id=user_id,
+                title='Tư duy Mục tiêu',
+                skill='Phân công',
+                chapter=2,
+                status='unlocked',
+                definition='Khả năng xác định rõ ràng điểm đến trước khi bắt đầu hành trình với AI.',
+                explanation='Đây là bước đầu tiên và quan trọng nhất trong "Nghệ thuật Phân công". Việc xác định mục tiêu cụ thể giúp bạn định hướng rõ ràng cho quá trình làm việc với AI.',
+                examples=[
+                    'Thay vì: "Viết về marketing" → Hãy: "Viết một bài blog 500 từ về chiến lược marketing số cho doanh nghiệp nhỏ"',
+                    'Thay vì: "Giúp tôi lập kế hoạch" → Hãy: "Lập kế hoạch 3 tháng để tăng 30% lượng khách hàng cho quán cà phê"'
+                ],
+                tags=['mục tiêu', 'lập kế hoạch', 'định hướng'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='Công thức R.C.T.C',
+                skill='Mô tả',
+                chapter=3,
+                status='unlocked',
+                definition='Framework để tạo ra những prompt hiệu quả: Role (Vai trò), Context (Ngữ cảnh), Task (Nhiệm vụ), Criteria (Tiêu chí).',
+                explanation='R.C.T.C là công thức "vàng" để viết prompt hiệu quả. Mỗi thành phần có vai trò riêng trong việc hướng dẫn AI hiểu đúng ý định của bạn.',
+                examples=[
+                    'Role: "Bạn là một chuyên gia marketing có 10 năm kinh nghiệm"',
+                    'Context: "Cho một công ty khởi nghiệp về công nghệ giáo dục"',
+                    'Task: "Viết một email marketing để giới thiệu sản phẩm mới"',
+                    'Criteria: "Tối đa 200 từ, tông giọng thân thiện, có call-to-action rõ ràng"'
+                ],
+                tags=['prompt', 'framework', 'cấu trúc', 'vai trò', 'ngữ cảnh'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='Biết mình, biết ta',
+                skill='Phân công',
+                chapter=2,
+                status='unlocked',
+                definition='Hiểu rõ điểm mạnh của con người và AI để phân công hiệu quả.',
+                explanation='Năng lực Phân tích Kép giúp bạn tận dụng thế mạnh của cả con người và AI. Con người giỏi sáng tạo, ra quyết định, cảm xúc. AI giỏi xử lý dữ liệu, tạo nội dung, phân tích.',
+                examples=[
+                    'Thế mạnh Con người: Đặt tầm nhìn chiến lược, quyết định cuối cùng, kiểm soát chất lượng',
+                    'Thế mạnh AI: Nghiên cứu dữ liệu, tạo nhiều phương án, phân tích thông tin',
+                    'Ví dụ phân công: Bạn đặt mục tiêu → AI nghiên cứu → Bạn lựa chọn → AI triển khai → Bạn kiểm tra'
+                ],
+                tags=['phân tích', 'thế mạnh', 'phân công', 'hợp tác'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='AI Hallucination (Ảo giác)',
+                skill='Nhận định',
+                chapter=4,
+                status='locked',
+                definition='Hiện tượng AI tạo ra thông tin không chính xác nhưng trình bày một cách tự tin.',
+                explanation='AI có thể tạo ra các trích dẫn sách không tồn tại, thống kê giả mạo, hoặc sự kiện lịch sử không chính xác. Đây là hạn chế tự nhiên của công nghệ AI hiện tại.',
+                examples=[
+                    'AI có thể tạo ra tên sách và tác giả không tồn tại',
+                    'Đưa ra số liệu thống kê không có nguồn gốc thực tế',
+                    'Mô tả chi tiết những sự kiện lịch sử chưa từng xảy ra'
+                ],
+                tags=['ảo giác', 'thông tin sai', 'kiểm chứng', 'phản biện'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='Kỹ năng "Chẻ củi"',
+                skill='Phân công',
+                chapter=2,
+                status='unlocked',
+                definition='Chia một vấn đề lớn, phức tạp thành các nhiệm vụ nhỏ, cụ thể.',
+                explanation='Thay vì giao cho AI một nhiệm vụ khổng lồ, hãy chia nhỏ thành các bước có thể quản lý được. Điều này giúp AI hiểu rõ hơn và cho kết quả chất lượng cao hơn.',
+                examples=[
+                    'Thay vì: "Viết cho tôi một cuốn tiểu thuyết"',
+                    'Hãy chia: "Tạo outline → Phát triển nhân vật → Viết chương 1 → Xem xét và chỉnh sửa"',
+                    'Ví dụ khác: "Lập kế hoạch kinh doanh" → "Phân tích thị trường → Xác định đối tượng → Chiến lược marketing → Dự báo tài chính"'
+                ],
+                tags=['chia nhỏ', 'quản lý', 'từng bước', 'hiệu quả'],
+            )
+        ]
+        return db.create("knowledge_vault", vaults)
 
 @app.get("/health",
          response_model=SystemHealth,

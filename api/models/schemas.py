@@ -209,3 +209,41 @@ class ErrorResponse(BaseModel):
                 "timestamp": "2024-01-01T12:00:00Z"
             }
         }
+
+class UserJourney(BaseModel):
+    """Schema cho hành trình người dùng."""
+    id: Optional[int] = None
+    world: int
+    world_name: str
+    name: str
+    chapter: int
+    description: str
+    status: str
+    user_id: str
+
+class SkillProgress(BaseModel):
+    """Schema cho tiến độ kỹ năng của người dùng."""
+    id: Optional[str] = None
+    user_id: str
+    mastered_skill_num: Optional[int] = 0
+    skills_completed: Optional[int] = 0
+    total_skills: Optional[int] = 0
+    last_accessed: Optional[str] = None
+    
+class KnowledgeVault(BaseModel):
+    """Schema cho kho tri thức của người dùng."""
+    id: Optional[str] = None
+    user_id: str
+    chapter: int
+    title: str
+    skill: str
+    definition: str
+    explanation: str
+    status: str
+    examples: list[str]
+    tags: list[str]
+
+class UpdateJourneyDto(BaseModel):
+    """Schema cho dữ liệu cập nhật hành trình người dùng."""
+    id: int
+    status: str
