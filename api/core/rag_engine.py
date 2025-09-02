@@ -77,7 +77,7 @@ class CurriculumRAG:
                 relevance_score=abs(relevance_score),
                 metadata={
                     "concept_id": concept_data.id,
-                    "title": content.get("title"),
+                    "title": content,
                     "source": "curriculum_database"
                 }
             )

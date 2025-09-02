@@ -6,6 +6,9 @@ TutorAgent - Agent điều phối cho quá trình học lý thuyết.
 
 from typing import Dict, Any, List
 from agents.base import OrchestrationAgent
+from agents.execution.practice_agent import PracticeAgent
+from agents.communication.interaction_agent import InteractionAgent
+from agents.execution.quiz_agent import QuizAgent
 from core.rag_engine import DualSourceRAGEngine
 
 
@@ -19,21 +22,23 @@ class TutorAgent(OrchestrationAgent):
     - Quản lý context và flow của phiên học
     - Đảm bảo consistency trong personality và teaching style
     """
-    
-    def __init__(self, interaction_agent=None):
+
+    def __init__(self):
         """
         Khởi tạo TutorAgent với dependency injection.
         
         Args:
             interaction_agent: InteractionAgent để giao tiếp với AI
         """
-        self.interaction_agent = interaction_agent
+        self.interaction_agent = InteractionAgent()
+        self.practice_agent = PracticeAgent(self.interaction_agent)
+        self.quiz_agent = QuizAgent(self.interaction_agent)
         self.rag_engine = DualSourceRAGEngine()
         print(f"[{self.name}] Initialized with dependency injection")
-        print(f"[{self.name}] InteractionAgent: {'✓ Connected' if interaction_agent else '✗ Not provided'}")
+        print(f"[{self.name}] InteractionAgent: {'✓ Connected' if self.interaction_agent else '✗ Not provided'}")
         print(f"[{self.name}] RAG Engine: ✓ Dual-source strategy enabled")
     
-    def handle_request(self, user_input: str, session_context: Dict[str, Any]) -> Dict[str, Any]:
+    async def handle_request(self, user_input: str, session_context: Dict[str, Any]) -> Dict[str, Any]:
         """
         Xử lý yêu cầu học tập và tạo ra trải nghiệm ALVA.
         

@@ -12,6 +12,7 @@ import uvicorn
 from typing import Dict, Any
 
 from agents.orchestration.tutor_agent import TutorAgent
+from agents.orchestration.project_agent import ProjectAgent
 from constants.enum import JourneyEnum
 from database.db_supabase import DbSupabase
 from models.schemas import (
@@ -28,7 +29,6 @@ from models.schemas import (
     UpdateJourneyDto,
     UserJourney
 )
-from core.dispatcher import SmartDispatcher
 
 
 # Khởi tạo FastAPI app
@@ -58,8 +58,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Khởi tạo SmartDispatcher
-dispatcher = SmartDispatcher()
+tutorAgent = TutorAgent()
+projectAgent = ProjectAgent()
 
 # Biến global để theo dõi thống kê
 app_stats = {
@@ -126,8 +126,11 @@ async def learning_interaction(request: LearningRequest):
     )
     
     try:
-        tutorAgent = TutorAgent()
-        return await tutorAgent.handle_request(interaction_request.user_input, interaction_request.session_context)
+        return await tutorAgent.handle_request(
+            interaction_request.user_input, 
+            interaction_request.session_context
+        )
+        
     except Exception as e:
         app_stats["failed_requests"] += 1
         print(f"[FastAPI] Error in learning_interaction: {str(e)}")
@@ -163,7 +166,19 @@ async def project_interaction(request: ProjectRequest):
         session_context=session_context
     )
     
-    return await interact(interaction_request)
+    try:
+        return await projectAgent.handle_request(
+            interaction_request.user_input, 
+            interaction_request.session_context
+        )
+        
+    except Exception as e:
+        app_stats["failed_requests"] += 1
+        print(f"[FastAPI] Error in project_interaction: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Lỗi khi xử lý project interaction: {str(e)}"
+        )
 
 @app.get("/journey/{user_id}")
 async def get_journey(user_id: str):
