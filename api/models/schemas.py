@@ -6,21 +6,7 @@ Pydantic models cho request/response schemas của AI Lab Việt API.
 
 from pydantic import BaseModel, Field
 from typing import Dict, Any, List, Optional
-from enum import Enum
-
-
-class ModeEnum(str, Enum):
-    """Enum cho các mode hoạt động của hệ thống."""
-    LEARNING = "learning"
-    PROJECT = "project"
-
-
-class DifficultyEnum(str, Enum):
-    """Enum cho các mức độ khó."""
-    BEGINNER = "beginner"
-    INTERMEDIATE = "intermediate"
-    ADVANCED = "advanced"
-
+from constants.enum import DifficultyEnum, ModeEnum
 
 class InteractionRequest(BaseModel):
     """Schema cho request tương tác với hệ thống."""
@@ -69,17 +55,19 @@ class InteractionResponse(BaseModel):
 class LearningRequest(BaseModel):
     """Schema cho request học tập cụ thể."""
     topic: str = Field(..., description="Chủ đề học tập")
-    difficulty_level: DifficultyEnum = Field(default=DifficultyEnum.BEGINNER)
-    learning_goals: List[str] = Field(default_factory=list)
-    time_budget_minutes: Optional[int] = Field(None, description="Thời gian học dự kiến (phút)")
+    query: str = Field(..., description="Câu hỏi hoặc yêu cầu học tập cụ thể")
+    # difficulty_level: DifficultyEnum = Field(default=DifficultyEnum.BEGINNER)
+    # learning_goals: List[str] = Field(default_factory=list)
+    # time_budget_minutes: Optional[int] = Field(None, description="Thời gian học dự kiến (phút)")
     
     class Config:
         json_schema_extra = {
             "example": {
-                "topic": "Python Programming",
-                "difficulty_level": "intermediate",
-                "learning_goals": ["Học về OOP", "Thực hành với APIs"],
-                "time_budget_minutes": 60
+                "topic": "Nền tảng tư duy AI Lab Việt",
+                "query": "Mục tiêu bài học là gì",
+                # "difficulty_level": "intermediate",
+                # "learning_goals": ["Học về OOP", "Thực hành với APIs"],
+                # "time_budget_minutes": 60
             }
         }
 

@@ -13,7 +13,9 @@ from typing import Dict, Any
 
 from agents.orchestration.tutor_agent import TutorAgent
 from agents.orchestration.project_agent import ProjectAgent
-from constants.enum import JourneyEnum
+from database.redis import RedisComponent
+from constants.constants import TimeConstants
+from constants.enum import CacheKeys, JourneyEnum
 from database.db_supabase import DbSupabase
 from models.schemas import (
     ContentBlock,
@@ -70,6 +72,7 @@ app_stats = {
 }
 
 db = DbSupabase()
+redis = RedisComponent()
 
 @app.middleware("http")
 async def add_process_time_header(request, call_next):
@@ -111,17 +114,17 @@ async def learning_interaction(request: LearningRequest):
     """
     # Tạo session context cho learning mode
     session_context = {
-        "mode": "learning",
+        # "mode": "learning",
         "topic": request.topic,
-        "difficulty_level": request.difficulty_level.value,
-        "learning_goals": request.learning_goals,
-        "time_budget_minutes": request.time_budget_minutes,
+        # "difficulty_level": request.difficulty_level.value,
+        # "learning_goals": request.learning_goals,
+        # "time_budget_minutes": request.time_budget_minutes,
         "user_id": "learning_user"  # Placeholder user ID
     }
     
     # Tạo InteractionRequest và gọi interact endpoint
     interaction_request = InteractionRequest(
-        user_input=f"Tôi muốn học về {request.topic} ở mức {request.difficulty_level.value}",
+        user_input=request.query,
         session_context=session_context
     )
     
@@ -374,7 +377,16 @@ async def get_knowledge_vault(
 def get_lesson(
     chapter: str = Query(None, description="Lấy nội dung bài học theo chương")
 ):
-    return db.find_by("content_blocks", ContentBlock, filters={"chapter": chapter} if chapter else None)
+    cached_lessons = redis.get_json(f"{CacheKeys.LESSON_DATA}_{chapter}")
+    if cached_lessons:
+        return cached_lessons
+    lessons = db.find_by("content_blocks", ContentBlock, filters={"chapter": chapter} if chapter else None)
+    redis.set_json(
+        f"{CacheKeys.LESSON_DATA}_{chapter}", 
+        [lesson.model_dump() for lesson in lessons],
+        TimeConstants.ONE_DAY
+    )
+    return lessons
 
 @app.get("/learning-chat-history/{user_id}")
 def get_learning_chat_history(
@@ -482,7 +494,6 @@ def get_system_status():
             "failed_requests": app_stats["failed_requests"],
             "success_rate": (app_stats["successful_requests"] / max(app_stats["total_requests"], 1)) * 100
         },
-        "agents": dispatcher.get_system_status()
     }
 
 
@@ -533,7 +544,7 @@ async def test_tutor_flow(request: Dict[str, str]):
         print(f"👨‍🎓 User level: {session_context['user_level']}")
         
         # Gọi SmartDispatcher để xử lý
-        result = dispatcher.dispatch(user_input, session_context)
+        result = await tutorAgent.handle_request(user_input, session_context)
         
         if result.get("status") == "error":
             app_stats["failed_requests"] += 1
@@ -614,7 +625,7 @@ async def test_project_flow():
             "mission_id": "mission_01"
         }
         
-        start_response = dispatcher.dispatch("Bắt đầu dự án nào!", start_context)
+        start_response = await projectAgent.handle_request("Bắt đầu dự án nào!", start_context)
         print(f"✅ Project started: {start_response.get('status', 'unknown')}")
         
         # === PHASE 2: MÔ PHỎNG QUÁ TRÌNH LÀM VIỆC ===
@@ -636,8 +647,8 @@ async def test_project_flow():
                 {"role": "model", "parts": ["Chắc chắn rồi! Kế hoạch 3 tháng cho slogan 'Mở Sách - Mở Tư Duy - Mở Tương Lai' sẽ bao gồm: THÁNG 1: Giai đoạn Nhận thức..."]}
             ]
         }
-        
-        work_response = dispatcher.dispatch(
+
+        work_response = await projectAgent.handle_request(
             "Bây giờ tôi cần tạo timeline cụ thể cho từng hoạt động", 
             work_context
         )
@@ -679,9 +690,9 @@ async def test_project_flow():
                 {"role": "model", "parts": ["Tuyệt vời! Để tạo timeline chi tiết, chúng ta sẽ chia thành 3 giai đoạn..."]}
             ]
         }
-        
-        complete_response = dispatcher.dispatch("Tôi đã hoàn thành kế hoạch!", complete_context)
-        
+
+        complete_response = await projectAgent.handle_request("Tôi đã hoàn thành kế hoạch!", complete_context)
+
         app_stats["successful_requests"] += 1
         
         print(f"✅ [PROJECT_FLOW] Complete flow test finished!")

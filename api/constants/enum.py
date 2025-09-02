@@ -1,5 +1,16 @@
 from pyparsing import Enum
 
+class ModeEnum(str, Enum):
+    """Enum cho các mode hoạt động của hệ thống."""
+    LEARNING = "learning"
+    PROJECT = "project"
+
+class DifficultyEnum(str, Enum):
+    """Enum cho các mức độ khó."""
+    BEGINNER = "beginner"
+    INTERMEDIATE = "intermediate"
+    ADVANCED = "advanced"
+    
 class JourneyEnum(str, Enum):
     """Enum cho các hành trình người dùng."""
     LOCKED = "locked"
@@ -18,3 +29,8 @@ class TutorAgentStateEnum(str, Enum):
     EXPLAINING_HOW = 7
     QUIZ = 8
     COMPLETION = 9
+
+class CacheKeys(str, Enum):
+    """Enum cho các khóa cache."""
+    CURRICULUM_DATA = "CURRICULUM_DATA"
+    LESSON_DATA = "LESSON_DATA"

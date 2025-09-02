@@ -10,8 +10,13 @@ Author: AI Lab Việt
 """
 
 from typing import Dict, Any, List, Optional, Tuple
-import re, os
+import re, os        
 from dataclasses import dataclass
+
+from openai import BaseModel
+from constants.constants import TimeConstants
+from constants.enum import CacheKeys
+from database.redis import RedisComponent
 from database.db_supabase import DbSupabase
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -28,11 +33,10 @@ class RAGResult:
     relevance_score: float
     metadata: Dict[str, Any]
 
-@dataclass
-class DocumentModel:
-    id: str
-    content: Dict[str, Any]  # JSON structured content
-    embedding: List[float]
+class DocumentModel(BaseModel):
+    id: int
+    content: str # JSON structured content
+    embedding: str
 
 class CurriculumRAG:
     """
@@ -44,6 +48,7 @@ class CurriculumRAG:
     
     def __init__(self):
         """Khởi tạo với mock curriculum data."""
+        self.redis = RedisComponent()
         self.curriculum_data: List[DocumentModel] = self._load_curriculum()
         print(f"[CurriculumRAG] Initialized with {len(self.curriculum_data)} curriculum entries")
     
@@ -52,8 +57,18 @@ class CurriculumRAG:
         Load mock curriculum data.
         Trong thực tế sẽ load từ vector database hoặc knowledge base.
         """
+        cached_curriculum = self.redis.get_json(CacheKeys.CURRICULUM_DATA)
+        if cached_curriculum:
+            return [DocumentModel(**item) for item in cached_curriculum]
         db = DbSupabase()
-        return db.find_all("documents", DocumentModel)
+        documents = db.find_all("documents", DocumentModel)
+
+        self.redis.set_json(
+            CacheKeys.CURRICULUM_DATA, 
+            [doc.model_dump() for doc in documents],
+            TimeConstants.ONE_DAY * 30
+        )
+        return documents
 
     def search(self, query: str, max_results: int = 3) -> List[RAGResult]:
         """
