@@ -10,12 +10,15 @@ Author: AI Lab Việt
 """
 
 from typing import Dict, Any, List, Optional, Tuple
-import re
+import re, os
 from dataclasses import dataclass
 from database.db_supabase import DbSupabase
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from google import genai
+from google.genai.types import EmbedContentConfig
+import ast
 
 @dataclass
 class RAGResult:
@@ -64,17 +67,23 @@ class CurriculumRAG:
             List các RAGResult được sắp xếp theo relevance
         """
         query_lower = query.lower()
+        query_embedding = embed_text([query_lower])[0]
         results = []
         for concept_data in self.curriculum_data:
-            relevance_score = self._calculate_relevance(query_lower, concept_data)
+            doc_embedding = concept_data.embedding
 
-            # Tạo content summary từ concept data
-            content = self._format_concept_content(concept_data.content)
+            if not doc_embedding or len(doc_embedding) == 0:
+                continue  
+
+            if isinstance(doc_embedding, str):
+                doc_embedding = ast.literal_eval(doc_embedding)
+            relevance_score = self._calculate_relevance(query_embedding, doc_embedding)
+            content = concept_data.content
 
             result = RAGResult(
                 source_type="curriculum",
                 content=content,
-                relevance_score=abs(relevance_score),
+                relevance_score=relevance_score,
                 metadata={
                     "concept_id": concept_data.id,
                     "title": content,
@@ -85,44 +94,16 @@ class CurriculumRAG:
         
         # Sắp xếp theo relevance score giảm dần
         results.sort(key=lambda x: x.relevance_score, reverse=True)
-        
         return results[:max_results]
     
-    def _calculate_relevance(self, query: str, concept_data: DocumentModel) -> float:
-        """
-        Tính toán độ liên quan giữa query và concept.
-        Trong thực tế sẽ sử dụng embedding similarity.
-        """
-        vectorizer = TfidfVectorizer()
-        query_vec = vectorizer.fit_transform([query]).toarray()[0]
+    def _calculate_relevance(self, query_vec: List[float], doc_vec: List[float]) -> float:
+        """Cosine similarity"""
+        if not query_vec or not doc_vec:
+            return 0.0
+        query_vec = np.array(query_vec).reshape(1, -1)
+        doc_vec = np.array(doc_vec).reshape(1, -1)
+        return float(cosine_similarity(query_vec, doc_vec)[0][0])
 
-        embedding = concept_data.embedding
-        if isinstance(embedding, str):
-            try:
-                embedding = eval(embedding)
-            except Exception:
-                embedding = []
-        if not isinstance(embedding, list):
-            embedding = []
-
-        target_len = max(len(embedding), len(query_vec))
-        embedding_vec = np.array(embedding[:target_len] + [0.0] * (target_len - len(embedding)))
-        query_vec = np.array(list(query_vec[:target_len]) + [0.0] * (target_len - len(query_vec)))
-
-        def _normalize(vec):
-            norm = np.linalg.norm(vec)
-            return vec if norm == 0 else vec / norm
-
-        embedding_vec = _normalize(embedding_vec)
-        query_vec = _normalize(query_vec)
-
-        if target_len == 0:
-            cos_sim = 0.0
-        else:
-            cos_sim = float(cosine_similarity([embedding_vec], [query_vec])[0][0])
-
-        return cos_sim
-    
     def _format_concept_content(self, concept_data: Dict[str, Any]) -> str:
         """Format concept data thành text để đưa vào prompt."""
         content_parts = []
@@ -342,3 +323,12 @@ class DualSourceRAGEngine:
                 summary_parts.append(result.content)
         
         return "\n".join(summary_parts) if summary_parts else "Ngữ cảnh dự án: Đang bắt đầu cuộc trò chuyện mới."
+
+def embed_text(chunks, dim=1536):
+    client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+    response = client.models.embed_content(
+        model="gemini-embedding-001",
+        contents=chunks,
+        config=EmbedContentConfig(output_dimensionality=dim)
+    )
+    return [e.values for e in response.embeddings]

@@ -3,12 +3,13 @@
 TutorAgent - Agent điều phối cho quá trình học lý thuyết.
 Đây là "đạo diễn" cho luồng học tập, tạo ra trải nghiệm ALVA hoàn chỉnh.
 """
-
+import json, re
 from typing import Dict, Any, List
 from agents.base import OrchestrationAgent
 from agents.execution.practice_agent import PracticeAgent
 from agents.communication.interaction_agent import InteractionAgent
 from agents.execution.quiz_agent import QuizAgent
+from constants.enum import TutorAgentStateEnum
 from core.rag_engine import DualSourceRAGEngine
 
 
@@ -30,6 +31,7 @@ class TutorAgent(OrchestrationAgent):
         Args:
             interaction_agent: InteractionAgent để giao tiếp với AI
         """
+        self.state = TutorAgentStateEnum.GREETING
         self.interaction_agent = InteractionAgent()
         self.practice_agent = PracticeAgent(self.interaction_agent)
         self.quiz_agent = QuizAgent(self.interaction_agent)
@@ -101,7 +103,7 @@ class TutorAgent(OrchestrationAgent):
         Returns:
             System prompt hoàn chỉnh
         """
-        current_lesson = session_context.get("current_lesson", "Bài học chung")
+        current_lesson = session_context.get("topic", "Nền tảng tư duy AI Lab Việt")
         user_level = session_context.get("user_level", "Trung bình")
         learning_style = session_context.get("learning_style", "Tương tác")
         
@@ -120,12 +122,29 @@ Chủ đề: {current_lesson}
 Cấp độ học viên: {user_level}
 Phong cách học: {learning_style}
 
-=== NHIỆM VỤ CỦA BẠN ===
-1. Trả lời câu hỏi của học viên về bài học hiện tại
-2. Giải thích khái niệm bằng ngôn ngữ dễ hiểu
-3. Đưa ra ví dụ thực tế từ môi trường doanh nghiệp Việt Nam
-4. Khuyến khích học viên đặt thêm câu hỏi
-5. Kết nối kiến thức với các tình huống thực tế
+=== ĐÁNH GIÁ TIẾN TRÌNH HỌC TẬP ===
+Bạn phải luôn đánh giá xem học viên đang ở bước nào trong flow học tập:
+
+Các trạng thái chính:
+0. Greeting (chào mừng, khởi động)
+1. Explain "What" (giảng khái niệm, hiển thị nội dung giáo trình)
+2. Practice 1 (câu hỏi trắc nghiệm kiểm tra "CÁI GÌ")
+3. Feedback sau Practice 1
+4. Explain "Why" (giải thích nguyên nhân, hiển thị cờ đỏ)
+5. Practice 2 (câu hỏi trắc nghiệm kiểm tra "TẠI SAO")
+6. Feedback sau Practice 2
+7. Explain "How" (hướng dẫn công thức phản hồi)
+8. Quiz (câu hỏi mở để học viên áp dụng)
+9. Completion (kết thúc, trao huy hiệu, tổng kết)
+
+Nhiệm vụ của bạn:
+- Luôn trả lời theo đúng state hiện tại.
+- Nếu học viên trả lời đúng/sai trong Practice hoặc Quiz, hãy phản hồi và chuyển tiếp state phù hợp.
+- Nếu không chắc state hiện tại, hãy dựa vào session_context.lesson_state và chat_history để quyết định.
+- Không nhảy sai bước, phải tuân thủ logic flow.
+- Chỉ được đề cập state ở cuối câu trả lời.
+- Khi cần gọi PracticeAgent hoặc QuizAgent, hãy trả về thêm trạng thái cuối câu trả lời của bạn theo ví dụ mẫu:
+(state: 2)
 
 === NGUYÊN TẮC ===
 - **ƯU TIÊN GIÁO TRÌNH**: Luôn dựa vào kiến thức từ giáo trình được cung cấp
@@ -233,14 +252,18 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         # - Thêm metadata
         # - Cập nhật learning progress
         
+        santinized_response = parse_alva_response(response_text)
+        self.state = santinized_response.get("state", self.state)
+        
+        
         return {
             "response_from": self.interaction_agent.name,
-            "response_text": response_text,
+            "response_text": santinized_response.get("response_text", ""),
             "status": "success",
             "metadata": {
                 "lesson": session_context.get("current_lesson"),
                 "user_input_length": len(user_input),
-                "response_length": len(response_text),
+                "response_length": len(santinized_response.get("response_text", "")),
                 "interaction_type": "learning_session",
                 "agent_chain": f"{self.name} -> {self.interaction_agent.name}"
             },
@@ -279,3 +302,32 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
                 "Làm thế nào để áp dụng trong công việc?",
                 "Những thách thức phổ biến là gì?"
             ]
+
+def parse_alva_response(raw_text: str):
+    """
+    Parse response từ ALVA, tách response_text và state.
+    
+    Args:
+        raw_text (str): Chuỗi text trả về từ model, VD:
+            "... Bạn hiểu chưa nào? 🤔\n\n(state: 1)\n"
+    
+    Returns:
+        dict: {
+            "response_text": "... Bạn hiểu chưa nào? 🤔",
+            "state": 1
+        }
+    """
+    # Regex tìm "(state: X)"
+    match = re.search(r"\(state:\s*(\d+)\)", raw_text)
+    state = None
+    if match:
+        state = int(match.group(1))
+        # Xóa phần state khỏi text
+        response_text = re.sub(r"\(state:\s*\d+\)", "", raw_text).strip()
+    else:
+        response_text = raw_text.strip()
+    
+    return {
+        "response_text": response_text,
+        "state": state
+    }

@@ -2,6 +2,7 @@
 fastapi
 uvicorn[standard]
 pydantic
+redis
 
 # HTTP client và async support
 httpx
