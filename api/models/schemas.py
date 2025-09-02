@@ -255,3 +255,13 @@ class ContentBlock(BaseModel):
     block_type: str
     content: str
     display_order: int
+    
+class LearningChatHistory(BaseModel):
+    """Schema cho lịch sử chat học tập."""
+    id: Optional[str] = None
+    chapter_id: str
+    user_id: str
+    activity_id: Optional[str] = None
+    role: str
+    content: str
+    created_at: str

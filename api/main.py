@@ -11,6 +11,7 @@ from datetime import datetime
 import uvicorn
 from typing import Dict, Any
 
+from agents.orchestration.tutor_agent import TutorAgent
 from constants.enum import JourneyEnum
 from database.db_supabase import DbSupabase
 from models.schemas import (
@@ -18,6 +19,7 @@ from models.schemas import (
     InteractionRequest, 
     InteractionResponse,
     KnowledgeVault,
+    LearningChatHistory,
     SkillProgress, 
     SystemHealth,
     ErrorResponse,
@@ -99,72 +101,6 @@ def read_root():
     }
 
 
-@app.post("/interact", 
-          response_model=InteractionResponse,
-          summary="Tương tác chính với hệ thống",
-          description="Endpoint chính để người dùng tương tác với hệ thống đa tác tử")
-async def interact(request: InteractionRequest):
-    """
-    Endpoint chính để người dùng tương tác với hệ thống.
-    
-    Hệ thống sẽ:
-    1. Phân tích request và session context
-    2. Định tuyến đến orchestration agent phù hợp
-    3. Thực thi action plan thông qua execution agents
-    4. Trả về response với kết quả xử lý
-    """
-    global app_stats
-    app_stats["total_requests"] += 1
-    
-    try:
-        print(f"\n{'='*50}")
-        print(f"[FastAPI] New interaction request received")
-        print(f"[FastAPI] User input: {request.user_input}")
-        print(f"[FastAPI] Session context: {request.session_context}")
-        
-        # Validate session context
-        if "mode" not in request.session_context:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Session context phải chứa 'mode' (learning hoặc project)"
-            )
-        
-        # Gọi SmartDispatcher để xử lý
-        result = dispatcher.dispatch(request.user_input, request.session_context)
-        
-        if result.get("status") == "error":
-            app_stats["failed_requests"] += 1
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=result.get("error_details", "Internal server error")
-            )
-        
-        app_stats["successful_requests"] += 1
-        
-        # Tạo response
-        response = InteractionResponse(
-            agent_name=result["agent_name"],
-            action=result["action"],
-            response_message=result["response_message"]
-        )
-        
-        print(f"[FastAPI] Successfully processed request")
-        print(f"[FastAPI] Response: {response.response_message}")
-        print(f"{'='*50}\n")
-        
-        return response
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        app_stats["failed_requests"] += 1
-        print(f"[FastAPI] Unexpected error: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Đã có lỗi không mong muốn xảy ra: {str(e)}"
-        )
-
-
 @app.post("/learning",
           summary="Endpoint đặc biệt cho learning mode",
           description="Endpoint tối ưu hóa cho các request học tập")
@@ -189,7 +125,17 @@ async def learning_interaction(request: LearningRequest):
         session_context=session_context
     )
     
-    return await interact(interaction_request)
+    try:
+        tutorAgent = TutorAgent()
+        return await tutorAgent.handle_request(interaction_request.user_input, interaction_request.session_context)
+    except Exception as e:
+        app_stats["failed_requests"] += 1
+        print(f"[FastAPI] Error in learning_interaction: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Lỗi khi xử lý learning interaction: {str(e)}"
+        )
+
 
 
 @app.post("/project",
@@ -414,6 +360,22 @@ def get_lesson(
     chapter: str = Query(None, description="Lấy nội dung bài học theo chương")
 ):
     return db.find_by("content_blocks", ContentBlock, filters={"chapter": chapter} if chapter else None)
+
+@app.get("/learning-chat-history/{user_id}")
+def get_learning_chat_history(
+    user_id: str,
+    from_time: datetime = Query(None, description="Thời gian bắt đầu"),
+    limit: int = Query(10, description="Số lượng kết quả tối đa")
+):
+    return db.find_by(
+        "learning_chat_history", 
+        LearningChatHistory, 
+        filters={
+            "user_id": user_id, 
+            "from_time": from_time
+        },
+        limit=limit
+    )
 
 @app.get("/health",
          response_model=SystemHealth,
