@@ -32,7 +32,6 @@ export default function RootLayout({
   return (
     <html lang='vi' className={`${inter.variable} ${spaceGrotesk.variable} antialiased h-full`}>
       <body className='font-sans h-full overflow-hidden'>
-        {' '}
         <AuthProvider>
           <NavBarWrapper>{children}</NavBarWrapper>
         </AuthProvider>
