@@ -9,6 +9,7 @@ from agents.base import OrchestrationAgent
 from agents.execution.practice_agent import PracticeAgent
 from agents.communication.interaction_agent import InteractionAgent
 from agents.execution.quiz_agent import QuizAgent
+from tasks.task_consumer import generate_practice_activity
 from constants.enum import TutorAgentStateEnum
 from core.rag_engine import DualSourceRAGEngine
 
@@ -254,7 +255,15 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         
         santinized_response = parse_alva_response(response_text)
         self.state = santinized_response.get("state", self.state)
-        
+
+        print(f"[{self.name}] State updated to: {self.state}")
+        print(TutorAgentStateEnum.PRACTICING_WHAT.value)
+        if int(self.state) == TutorAgentStateEnum.PRACTICING_WHAT.value:
+            result = generate_practice_activity.delay({"query": "hello world"})
+
+            print("Task id:", result.id)
+
+
         
         return {
             "response_from": self.interaction_agent.name,

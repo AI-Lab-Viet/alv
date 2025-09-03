@@ -377,12 +377,12 @@ async def get_knowledge_vault(
 def get_lesson(
     chapter: str = Query(None, description="Lấy nội dung bài học theo chương")
 ):
-    cached_lessons = redis.get_json(f"{CacheKeys.LESSON_DATA}_{chapter}")
+    cached_lessons = redis.get_json(f"{CacheKeys.LESSON_DATA.value}_{chapter}")
     if cached_lessons:
         return cached_lessons
     lessons = db.find_by("content_blocks", ContentBlock, filters={"chapter": chapter} if chapter else None)
     redis.set_json(
-        f"{CacheKeys.LESSON_DATA}_{chapter}", 
+        f"{CacheKeys.LESSON_DATA.value}_{chapter}", 
         [lesson.model_dump() for lesson in lessons],
         TimeConstants.ONE_DAY
     )

@@ -4,13 +4,15 @@ from celery import Celery
 
 host = os.getenv("REDIS_HOST", "localhost")
 port = int(os.getenv("REDIS_PORT", "6379"))
-db = int(os.getenv("REDIS_DB_CELERY", "1"))
+db = int(os.getenv("REDIS_DB", "5"))
 REDIS_URL = f"redis://{host}:{port}/{db}"
+print(f"Using Redis URL: {REDIS_URL}")
 
 celery_queue = Celery(
     "alva",
     broker=REDIS_URL,
     backend=REDIS_URL,
+    include=["tasks.task_consumer"],
 )
 
 celery_queue.conf.task_queues = (

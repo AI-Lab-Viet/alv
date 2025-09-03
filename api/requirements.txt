@@ -3,6 +3,8 @@ fastapi
 uvicorn[standard]
 pydantic
 redis
+celery[redis]
+flower
 
 # HTTP client và async support
 httpx

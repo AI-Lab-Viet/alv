@@ -17,7 +17,7 @@ class JourneyEnum(str, Enum):
     COMPLETED = "completed"
     CURRENT = "current"
     
-class TutorAgentStateEnum(str, Enum):
+class TutorAgentStateEnum(int, Enum):
     """Enum cho trạng thái của TutorAgent."""
     GREETING = 0
     EXPLAINING_WHAT = 1
