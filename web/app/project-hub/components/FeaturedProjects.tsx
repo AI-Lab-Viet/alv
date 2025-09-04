@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { DIFFICULTY } from "@/consts/common";
-import { Project } from "@/interfaces/project";
+import { Project } from "@/interfaces/project.interface";
 import { Zap, ChevronRight, Clock, Users, Star, Link } from "lucide-react";
 const featuredProjects: Project[] = [
   {

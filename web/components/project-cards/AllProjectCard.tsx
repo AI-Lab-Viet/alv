@@ -1,4 +1,4 @@
-import { Project } from "@/interfaces/project";
+import { Project } from "@/interfaces/project.interface";
 import { Card, CardContent } from "../ui/card";
 import { Clock, Users, Star, ChevronRight } from "lucide-react";
 import { Badge } from "../ui/badge";

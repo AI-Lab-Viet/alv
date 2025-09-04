@@ -3,7 +3,7 @@ import { Clock, Users, Star, Link, ChevronRight, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
-import { Project } from "@/interfaces/project";
+import { Project } from "@/interfaces/project.interface";
 import {
   CarouselContent,
   CarouselItem,
@@ -11,10 +11,15 @@ import {
   CarouselPrevious,
 } from "../ui/carousel";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 
 export default function FeaturedCard({ project }: { project: Project }) {
+  const router = useRouter();
   return (
-    <CarouselItem className="shadow-none ">
+    <CarouselItem
+      className="shadow-none "
+      onClick={() => router.push(`/project-hub/${project.id}`)}
+    >
       <div
         className="w-full group relative h-64 bg-cover bg-center rounded-2xl flex flex-col justify-end p-6 text-white"
         style={{ backgroundImage: `url(${project.thumbnail})` }}
