@@ -429,69 +429,12 @@ export default function JourneyPage() {
           </div>
         );
 
-      case 'definition':
-        const IconComponent = contentDisplay.icon || Lightbulb;
-        return (
-          <div className='space-y-6'>
-            <div className='text-center'>
-              <h3 className='text-xl font-semibold text-foreground mb-2'>{contentDisplay.title}</h3>
-            </div>
-            <Card className='bg-primary/5 border-primary/20'>
-              <CardContent className='p-6'>
-                <div className='flex items-start gap-4'>
-                  <div className='w-12 h-12 bg-primary rounded-lg flex items-center justify-center flex-shrink-0'>
-                    <IconComponent className='w-6 h-6 text-white' />
-                  </div>
-                  <div className='flex-1'>
-                    <h4 className='font-semibold text-foreground mb-2'>Khái niệm</h4>
-                    <p className='text-sm text-muted-foreground mb-3'>
-                      {contentDisplay.definition || contentDisplay.concept}
-                    </p>
-                    {contentDisplay.explanation && (
-                      <div className='mt-4 p-4 bg-muted rounded-lg'>
-                        <p className='text-sm'>{contentDisplay.explanation}</p>
-                      </div>
-                    )}
-                    {contentDisplay.key_points && (
-                      <div className='mt-4 p-4 bg-secondary/10 rounded-lg border border-secondary/20'>
-                        <h5 className='text-sm font-medium text-secondary mb-2'>Điểm chính:</h5>
-                        <ul className='text-xs space-y-1'>
-                          {contentDisplay.key_points.map((point: string, index: number) => (
-                            <li key={index}>• {point}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {contentDisplay.steps && (
-                      <div className='mt-4 p-4 bg-green-50 rounded-lg border border-green-200'>
-                        <h5 className='text-sm font-medium text-green-700 mb-2'>
-                          Các bước thực hiện:
-                        </h5>
-                        <ul className='text-xs space-y-1'>
-                          {contentDisplay.steps.map((step: string, index: number) => (
-                            <li key={index}>
-                              {index + 1}. {step}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {contentDisplay.example && (
-                      <div className='mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200'>
-                        <h5 className='text-sm font-medium text-blue-700 mb-2'>Ví dụ:</h5>
-                        <p className='text-xs'>{contentDisplay.example}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
+      case 'document':
+        return renderDocumentContent();
 
       case 'practice':
-        if (contentDisplay.task_type === 'drag_drop') {
-          return renderDragDropTask();
+        if (contentDisplay.task_type === 'evaluation') {
+          return renderEvaluationTask();
         } else if (contentDisplay.task_type === 'analysis') {
           return renderAnalysisTask();
         }
@@ -545,6 +488,110 @@ export default function JourneyPage() {
       default:
         return null;
     }
+  };
+
+  const renderDocumentContent = () => {
+    if (!contentDisplay?.content) return null;
+
+    return (
+      <div className='space-y-4 max-h-[600px]'>
+        <div className='text-center mb-6'>
+          <Badge variant='outline' className='mb-2'>
+            Khung Tri thức
+          </Badge>
+          <h3 className='text-lg font-semibold'>
+            {contentDisplay.section === 'what' && 'CÁI GÌ - Khái niệm cơ bản'}
+            {contentDisplay.section === 'why' && 'TẠI SAO - Tầm quan trọng'}
+            {contentDisplay.section === 'how' && 'NHƯ THẾ NÀO - Cách thực hiện'}
+          </h3>
+        </div>
+
+        {contentDisplay.content.map((block: any, index: number) => (
+          <div key={block.id} className='mb-4'>
+            {block.block_type === 'title' && (
+              <h4 className='text-lg font-semibold text-foreground mb-2'>{block.content}</h4>
+            )}
+            {block.block_type === 'text' && (
+              <p className='text-sm text-muted-foreground leading-relaxed mb-3'>{block.content}</p>
+            )}
+            {block.block_type === 'image_body' && (
+              <div className='my-4'>
+                <img
+                  src={block.content}
+                  alt={`Hình minh họa ${index + 1}`}
+                  className='w-full rounded-lg border'
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderEvaluationTask = () => {
+    if (!contentDisplay) return null;
+
+    return (
+      <div className='space-y-4'>
+        <div className='text-center'>
+          <Badge variant='destructive' className='mb-2'>
+            Thực hành Nhận định
+          </Badge>
+          <h3 className='text-xl font-semibold text-foreground'>{contentDisplay.title}</h3>
+        </div>
+
+        <Card className='bg-destructive/5 border-destructive/20'>
+          <CardContent className='p-6'>
+            <p className='text-sm text-muted-foreground mb-4'>{contentDisplay.instruction}</p>
+
+            <div className='p-4 bg-muted rounded-lg mb-6'>
+              <h4 className='text-sm font-medium mb-2'>Bài viết cần đánh giá:</h4>
+              <div className='text-xs whitespace-pre-wrap'>{contentDisplay.ai_output}</div>
+            </div>
+
+            <div className='space-y-4'>
+              <h4 className='text-sm font-medium'>Áp dụng Bộ câu hỏi Vàng:</h4>
+              {contentDisplay.evaluation_criteria.map((criteria: any) => (
+                <div key={criteria.id} className='border rounded-lg p-4'>
+                  <h5 className='text-sm font-medium mb-2'>{criteria.title}</h5>
+                  <p className='text-xs text-muted-foreground mb-3'>{criteria.description}</p>
+
+                  <div className='space-y-2'>
+                    {criteria.issues.length > 0 ? (
+                      criteria.issues.map((issue: string, idx: number) => (
+                        <label key={idx} className='flex items-start gap-2 text-xs cursor-pointer'>
+                          <input
+                            type='checkbox'
+                            checked={userAnswers[`${criteria.id}_${idx}`] || false}
+                            onChange={(e) =>
+                              setUserAnswers({
+                                ...userAnswers,
+                                [`${criteria.id}_${idx}`]: e.target.checked
+                              })
+                            }
+                            className='mt-1'
+                          />
+                          <span className='text-red-600'>{issue}</span>
+                        </label>
+                      ))
+                    ) : (
+                      <p className='text-xs text-green-600'>✓ Không có vấn đề</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className='mt-6'>
+              <Button onClick={() => handleTaskSubmit(userAnswers)} className='w-full'>
+                Nộp bài đánh giá
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   };
 
   const renderDragDropTask = () => {
