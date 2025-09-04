@@ -4,6 +4,7 @@ Pydantic models cho request/response schemas của AI Lab Việt API.
 Định nghĩa các data structures được sử dụng trong FastAPI endpoints.
 """
 
+from datetime import date
 from pydantic import BaseModel, Field
 from typing import Dict, Any, List, Optional
 from constants.enum import DifficultyEnum, ModeEnum
@@ -65,6 +66,8 @@ class LearningRequest(BaseModel):
             "example": {
                 "topic": "Nền tảng tư duy AI Lab Việt",
                 "query": "Mục tiêu bài học là gì",
+                "user_id": "18645595-da81-43f7-b9ce-1834bec4d6d4",
+                "chapter_id": "622f8ec2-0c4c-4874-81e7-912e1e4f4522"
                 # "difficulty_level": "intermediate",
                 # "learning_goals": ["Học về OOP", "Thực hành với APIs"],
                 # "time_budget_minutes": 60
@@ -252,4 +255,10 @@ class LearningChatHistory(BaseModel):
     activity_id: Optional[str] = None
     role: str
     content: str
-    created_at: str
+    created_at: Optional[str] = None
+
+class JobData(BaseModel):
+    """Schema cho dữ liệu job."""
+    id: Optional[str] = None
+    user_id: str
+    context: Dict[str, Any]

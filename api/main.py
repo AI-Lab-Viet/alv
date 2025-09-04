@@ -116,22 +116,17 @@ async def learning_interaction(request: LearningRequest):
     session_context = {
         # "mode": "learning",
         "topic": request.topic,
+        "chapter_id": "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
         # "difficulty_level": request.difficulty_level.value,
         # "learning_goals": request.learning_goals,
         # "time_budget_minutes": request.time_budget_minutes,
-        "user_id": "learning_user"  # Placeholder user ID
+        "user_id": "18645595-da81-43f7-b9ce-1834bec4d6d4"
     }
-    
-    # Tạo InteractionRequest và gọi interact endpoint
-    interaction_request = InteractionRequest(
-        user_input=request.query,
-        session_context=session_context
-    )
     
     try:
         return await tutorAgent.handle_request(
-            interaction_request.user_input, 
-            interaction_request.session_context
+            user_input=request.query,
+            session_context=session_context
         )
         
     except Exception as e:

@@ -14,6 +14,7 @@ import re, os
 from dataclasses import dataclass
 
 from openai import BaseModel
+from models.schemas import LearningChatHistory
 from constants.constants import TimeConstants
 from constants.enum import CacheKeys
 from database.redis import RedisComponent
@@ -156,8 +157,8 @@ class ChatHistoryRAG:
     
     def __init__(self):
         print(f"[ChatHistoryRAG] Initialized for conversation context extraction")
-    
-    def search(self, chat_history: List[Dict[str, Any]], query: str, max_results: int = 5) -> List[RAGResult]:
+
+    def search(self, chat_history: List[LearningChatHistory | Dict[str, Any]], query: str, max_results: int = 5) -> List[RAGResult]:
         """
         Tìm kiếm trong chat history dựa trên query.
         
@@ -190,8 +191,8 @@ class ChatHistoryRAG:
                     relevance_score=relevance_score,
                     metadata={
                         "message_index": i,
-                        "role": message.get("role", "unknown"),
-                        "timestamp": message.get("timestamp", "unknown")
+                        "role": message.role if isinstance(message, LearningChatHistory) else message.get("role", "unknown"),
+                        "timestamp": message.created_at if isinstance(message, LearningChatHistory) else message.get("timestamp", "unknown"),
                     }
                 )
                 results.append(result)
@@ -201,7 +202,7 @@ class ChatHistoryRAG:
         
         return results[:max_results]
     
-    def _calculate_message_relevance(self, message: Dict[str, Any], query: str, position: int, total: int) -> float:
+    def _calculate_message_relevance(self, message: LearningChatHistory | Dict[str, Any], query: str, position: int, total: int) -> float:
         """Tính relevance của message với query hiện tại."""
         content = self._extract_message_text(message).lower()
         
@@ -217,20 +218,20 @@ class ChatHistoryRAG:
                 content_score += 0.3
         
         # Bonus cho user messages (thường chứa context quan trọng)
-        role_bonus = 0.2 if message.get("role") == "user" else 0.1
-        
+        role_bonus = 0.2 if (message.role if isinstance(message, LearningChatHistory) else message.get("role")) == "user" else 0.1
+
         return recency_score + content_score + role_bonus
-    
-    def _extract_message_text(self, message: Dict[str, Any]) -> str:
+
+    def _extract_message_text(self, message: LearningChatHistory | Dict[str, Any]) -> str:
         """Trích xuất text từ message."""
-        parts = message.get("parts", [])
+        parts = message.get("parts", []) if isinstance(message, dict) else [message.content]
         if isinstance(parts, list):
             return " ".join(str(part) for part in parts)
         return str(parts)
-    
-    def _format_message_content(self, message: Dict[str, Any]) -> str:
+
+    def _format_message_content(self, message: LearningChatHistory | Dict[str, Any]) -> str:
         """Format message để đưa vào context."""
-        role = message.get("role", "unknown")
+        role = message.role if isinstance(message, LearningChatHistory) else message.get("role", "unknown")
         content = self._extract_message_text(message)
         
         role_label = "Người dùng" if role == "user" else "ALVA"
@@ -251,7 +252,7 @@ class DualSourceRAGEngine:
         self.chat_rag = ChatHistoryRAG()
         print(f"[DualSourceRAGEngine] Initialized with dual-source strategy")
     
-    def search_for_tutor(self, query: str, chat_history: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def search_for_tutor(self, query: str, chat_history: List[LearningChatHistory]) -> Dict[str, Any]:
         """
         RAG search cho Tutor ALVA.
         Primary: Curriculum, Secondary: Chat History

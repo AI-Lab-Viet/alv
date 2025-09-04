@@ -33,7 +33,16 @@ class DbSupabase:
         result = self.supabase.table(table).select("*").execute()
         return [model(**item) for item in result.data]
 
-    def find_by(self, table: str, model: Type[BaseModel], filters: dict = None, limit: int = 100, select_fields: list[str] = None) -> list[BaseModel]:
+    def find_by(
+        self, 
+        table: str, 
+        model: Type[BaseModel], 
+        filters: dict = None, 
+        limit: int = 100, 
+        select_fields: list[str] = None,
+        sort_by: str = None,
+        sort_order: str = "asc"
+    ) -> list[BaseModel]:
         if not self.supabase:
             self.connect()
         query = self.supabase.table(table)
@@ -50,6 +59,8 @@ class DbSupabase:
                     query = query.gte("created_at", value)
                 else:
                     query = query.eq(key, value)
+        if sort_by:
+            query = query.order(sort_by, desc=(sort_order == "desc"))
         result = query.limit(limit).execute()
         return [model(**item) for item in result.data] if result.data else []
 

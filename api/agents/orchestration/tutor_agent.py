@@ -9,8 +9,10 @@ from agents.base import OrchestrationAgent
 from agents.execution.practice_agent import PracticeAgent
 from agents.communication.interaction_agent import InteractionAgent
 from agents.execution.quiz_agent import QuizAgent
+from database.db_supabase import DbSupabase
+from models.schemas import JobData, LearningChatHistory
 from tasks.task_consumer import generate_practice_activity
-from constants.enum import TutorAgentStateEnum
+from constants.enum import ChatRoleEnum, TutorAgentStateEnum
 from core.rag_engine import DualSourceRAGEngine
 
 
@@ -32,11 +34,12 @@ class TutorAgent(OrchestrationAgent):
         Args:
             interaction_agent: InteractionAgent để giao tiếp với AI
         """
-        self.state = TutorAgentStateEnum.GREETING
+        self.state = TutorAgentStateEnum.EXPLAINING_WHAT
         self.interaction_agent = InteractionAgent()
         self.practice_agent = PracticeAgent(self.interaction_agent)
         self.quiz_agent = QuizAgent(self.interaction_agent)
         self.rag_engine = DualSourceRAGEngine()
+        self.db = DbSupabase()
         print(f"[{self.name}] Initialized with dependency injection")
         print(f"[{self.name}] InteractionAgent: {'✓ Connected' if self.interaction_agent else '✗ Not provided'}")
         print(f"[{self.name}] RAG Engine: ✓ Dual-source strategy enabled")
@@ -68,8 +71,18 @@ class TutorAgent(OrchestrationAgent):
             # 1. Tạo System Prompt chi tiết cho vai "Gia sư ALVA"
             persona_prompt = self._create_alva_persona(session_context)
             
+            chat_history = self.db.find_by(
+                'learning_chat_history', 
+                LearningChatHistory, 
+                filters={
+                    "chapter_id": session_context.get("chapter_id"),
+                    "user_id": session_context.get("user_id")
+                },
+                sort_by="created_at",
+                sort_order="desc",
+            )
+            
             # 2. Thực hiện RAG search (Primary: Curriculum, Secondary: Chat History)
-            chat_history = session_context.get("chat_history", [])
             rag_results = self.rag_engine.search_for_tutor(user_input, chat_history)
             
             # 3. Chuẩn bị context với RAG knowledge
@@ -81,7 +94,20 @@ class TutorAgent(OrchestrationAgent):
             
             # 4. Post-process response và chuẩn bị kết quả
             result = self._process_response(response_text, user_input, session_context)
-            
+            user_message: LearningChatHistory = LearningChatHistory(
+                chapter_id=session_context.get("chapter_id"),
+                user_id=session_context.get("user_id"),
+                role=ChatRoleEnum.USER,
+                content=user_input
+            )
+            alva_message: LearningChatHistory = LearningChatHistory(
+                chapter_id=session_context.get("chapter_id"),
+                user_id=session_context.get("user_id"),
+                role=ChatRoleEnum.ALVA,
+                content=result.get("response_text", "")
+            )
+            self.db.create("learning_chat_history", [user_message, alva_message])
+
             print(f"[{self.name}] Successfully orchestrated learning interaction")
             return result
             
@@ -212,6 +238,7 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         # Base context
         context = {
             "user_input": user_input,
+            "user_id": session_context.get("user_id", "unknown"),
             "current_lesson": session_context.get("current_lesson", "N/A"),
             "user_level": session_context.get("user_level", "beginner"),
             "learning_style": session_context.get("learning_style", "interactive")
@@ -259,11 +286,13 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         print(f"[{self.name}] State updated to: {self.state}")
         print(TutorAgentStateEnum.PRACTICING_WHAT.value)
         if int(self.state) == TutorAgentStateEnum.PRACTICING_WHAT.value:
-            result = generate_practice_activity.delay({"query": "hello world"})
+            job = JobData(
+                user_id=session_context.get("user_id", "unknown"),
+                context=session_context,
+            )
+            result = generate_practice_activity.delay({"job": job.model_dump()} )
 
             print("Task id:", result.id)
-
-
         
         return {
             "response_from": self.interaction_agent.name,
@@ -271,6 +300,7 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
             "status": "success",
             "metadata": {
                 "lesson": session_context.get("current_lesson"),
+                "state": self.state,
                 "user_input_length": len(user_input),
                 "response_length": len(santinized_response.get("response_text", "")),
                 "interaction_type": "learning_session",
