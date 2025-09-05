@@ -308,7 +308,7 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
                 "interaction_type": "learning_session",
                 "agent_chain": f"{self.name} -> {self.interaction_agent.name}"
             },
-            "suggestions": self._generate_follow_up_suggestions(user_input, session_context)
+            # "suggestions": self._generate_follow_up_suggestions(user_input, session_context)
         }
     
     def _generate_follow_up_suggestions(self, user_input: str, session_context: Dict[str, Any]) -> List[str]:

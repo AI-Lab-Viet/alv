@@ -8,11 +8,12 @@ from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from datetime import datetime
-import uvicorn
+import uvicorn, json
 from typing import Dict, Any
-
+from celery.result import AsyncResult
 from agents.orchestration.tutor_agent import TutorAgent
 from agents.orchestration.project_agent import ProjectAgent
+from tasks.celery_queue import celery_queue
 from database.redis import RedisComponent
 from constants.constants import TimeConstants
 from constants.enum import CacheKeys, JourneyEnum
@@ -398,6 +399,22 @@ def get_learning_chat_history(
         },
         limit=limit
     )
+
+@app.get("/task/{task_id}")
+def get_task_status(task_id: str):
+    """
+    Polling kết quả task
+    """
+    async_result = AsyncResult(task_id, app=celery_queue)
+    if async_result.ready():
+        result = async_result.result
+        try:
+            json.dumps(result)
+            return {"status": "SUCCESS", "result": result}
+        except Exception as e:
+            return {"status": "ERROR", "error": str(e), "raw_result": str(result)}
+    else:
+        return {"status": async_result.status}
 
 @app.get("/health",
          response_model=SystemHealth,
