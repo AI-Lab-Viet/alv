@@ -10,9 +10,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { DIFFICULTY } from "@/consts/common";
-import { Project } from "@/interfaces/project.interface";
+import { DetailedProject } from "@/interfaces/project.interface";
 import { Zap, ChevronRight, Clock, Users, Star, Link } from "lucide-react";
-const featuredProjects: Project[] = [
+const featuredProjects: DetailedProject[] = [
   {
     id: "c3356ab6-ecaf-4c14-b295-9140dd01bdc2",
     title: "Lập kế hoạch du lịch Việt Nam",
@@ -20,7 +20,11 @@ const featuredProjects: Project[] = [
       "Tạo lịch trình chi tiết cho chuyến du lịch 3 ngày 2 đêm tại Đà Nẵng",
     category: "Đời sống",
     difficulty: DIFFICULTY.NORMAL,
-    duration: "45 phút",
+    estimated_hours: "45 phút",
+    context: "Lập kế hoạch du lịch hiệu quả và tiết kiệm cho chuyến đi Đà Nẵng",
+    objectives: ["Tạo lịch trình 3 ngày 2 đêm", "Lựa chọn địa điểm tham quan"],
+    deliverables: ["Lịch trình chi tiết", "Danh sách chi phí ước tính"],
+    tips: ["Nghiên cứu thời tiết", "Đặt chỗ trước để có giá tốt"],
     participants: 1247,
     rating: 4.8,
     skills: ["Đặt câu hỏi", "Lập kế hoạch"],
@@ -33,7 +37,15 @@ const featuredProjects: Project[] = [
       "Nghiên cứu và viết bài luận 1000 từ về tác động của AI trong giáo dục Việt Nam",
     category: "Học thuật",
     difficulty: "Trung bình",
-    duration: "90 phút",
+    estimated_hours: "90 phút",
+    context:
+      "Phân tích tác động của công nghệ AI đối với hệ thống giáo dục Việt Nam",
+    objectives: [
+      "Viết bài luận 1000 từ",
+      "Phân tích tác động tích cực và tiêu cực",
+    ],
+    deliverables: ["Bài luận hoàn chỉnh", "Danh sách tài liệu tham khảo"],
+    tips: ["Tìm hiểu các ứng dụng AI hiện tại", "Sử dụng ví dụ cụ thể"],
     participants: 892,
     rating: 4.7,
     skills: ["Tư duy phản biện", "Nghiên cứu"],
@@ -46,7 +58,15 @@ const featuredProjects: Project[] = [
       "Xây dựng kế hoạch kinh doanh chi tiết cho quán cà phê tại thành phố Hồ Chí Minh",
     category: "Hướng nghiệp",
     difficulty: "Nâng cao",
-    duration: "120 phút",
+    estimated_hours: "120 phút",
+    context:
+      "Phát triển kế hoạch kinh doanh thực tế cho ngành F&B tại Việt Nam",
+    objectives: ["Xây dựng business plan", "Phân tích thị trường"],
+    deliverables: [
+      "Kế hoạch kinh doanh hoàn chỉnh",
+      "Bảng tính toán tài chính",
+    ],
+    tips: ["Nghiên cứu đối thủ cạnh tranh", "Xác định đúng target customer"],
     participants: 634,
     rating: 4.9,
     skills: ["Sáng tạo", "Phân tích"],

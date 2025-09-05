@@ -1,25 +1,12 @@
 import { DIFFICULTY } from "@/consts/common";
 
-export interface Project {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty: string;
-  duration: string;
-  participants: number;
-  rating: number;
-  skills: string[];
-  thumbnail: string;
-}
-
 export interface DetailedProject {
   id: string;
   title: string;
   description: string;
   category: string;
   difficulty: string;
-  duration: string;
+  estimated_hours: string;
   context: string;
   objectives: string[];
   deliverables: string[];
@@ -28,4 +15,5 @@ export interface DetailedProject {
   rating: number;
   skills: string[];
   thumbnail: string;
+  featured?: boolean;
 }

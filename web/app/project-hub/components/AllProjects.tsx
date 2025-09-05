@@ -1,23 +1,17 @@
 "use client";
 import AllProjectCard from "@/components/project-cards/AllProjectCard";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Project } from "@/interfaces/project.interface";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DetailedProject } from "@/interfaces/project.interface";
+import { getAllProject } from "@/services/projects.service";
 import {
-  Clock,
-  Users,
-  Star,
-  Link,
-  ChevronRight,
   BookOpen,
   Briefcase,
   GraduationCap,
   Home,
   Palette,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const projectCategories = [
   {
@@ -58,7 +52,7 @@ const projectCategories = [
   },
 ];
 
-const allProjects: Project[] = [
+const allProjects: DetailedProject[] = [
   {
     id: "recipe-creation",
     title: "Tạo công thức món ăn Việt",
@@ -66,7 +60,11 @@ const allProjects: Project[] = [
       "Phát triển công thức nấu ăn mới kết hợp ẩm thực truyền thống và hiện đại",
     category: "Sáng tạo",
     difficulty: "Cơ bản",
-    duration: "30 phút",
+    estimated_hours: "30 phút",
+    context: "Khám phá và tạo ra các món ăn Việt Nam độc đáo",
+    objectives: ["Tạo công thức mới", "Kết hợp truyền thống và hiện đại"],
+    deliverables: ["Công thức hoàn chỉnh", "Hướng dẫn nấu ăn"],
+    tips: ["Chú ý đến hương vị cân bằng", "Sử dụng nguyên liệu tươi"],
     participants: 756,
     rating: 4.6,
     skills: ["Nấu ăn", "Sáng tạo", "Lên ý tưởng"],
@@ -79,7 +77,15 @@ const allProjects: Project[] = [
       "Luyện tập câu hỏi phỏng vấn cho vị trí Marketing tại công ty công nghệ",
     category: "Hướng nghiệp",
     difficulty: "Trung bình",
-    duration: "60 phút",
+    estimated_hours: "60 phút",
+    context:
+      "Chuẩn bị cho phỏng vấn vị trí Marketing tại các công ty công nghệ",
+    objectives: [
+      "Luyện tập câu trả lời",
+      "Chuẩn bị câu hỏi cho nhà tuyển dụng",
+    ],
+    deliverables: ["Kịch bản phỏng vấn", "Danh sách câu hỏi"],
+    tips: ["Nghiên cứu công ty trước", "Chuẩn bị ví dụ cụ thể"],
     participants: 1123,
     rating: 4.8,
     skills: ["Giao tiếp", "Phân tích", "Marketing"],
@@ -91,7 +97,11 @@ const allProjects: Project[] = [
     description: "Sáng tác truyện ngắn 500 từ lấy bối cảnh phố cổ Hà Nội",
     category: "Sáng tạo",
     difficulty: "Trung bình",
-    duration: "75 phút",
+    estimated_hours: "75 phút",
+    context: "Khám phá và thể hiện vẻ đẹp của phố cổ Hà Nội qua văn chương",
+    objectives: ["Viết truyện ngắn 500 từ", "Thể hiện đặc trưng phố cổ"],
+    deliverables: ["Bản thảo truyện ngắn", "Bài phân tích bối cảnh"],
+    tips: ["Quan sát chi tiết môi trường", "Sử dụng ngôn ngữ sinh động"],
     participants: 445,
     rating: 4.5,
     skills: ["Viết lách", "Sáng tạo", "Biên tập"],
@@ -103,7 +113,11 @@ const allProjects: Project[] = [
     description: "Tạo kế hoạch chi tiêu hàng tháng cho sinh viên tại Hà Nội",
     category: "Đời sống",
     difficulty: "Cơ bản",
-    duration: "40 phút",
+    estimated_hours: "40 phút",
+    context: "Quản lý tài chính cá nhân hiệu quả cho sinh viên",
+    objectives: ["Tạo bảng chi tiêu", "Xác định mức tiết kiệm"],
+    deliverables: ["Bảng ngân sách Excel", "Kế hoạch tiết kiệm"],
+    tips: ["Theo dõi chi tiêu hàng ngày", "Ưu tiên các khoản chi cần thiết"],
     participants: 987,
     rating: 4.7,
     skills: ["Quản lý tài chính", "Lập kế hoạch", "Excel"],
@@ -112,13 +126,14 @@ const allProjects: Project[] = [
 ];
 
 export default function AllProjects() {
-  const [listProject, setListProject] = useState<Project[]>(allProjects);
+  const [fetchedProject, setFetchedProject] = useState<DetailedProject[]>([]);
+  const [listProject, setListProject] = useState<DetailedProject[]>([]);
   function handleTabChange(category: string) {
     if (category === "all") {
-      setListProject(allProjects);
+      setListProject(fetchedProject);
     } else {
       setListProject(
-        allProjects.filter((project) => project.category === category)
+        fetchedProject.filter((project) => project.category === category)
       );
     }
   }
@@ -145,6 +160,7 @@ export default function AllProjects() {
     if (listProject.length === 0) {
       return <div className="text-center py-12">Không có dự án nào.</div>;
     }
+    console.log(listProject);
     return (
       <div className="grid md:grid-cols-2 gap-6">
         {listProject.map((project) => (
@@ -153,6 +169,16 @@ export default function AllProjects() {
       </div>
     );
   }, [listProject]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const projectsData = await getAllProject({});
+      console.log(projectsData);
+      setFetchedProject(projectsData);
+      setListProject(projectsData);
+    };
+    fetchProjects();
+  }, []);
 
   return (
     <section>

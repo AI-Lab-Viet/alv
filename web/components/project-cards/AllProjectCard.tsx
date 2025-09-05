@@ -1,11 +1,15 @@
-import { Project } from "@/interfaces/project.interface";
+import { DetailedProject } from "@/interfaces/project.interface";
 import { Card, CardContent } from "../ui/card";
 import { Clock, Users, Star, ChevronRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import Link from "next/link";
 
-export default function AllProjectCard({ project }: { project: Project }) {
+export default function AllProjectCard({
+  project,
+}: {
+  project: DetailedProject;
+}) {
   return (
     <Card
       key={project.id}
@@ -37,11 +41,11 @@ export default function AllProjectCard({ project }: { project: Project }) {
         <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            {project.duration}
+            {project.estimated_hours}
           </span>
           <span className="flex items-center gap-1">
             <Users className="w-4 h-4" />
-            {project.participants.toLocaleString()}
+            {project.participants.toString()}
           </span>
           <span className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />

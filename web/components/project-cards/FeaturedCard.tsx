@@ -3,7 +3,7 @@ import { Clock, Users, Star, Link, ChevronRight, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
-import { Project } from "@/interfaces/project.interface";
+import { DetailedProject } from "@/interfaces/project.interface";
 import {
   CarouselContent,
   CarouselItem,
@@ -13,7 +13,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 
-export default function FeaturedCard({ project }: { project: Project }) {
+export default function FeaturedCard({
+  project,
+}: {
+  project: DetailedProject;
+}) {
   const router = useRouter();
   return (
     <CarouselItem
