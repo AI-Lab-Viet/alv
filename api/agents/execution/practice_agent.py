@@ -5,8 +5,12 @@ Phiên bản nâng cấp với AI integration để tạo bài tập động.
 """
 
 import json
+import random
+import re
 from typing import Dict, Any
 from agents.base import ExecutionAgent
+from models.schemas import JobData
+from constants.enum import InteractionTypeEnum
 
 
 class PracticeAgent(ExecutionAgent):
@@ -30,8 +34,8 @@ class PracticeAgent(ExecutionAgent):
         self.interaction_agent = interaction_agent
         print(f"[{self.name}] Initialized for AI-powered practice exercise generation")
         print(f"[{self.name}] InteractionAgent: {'✓ Connected' if interaction_agent else '✗ Not provided'}")
-    
-    async def execute(self, params: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def execute(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Thực thi việc tạo bài tập thực hành với AI.
         
@@ -42,12 +46,12 @@ class PracticeAgent(ExecutionAgent):
             Dict chứa bài tập thực hành được AI tạo
         """
         print(f"[{self.name}] 🎯 Generating AI-powered practice exercise...")
-        print(f"[{self.name}] Parameters: {params}")
+        print(f"[{self.name}] Parameters: {data}")
         
-        topic = params.get('topic', 'Chủ đề tổng quát')
-        difficulty_level = params.get('difficulty_level', 'beginner')
-        exercise_type = params.get('exercise_type', 'coding')
-        lesson_content = params.get('lesson_content', 'Nội dung bài học')
+        topic = data.get('context').get('topic', 'Chủ đề chung')
+        difficulty_level = data.get('context').get('difficulty_level', 'beginner')
+        exercise_type = random.choice([e.value for e in InteractionTypeEnum])
+        lesson_content = data.get('context').get('lesson_content', 'Nội dung bài học')
 
         if not self.interaction_agent:
             print(f"[{self.name}] No InteractionAgent available, using fallback...")
@@ -108,7 +112,6 @@ có tính ứng dụng, và theo đúng định dạng JSON để hệ thống c
 
 === THÔNG TIN BÀI TẬP ===
 Chủ đề: {topic}
-Độ khó: {difficulty_level}
 Loại bài tập: {exercise_type}   # Một trong các loại: identify_error, free_text_response, categorize_error
 Yêu cầu về nội dung: Phù hợp với ngữ cảnh bài học, không quá dễ hoặc quá khó.
 
@@ -150,9 +153,10 @@ Chỉ trả lời bằng JSON hợp lệ cho loại {exercise_type}.
         # Gọi AI
         context = {
             "user_input": f"Tạo bài tập thực hành về {topic}",
+            "current_lesson": lesson_content,
             "exercise_requirements": {
                 "topic": topic,
-                "difficulty": difficulty_level,
+                # "difficulty": difficulty_level,
                 "type": exercise_type,
                 "content": lesson_content
             }
@@ -166,6 +170,10 @@ Chỉ trả lời bằng JSON hợp lệ cho loại {exercise_type}.
         
         # Parse JSON response
         try:
+            match = re.search(r"```json\s*(.*?)\s*```", ai_response, re.DOTALL)
+            if match:
+                ai_response = match.group(1).strip()
+
             exercise_data = json.loads(ai_response)
             return exercise_data
         except json.JSONDecodeError:

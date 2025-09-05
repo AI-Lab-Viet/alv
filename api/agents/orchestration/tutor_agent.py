@@ -92,6 +92,7 @@ class TutorAgent(OrchestrationAgent):
             print(f"[{self.name}] Calling InteractionAgent for AI response...")
             response_text = self.interaction_agent.communicate(persona_prompt, context, chat_history)
             
+            session_context["current_lesson"] = context.get("current_lesson", "N/A")
             # 4. Post-process response và chuẩn bị kết quả
             result = self._process_response(response_text, user_input, session_context)
             user_message: LearningChatHistory = LearningChatHistory(
@@ -130,7 +131,7 @@ class TutorAgent(OrchestrationAgent):
         Returns:
             System prompt hoàn chỉnh
         """
-        current_lesson = session_context.get("topic", "Nền tảng tư duy AI Lab Việt")
+        topic = session_context.get("topic", "Nền tảng tư duy AI Lab Việt")
         user_level = session_context.get("user_level", "Trung bình")
         learning_style = session_context.get("learning_style", "Tương tác")
         
@@ -145,9 +146,10 @@ Bạn là ALVA (AI Learning & Virtual Assistant), gia sư AI thông minh và th�
 - Tạo không khí học tập tích cực và thú vị
 
 === BÀI HỌC HIỆN TẠI ===
-Chủ đề: {current_lesson}
+Chủ đề: {topic}
 Cấp độ học viên: {user_level}
 Phong cách học: {learning_style}
+Nội dụng bài học: 
 
 === ĐÁNH GIÁ TIẾN TRÌNH HỌC TẬP ===
 Bạn phải luôn đánh giá xem học viên đang ở bước nào trong flow học tập:
@@ -239,7 +241,7 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         context = {
             "user_input": user_input,
             "user_id": session_context.get("user_id", "unknown"),
-            "current_lesson": session_context.get("current_lesson", "N/A"),
+            "current_lesson": rag_results.get("curriculum_knowledge", [{}]),
             "user_level": session_context.get("user_level", "beginner"),
             "learning_style": session_context.get("learning_style", "interactive")
         }

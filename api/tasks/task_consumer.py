@@ -18,7 +18,7 @@ def generate_practice_activity(job: Dict[str, Any]):
     agent: PracticeAgent = AGENT_REGISTRY.get("practice")
     print(f"[PracticeTask] Received job: {job}")
 
-    result = asyncio.run(agent.execute(job))
+    result = asyncio.run(agent.execute(job.get("job")))
 
     print(f"[PracticeTask] Result: {result}")
     return result
