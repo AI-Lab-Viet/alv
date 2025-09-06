@@ -1,121 +1,163 @@
-export const mockAgentResponses: Record<number, {
-  state: number;
-  response_text: string;
-  task_id?: string;
-  progress?: number;
-  chapter_data?: any;
-}> = {
-  // GREETING = 0
+export const mockAgentResponses: Record<
+  number,
+  {
+    state: number;
+    response_text: string;
+    task_id?: string;
+    progress?: number;
+    chapter_data?: any;
+    interactive_content?: any;
+  }
+> = {
+  // Step 1: Greeting from Master
   0: {
     state: 0,
-    response_text: "Xin chào! Tôi là ALVA, trợ lý AI của AI Lab Việt. Tôi sẽ đồng hành cùng bạn trong hành trình học tập. Bạn đã sẵn sàng khám phá chương này chưa?",
+    response_text:
+      "Chào mừng Phong đến với võ đường 'Nghệ thuật Nhận định'! Đây là nơi chúng ta rèn luyện kỹ năng biến bạn từ một người dùng AI thành một người dẫn dắt AI: tư duy phản biện. Sẵn sàng chưa?",
     progress: 0
   },
-  
-  // EXPLAINING_WHAT = 1
+
+  // Step 2: Teaching "Bộ câu hỏi Vàng"
   1: {
     state: 1,
-    response_text: "Tuyệt vời! Chúng ta sẽ bắt đầu với việc tìm hiểu khái niệm cơ bản của chương này.",
+    response_text:
+      "Tuyệt vời! Một nhà phản biện giỏi luôn có một bộ công cụ sắc bén. Để đánh giá sản phẩm của AI, chúng ta sẽ dùng 'Bộ câu hỏi Vàng'. Bạn hãy xem ở bên phải nhé.",
     progress: 15,
     chapter_data: {
-      title: "Khái niệm Cơ bản",
-      concept: "Hiểu rõ nền tảng",
-      definition: "Đây là những kiến thức nền tảng bạn cần nắm vững để tiếp tục học tập hiệu quả.",
-      key_points: [
-        "Xác định vai trò của bạn trong quá trình học",
-        "Hiểu cách thức hoạt động của AI",
-        "Nắm vững các nguyên tắc cơ bản"
-      ],
-      explanation: "Việc hiểu rõ những khái niệm cơ bản sẽ giúp bạn xây dựng nền tảng vững chắc cho những kiến thức phức tạp hơn."
+      title: 'Bộ câu hỏi Vàng',
+      questions: [
+        '1. Tính chính xác: Thông tin có đúng sự thật không?',
+        '2. Độ Phù hợp: Có phù hợp với đối tượng và mục đích không?',
+        '3. Độ Mạch lạc: Có logic và dễ hiểu không?',
+        '4. Tính Đáp ứng: Có đủ các yêu cầu đã nêu không?',
+        '5. Giá trị Gia tăng: Có mang lại điều bất ngờ tích cực không?'
+      ]
     }
   },
 
-  // PRACTICING_WHAT = 2
+  // Step 3: Practice 1 - Action 1 (Find error)
   2: {
     state: 2,
-    response_text: "Bây giờ hãy thực hành những gì chúng ta vừa học! Tôi đã chuẩn bị một bài tập thú vị cho bạn.",
-    task_id: "practice_basic_001",
-    progress: 30
+    response_text:
+      'Giờ hãy dùng chính bộ câu hỏi đó để thực hành. Hãy tìm và click vào cụm từ sai trong đoạn văn ở bên phải.',
+    progress: 30,
+    interactive_content: {
+      type: 'clickable_text',
+      text: 'Vua Quang Trung, một trong những vị tướng vĩ đại nhất lịch sử, đã đại phá 29 vạn quân Thanh vào mùa hè rực lửa năm 1789',
+      correct_answer: 'mùa hè rực lửa năm 1789',
+      clickable_words: [
+        'Vua Quang Trung',
+        'mùa hè rực lửa năm 1789',
+        '29 vạn quân Thanh',
+        'đại phá'
+      ]
+    }
   },
 
-  // FEEDBACK_WHAT = 3
+  // Step 3: Practice 1 - Action 2 (Identify criteria violation)
   3: {
     state: 3,
-    response_text: "Tuyệt vời! Bạn đã hoàn thành bài tập rất tốt. Hãy tiếp tục với phần tiếp theo.",
-    progress: 45
+    response_text:
+      "Chính xác! Bạn đã tìm ra được lỗi sai. Giờ hãy cho tôi biết, lỗi sai này vi phạm tiêu chí nào trong 'Bộ câu hỏi Vàng'?",
+    progress: 40,
+    interactive_content: {
+      type: 'multiple_choice',
+      options: ['Tính chính xác', 'Độ Phù hợp', 'Độ Mạch lạc', 'Tính Đáp ứng', 'Giá trị Gia tăng'],
+      correct_answer: 'Tính chính xác'
+    }
   },
 
-  // EXPLAINING_WHY = 4
+  // Step 4: Feedback & Transition
   4: {
     state: 4,
-    response_text: "Bây giờ chúng ta sẽ tìm hiểu TẠI SAO những kiến thức này lại quan trọng.",
-    progress: 60,
-    chapter_data: {
-      title: "Tầm Quan Trọng",
-      concept: "Hiểu lý do",
-      definition: "Việc hiểu rõ lý do giúp bạn áp dụng kiến thức một cách có ý thức và hiệu quả.",
-      explanation: "Khi bạn hiểu được 'tại sao', bạn sẽ có động lực học tập mạnh mẽ hơn và ghi nhớ kiến thức lâu dài hơn.",
-      example: "Ví dụ: Hiểu tại sao cần học cách giao tiếp với AI sẽ giúp bạn chủ động cải thiện kỹ năng này."
-    }
+    response_text:
+      "Hoàn hảo! Bạn không chỉ tìm ra được lỗi sai, mà còn xác định đúng vấn đề cốt lõi là 'Tính Chính xác'. Đây chính là tư duy của một nhà phản biện. Giờ hãy đến với 'thế võ' tiếp theo.",
+    progress: 50
   },
 
-  // PRACTICING_WHY = 5
+  // Step 5: Teaching "Red Flags"
   5: {
     state: 5,
-    response_text: "Hãy phân tích một tình huống thực tế để hiểu rõ hơn về tầm quan trọng của những kiến thức này.",
-    task_id: "analysis_importance_002",
-    progress: 75
-  },
-
-  // FEEDBACK_WHY = 6
-  6: {
-    state: 6,
-    response_text: "Phân tích của bạn rất sâu sắc! Bạn đã nắm vững được tầm quan trọng của vấn đề.",
-    progress: 85
-  },
-
-  // EXPLAINING_HOW = 7
-  7: {
-    state: 7,
-    response_text: "Cuối cùng, chúng ta sẽ học cách áp dụng những kiến thức này vào thực tế.",
-    progress: 90,
+    response_text:
+      "Một nhà phản biện giỏi không chỉ nhìn vào kết quả, họ còn phân tích cả quá trình. Hãy học cách nhận diện các 'cờ đỏ' (red flags) trong tư duy của AI ở bên phải.",
+    progress: 60,
     chapter_data: {
-      title: "Cách Thực Hiện",
-      concept: "Áp dụng thực tế",
-      definition: "Những bước cụ thể để áp dụng kiến thức vào công việc và cuộc sống hàng ngày.",
-      steps: [
-        "Bước 1: Xác định tình huống cần áp dụng",
-        "Bước 2: Chọn phương pháp phù hợp",
-        "Bước 3: Thực hiện và đánh giá kết quả",
-        "Bước 4: Điều chỉnh và cải thiện"
-      ],
-      example: "Ví dụ: Áp dụng kỹ năng giao tiếp với AI để viết email chuyên nghiệp."
+      title: "Các 'Cờ đỏ' trong tư duy AI",
+      red_flags: [
+        'Mâu thuẫn logic (Logical inconsistency): Lập luận ở đầu và cuối câu trái ngược nhau',
+        'Lặp lại vòng tròn (Circular reasoning): Dùng chính kết luận để làm luận điểm',
+        'Bỏ qua các bước quan trọng (Inappropriate steps): Đi thẳng đến kết luận mà không có các bước phân tích cần thiết'
+      ]
     }
   },
 
-  // QUIZ = 8
-  8: {
-    state: 8,
-    response_text: "Bây giờ chúng ta sẽ kiểm tra kiến thức của bạn thông qua một bài quiz ngắn.",
-    task_id: "quiz_chapter_final",
-    progress: 95
+  // Practice "Red Flags"
+  6: {
+    state: 6,
+    response_text: "Thử thách nhỏ nhé! Đoạn văn ở bên phải đang mắc phải 'cờ đỏ' nào?",
+    progress: 65,
+    interactive_content: {
+      type: 'text_analysis',
+      content:
+        'AI không thể sáng tạo, nó chỉ lặp lại dữ liệu. Vì vậy, AI là một công cụ tuyệt vời để tạo ra những ý tưởng hoàn toàn mới và sáng tạo.',
+      expected_answer: 'Mâu thuẫn logic'
+    }
   },
 
-  // COMPLETION = 9
+  // Step 6: Teaching "Công thức Phản hồi"
+  7: {
+    state: 7,
+    response_text:
+      "Khi đã tìm ra lỗi, chúng ta cần tinh chỉnh 'NHƯ THẾ NÀO'. Hãy xem 'Công thức Phản hồi' ở bên phải, đây là vũ khí tối thượng của bạn.",
+    progress: 70,
+    chapter_data: {
+      title: 'Công thức Phản hồi 4 bước',
+      steps: [
+        '1. Chỉ rõ vấn đề: Xác định cụ thể lỗi sai',
+        '2. Giải thích tại sao nó là vấn đề: Nêu lý do',
+        '3. Đưa ra gợi ý cải thiện cụ thể: Hướng dẫn sửa',
+        '4. Cập nhật lại câu lệnh gốc (nếu cần): Điều chỉnh hướng dẫn'
+      ]
+    }
+  },
+
+  // Practice "Công thức Phản hồi"
+  8: {
+    state: 8,
+    response_text:
+      "Giờ hãy áp dụng công thức này để sửa lỗi về 'Vua Quang Trung' mà chúng ta đã tìm ra lúc nãy. Hãy viết một phản hồi đầy đủ 4 bước vào ô chat.",
+    progress: 80,
+    interactive_content: {
+      type: 'text_input',
+      prompt: "Áp dụng Công thức Phản hồi 4 bước cho lỗi 'mùa hè rực lửa năm 1789'"
+    }
+  },
+
+  // Step 7: Final Test
   9: {
     state: 9,
-    response_text: "Chúc mừng! Bạn đã hoàn thành chương học này một cách xuất sắc.",
+    response_text:
+      "Bạn đã có đủ vũ khí. Giờ là lúc cho 'trận đấu tính điểm'! Hãy áp dụng 'Công thức Phản hồi' 4 bước cho tình huống ở bên phải.",
+    progress: 90,
+    interactive_content: {
+      type: 'final_test',
+      scenario:
+        "ALVA đã viết: 'Nhà thơ Tố Hữu là một trong những gương mặt tiêu biểu của phong trào Thơ mới.' Hãy viết một yêu cầu hoàn chỉnh để hướng dẫn ALVA sửa lại.",
+      prompt: 'Viết phản hồi theo Công thức 4 bước'
+    }
+  },
+
+  // Step 8: Completion
+  10: {
+    state: 10,
+    response_text:
+      'Một phản hồi hoàn hảo! Bạn đã hoàn toàn làm chủ Nghệ thuật Nhận định! Chúc mừng bạn đã hoàn thành chặng này!',
     progress: 100,
     chapter_data: {
       completion: {
-        score: 92,
-        badge: "Knowledge Master",
-        next_chapter: "Chương tiếp theo",
-        achievements: [
-          "Nắm vững kiến thức cơ bản",
-          "Hiểu rõ tầm quan trọng của vấn đề",
-          "Biết cách áp dụng vào thực tế"
-        ]
+        badge: 'Discernment Shield',
+        achievement: 'Nghệ thuật Nhận định - Hoàn thành',
+        next_action: 'Quay về Bản đồ Hành trình'
       }
     }
   }
