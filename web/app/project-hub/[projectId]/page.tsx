@@ -1,7 +1,12 @@
+"use client";
+import MissionPageSkeletion from "@/components/skeleton/MissionPageSkeletion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useChatSession } from "@/contexts/chat-session-context";
 import { projectData } from "@/data/mockdata";
+import { DetailedProject } from "@/interfaces/project.interface";
+import { getProjectById } from "@/services/projects.service";
 import {
   AlertCircle,
   CheckCircle,
@@ -14,20 +19,60 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-interface PageProps {
-  params: Promise<{
-    projectId: string;
-  }>;
-}
+export default function ProjectDetailPage() {
+  const params = useParams();
+  const missionId =
+    typeof params.projectId === "string" ? params.projectId : undefined;
+  const [project, setProject] = useState<DetailedProject>();
+  const [isStartingSession, setIsStartingSession] = useState(false);
+  const router = useRouter();
+  const { startNewSession, sessionId } = useChatSession();
 
-export default async function ProjectDetailPage(props: PageProps) {
-  const params = await props.params;
-  const project = projectData.find((p) => p.id === params.projectId);
+  const handleStartProject = async () => {
+    if (!missionId) {
+      console.error("Mission ID is undefined");
+      return;
+    }
+    try {
+      setIsStartingSession(true);
+      await startNewSession(missionId);
+      // sessionId will be set in the context and useEffect will handle navigation
+    } catch (error) {
+      console.error("Error starting new session:", error);
+      setIsStartingSession(false);
+    }
+  };
 
+  // Navigate when sessionId becomes available
+  useEffect(() => {
+    if (isStartingSession && sessionId) {
+      router.push(`/ai-lab/${sessionId}`);
+      setIsStartingSession(false);
+    }
+  }, [sessionId, isStartingSession, router]);
+
+  useEffect(() => {
+    async function fetchProject() {
+      if (!missionId) {
+        notFound();
+        return;
+      }
+      try {
+        const response = await getProjectById({ missionId });
+        console.log(response);
+        setProject(response);
+      } catch (error) {
+        console.error("Failed to fetch project:", error);
+        notFound();
+      }
+    }
+    fetchProject();
+  }, [missionId]);
   if (!project) {
-    notFound();
+    return <MissionPageSkeletion />;
   }
 
   return (
@@ -70,7 +115,7 @@ export default async function ProjectDetailPage(props: PageProps) {
               <div className="flex items-center gap-4 text-xs text-gray-600">
                 <span className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  {project.duration}
+                  {project.estimated_hours} giờ
                 </span>
                 <span className="flex items-center gap-1">
                   <Users className="w-4 h-4" />
@@ -89,7 +134,7 @@ export default async function ProjectDetailPage(props: PageProps) {
             <p className="text-xl text-gray-700 mb-6">{project.description}</p>
 
             <div className="flex flex-wrap gap-2 mb-8">
-              {project.skills.map((skill) => (
+              {project.skills_required.map((skill) => (
                 <Badge
                   key={skill}
                   variant={"outline"}
@@ -125,15 +170,14 @@ export default async function ProjectDetailPage(props: PageProps) {
               </CardContent>
             </Card>
             <div className="mt-auto">
-              <Link href={`/ai-lab/${params.projectId}`}>
-                <Button
-                  size="lg"
-                  className="gap-2 bg-gradient-to-r from-sky-300 to-blue-500 hover:from-sky-400 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <Play className="w-5 h-5" />
-                  Bắt đầu trong AI Lab
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="gap-2 bg-gradient-to-r from-sky-300 to-blue-500 hover:from-sky-400 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={handleStartProject}
+              >
+                <Play className="w-5 h-5" />
+                Bắt đầu trong AI Lab
+              </Button>
             </div>
           </div>
         </div>
@@ -174,7 +218,7 @@ export default async function ProjectDetailPage(props: PageProps) {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {project.objectives.map((objective, index) => (
+                      {project.learning_objectives.map((objective, index) => (
                         <li key={index} className="flex items-start gap-3">
                           <CheckCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
                           <span className="text-gray-700">{objective}</span>

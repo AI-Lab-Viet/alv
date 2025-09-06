@@ -1,6 +1,4 @@
 export interface Message {
-  id: string;
-  content: string;
+  message: string;
   sender: "user" | "ai";
-  timestamp: Date;
 }

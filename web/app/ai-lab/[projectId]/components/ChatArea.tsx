@@ -9,7 +9,6 @@ import ProjectSidebar from "./ProjectSidebar";
 interface ChatAreaProps {
   messages: Message[];
   isLoading: boolean;
-  messagesEndRef: React.RefObject<HTMLDivElement | null>;
   inputValue: string;
   setInputValue: (value: string) => void;
   onSendMessage: () => void;
@@ -21,7 +20,6 @@ interface ChatAreaProps {
 export default function ChatArea({
   messages,
   isLoading,
-  messagesEndRef,
   inputValue,
   setInputValue,
   onSendMessage,
@@ -50,11 +48,7 @@ export default function ChatArea({
           </CardHeader>
 
           <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-            <Chats
-              messages={messages}
-              isLoading={isLoading}
-              messagesEndRef={messagesEndRef}
-            />
+            <Chats messages={messages} isLoading={isLoading} />
             <ChatInput
               inputValue={inputValue}
               setInputValue={setInputValue}

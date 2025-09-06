@@ -63,13 +63,13 @@ export default function ProjectSidebar({
               <CardTitle className="text-md flex items-center gap-2">
                 <span className=" font-semibold">
                   Mục tiêu ({completedObjectives.length}/
-                  {project.objectives.length})
+                  {project.learning_objectives.length})
                 </span>
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               <ul className="space-y-2">
-                {project.objectives.map((objective, index) => (
+                {project.learning_objectives.map((objective, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <button
                       onClick={() => onCompleteObjective(index)}

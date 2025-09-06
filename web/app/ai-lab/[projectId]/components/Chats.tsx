@@ -1,24 +1,41 @@
+"use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Message } from "@/interfaces/chat.interface";
 import { Bot, User } from "lucide-react";
+import { useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export default function Chats({
   messages,
   isLoading,
-  messagesEndRef,
 }: {
   messages: Message[];
   isLoading: boolean;
-  messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    };
+
+    // Small delay to ensure DOM is updated
+    const timeoutId = setTimeout(scrollToBottom, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [messages, isLoading]); // Trigger on messages change or loading state change
   return (
     <ScrollArea className="flex-1 p-4">
       <div className="space-y-4">
         {messages.map((message) => (
           <div
-            key={message.id}
+            key={Math.random().toString(36).substring(7)}
             className={`flex gap-3 ${
               message.sender === "user" ? "justify-end" : "justify-start"
             }`}
@@ -59,18 +76,8 @@ export default function Chats({
                   ),
                 }}
               >
-                {message.content}
+                {message.message}
               </ReactMarkdown>
-              <div
-                className={`text-xs mt-2 ${
-                  message.sender === "user" ? "text-slate-200" : "text-gray-500"
-                }`}
-              >
-                {message.timestamp.toLocaleTimeString("vi-VN", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
             </div>
 
             {message.sender === "user" && (

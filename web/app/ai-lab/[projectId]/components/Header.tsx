@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { DetailedProject } from "@/interfaces/project.interface";
 import { ChevronLeft, Clock, Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { DetailedProject } from "@/data/mockdata";
 
 interface HeaderProps {
   project: DetailedProject;
