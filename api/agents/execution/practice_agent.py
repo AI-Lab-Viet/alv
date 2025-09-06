@@ -9,8 +9,9 @@ import random
 import re
 from typing import Dict, Any
 from agents.base import ExecutionAgent
-from models.schemas import JobData
-from constants.enum import InteractionTypeEnum
+from database.db_supabase import DbSupabase
+from models.schemas import LearningActivity
+from constants.enum import InteractionTypeEnum, TutorAgentStateEnum
 
 
 class PracticeAgent(ExecutionAgent):
@@ -32,6 +33,7 @@ class PracticeAgent(ExecutionAgent):
             interaction_agent: InteractionAgent để giao tiếp với AI
         """
         self.interaction_agent = interaction_agent
+        self.db = DbSupabase()
         print(f"[{self.name}] Initialized for AI-powered practice exercise generation")
         print(f"[{self.name}] InteractionAgent: {'✓ Connected' if interaction_agent else '✗ Not provided'}")
 
@@ -49,43 +51,38 @@ class PracticeAgent(ExecutionAgent):
         print(f"[{self.name}] Parameters: {data}")
         
         topic = data.get('context').get('topic', 'Chủ đề chung')
-        difficulty_level = data.get('context').get('difficulty_level', 'beginner')
+        state = data.get('state', 2)
+
+        exercise_scope = 'WHAT' if state == TutorAgentStateEnum.PRACTICING_WHAT.value else 'WHY'
+        chapter_id = data.get('context').get('chapter_id', 'Chủ đề chung')
         exercise_type = random.choice([e.value for e in InteractionTypeEnum])
         lesson_content = data.get('context').get('lesson_content', 'Nội dung bài học')
 
         if not self.interaction_agent:
             print(f"[{self.name}] No InteractionAgent available, using fallback...")
-            return self._create_fallback_exercise(topic, difficulty_level, exercise_type, lesson_content)
+            return self._create_fallback_exercise(topic, chapter_id, exercise_type)
         
         try:
             # Tạo exercise với AI
-            ai_exercise = await self._generate_ai_exercise(topic, difficulty_level, exercise_type, lesson_content)
-
-            # Enhance với metadata
-            exercise_id = f"practice_{topic.lower().replace(' ', '_')}_{difficulty_level}_{exercise_type}"
+            ai_exercise = await self._generate_ai_exercise(topic, exercise_scope, exercise_type, lesson_content)
             
-            result = {
-                "exercise_id": exercise_id,
-                "generated_by": "AI",
-                "ai_exercise": ai_exercise,
-                "metadata": {
-                    "topic": topic,
-                    "difficulty_level": difficulty_level,
-                    "exercise_type": exercise_type,
-                    "lesson_content": lesson_content,
-                    "generated_at": "2024-01-01T12:00:00Z"  # Placeholder
-                }
-            }
+            activity = LearningActivity(
+                chapter_id=chapter_id,
+                activity_type=ai_exercise.get('type', 'general_exercise'),
+                content=ai_exercise
+            )
+            
+            self.db.create('activities', [activity])
             
             print(f"[{self.name}] ✅ Successfully generated AI exercise for topic: {topic}")
-            return result
+            return ai_exercise
             
         except Exception as e:
             print(f"[{self.name}] ❌ Error generating AI exercise: {str(e)}")
             print(f"[{self.name}] Falling back to structured exercise...")
-            return self._create_fallback_exercise(topic, difficulty_level, exercise_type, lesson_content)
+            return self._create_fallback_exercise(topic, chapter_id, exercise_type)
 
-    async def _generate_ai_exercise(self, topic: str, difficulty_level: str,
+    async def _generate_ai_exercise(self, topic: str, excercise_cope: str,
                                      exercise_type: str, lesson_content: str) -> Dict[str, Any]:
         """
         Sử dụng AI để tạo bài tập thực hành.
@@ -112,6 +109,7 @@ có tính ứng dụng, và theo đúng định dạng JSON để hệ thống c
 
 === THÔNG TIN BÀI TẬP ===
 Chủ đề: {topic}
+Pham vi bài tập: {excercise_cope}   # WHAT hoặc WHY
 Loại bài tập: {exercise_type}   # Một trong các loại: identify_error, free_text_response, categorize_error
 Yêu cầu về nội dung: Phù hợp với ngữ cảnh bài học, không quá dễ hoặc quá khó.
 
@@ -126,8 +124,9 @@ Yêu cầu về nội dung: Phù hợp với ngữ cảnh bài học, không qu�
 Nếu exercise_type = "identify_error":
 {{
   "type": "identify_error",
-  "text": "Một đoạn văn bản (có 1 chỗ sai được đánh dấu bằng <error>...</error>).",
-  "correct_answer": "Chuỗi text sai"
+  "text": "Một đoạn văn bản",
+  "correct_answer": "Chuỗi text sai",
+  "clickable_words": ["Option 1", "Option 2", "Option 3"]
 }}
 
 Nếu exercise_type = "free_text_response":
@@ -189,9 +188,8 @@ Chỉ trả lời bằng JSON hợp lệ cho loại {exercise_type}.
                 "ai_generated_content": ai_response,
                 "note": "Nội dung được AI tạo nhưng không parse được JSON"
             }
-    
-    def _create_fallback_exercise(self, topic: str, difficulty_level: str, 
-                                exercise_type: str, lesson_content: str) -> Dict[str, Any]:
+
+    def _create_fallback_exercise(self, topic: str, chapter_id: str, exercise_type: str) -> Dict[str, Any]:
         """
         Tạo bài tập fallback khi không có AI.
         
@@ -204,37 +202,16 @@ Chỉ trả lời bằng JSON hợp lệ cho loại {exercise_type}.
         Returns:
             Bài tập fallback có cấu trúc
         """
-        exercise_id = f"practice_{topic.lower().replace(' ', '_')}_{difficulty_level}_{exercise_type}"
         
-        return {
-            "exercise_id": exercise_id,
-            "generated_by": "fallback",
-            "title": f"Bài tập thực hành: {topic}",
-            "description": f"Bài tập thực hành về {topic} ở mức độ {difficulty_level}",
-            "difficulty_level": difficulty_level,
-            "exercise_type": exercise_type,
-            "lesson_content": lesson_content,
-            "instructions": [
-                "Bước 1: Đọc hiểu yêu cầu bài tập",
-                "Bước 2: Phân tích bài toán và xác định approach",
-                "Bước 3: Thiết kế giải pháp chi tiết",
-                "Bước 4: Implement và test giải pháp"
-            ],
-            "learning_objectives": [
-                f"Hiểu sâu về {topic}",
-                "Phát triển kỹ năng giải quyết vấn đề",
-                "Thực hành coding/design skills"
-            ],
-            "evaluation_criteria": [
-                "Tính chính xác của giải pháp",
-                "Chất lượng code/design",
-                "Hiệu suất và optimization",
-                "Tính đọc hiểu và maintainability"
-            ],
-            "resources": [
-                "Tài liệu tham khảo chính thức",
-                "Best practices và coding standards",
-                "Ví dụ và case studies"
-            ],
-            "note": "Đây là bài tập fallback được tạo tự động"
-        }
+        exercise: list[LearningActivity] = self.db.find_by(
+            'activities', LearningActivity, 
+            filters={
+                "chapter_id": chapter_id,
+                "activity_type": exercise_type
+            }, 
+            limit=1
+        )
+        
+        if exercise:
+            print(f"[{self.name}] Found existing exercise in DB for topic: {topic}")
+            return json.loads(exercise[0].content)

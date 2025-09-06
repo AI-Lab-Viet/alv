@@ -57,20 +57,20 @@ class LearningRequest(BaseModel):
     """Schema cho request học tập cụ thể."""
     topic: str = Field(..., description="Chủ đề học tập")
     query: str = Field(..., description="Câu hỏi hoặc yêu cầu học tập cụ thể")
-    # difficulty_level: DifficultyEnum = Field(default=DifficultyEnum.BEGINNER)
-    # learning_goals: List[str] = Field(default_factory=list)
-    # time_budget_minutes: Optional[int] = Field(None, description="Thời gian học dự kiến (phút)")
+    current_state: int = Field(1, description="Trạng thái hiện tại của quá trình học tập")
+    user_id: str = Field(..., description="ID người dùng")
+    chapter_id: str = Field(..., description="ID chương học")
+    session_id: str = Field(..., description="ID phiên làm việc")
     
     class Config:
         json_schema_extra = {
             "example": {
-                "topic": "Nền tảng tư duy AI Lab Việt",
-                "query": "Mục tiêu bài học là gì",
+                "topic": "Nghệ thuật nhận định là gì?",
+                "query": "Nghệ thuật nhận định",
                 "user_id": "18645595-da81-43f7-b9ce-1834bec4d6d4",
-                "chapter_id": "622f8ec2-0c4c-4874-81e7-912e1e4f4522"
-                # "difficulty_level": "intermediate",
-                # "learning_goals": ["Học về OOP", "Thực hành với APIs"],
-                # "time_budget_minutes": 60
+                "chapter_id": "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
+                "session_id": "",
+                "current_state": 1,
             }
         }
 
@@ -246,6 +246,14 @@ class ContentBlock(BaseModel):
     block_type: str
     content: str
     display_order: int
+    section: str
+    
+class LearningActivity(BaseModel):
+    """Schema cho hoạt động học tập."""
+    id: Optional[str] = None
+    chapter_id: str
+    activity_type: str
+    content: Dict[str, Any]
     
 class LearningChatHistory(BaseModel):
     """Schema cho lịch sử chat học tập."""
@@ -255,10 +263,12 @@ class LearningChatHistory(BaseModel):
     activity_id: Optional[str] = None
     role: str
     content: str
+    session_id: str
     created_at: Optional[str] = None
 
 class JobData(BaseModel):
     """Schema cho dữ liệu job."""
     id: Optional[str] = None
     user_id: str
+    state: int
     context: Dict[str, Any]

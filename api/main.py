@@ -115,13 +115,11 @@ async def learning_interaction(request: LearningRequest):
     """
     # Tạo session context cho learning mode
     session_context = {
-        # "mode": "learning",
         "topic": request.topic,
-        "chapter_id": "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
-        # "difficulty_level": request.difficulty_level.value,
-        # "learning_goals": request.learning_goals,
-        # "time_budget_minutes": request.time_budget_minutes,
-        "user_id": "18645595-da81-43f7-b9ce-1834bec4d6d4"
+        "chapter_id": request.chapter_id,
+        "user_id": request.user_id,
+        "current_state": request.current_state,
+        "session_id": request.session_id,
     }
     
     try:

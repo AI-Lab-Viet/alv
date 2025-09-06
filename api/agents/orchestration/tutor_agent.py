@@ -11,7 +11,7 @@ from agents.communication.interaction_agent import InteractionAgent
 from agents.execution.quiz_agent import QuizAgent
 from database.db_supabase import DbSupabase
 from models.schemas import JobData, LearningChatHistory
-from tasks.task_consumer import generate_practice_activity
+from tasks.task_consumer import generate_practice_activity, generate_quiz
 from constants.enum import ChatRoleEnum, TutorAgentStateEnum
 from core.rag_engine import DualSourceRAGEngine
 
@@ -71,19 +71,21 @@ class TutorAgent(OrchestrationAgent):
             # 1. Tạo System Prompt chi tiết cho vai "Gia sư ALVA"
             persona_prompt = self._create_alva_persona(session_context)
             
+            topic = session_context.get("topic", "Nền tảng tư duy AI Lab Việt")
             chat_history = self.db.find_by(
                 'learning_chat_history', 
                 LearningChatHistory, 
                 filters={
                     "chapter_id": session_context.get("chapter_id"),
-                    "user_id": session_context.get("user_id")
+                    "user_id": session_context.get("user_id"),
+                    "session_id": session_context.get("session_id"),
                 },
                 sort_by="created_at",
                 sort_order="desc",
             )
             
             # 2. Thực hiện RAG search (Primary: Curriculum, Secondary: Chat History)
-            rag_results = self.rag_engine.search_for_tutor(user_input, chat_history)
+            rag_results = self.rag_engine.search_for_tutor(user_input + topic, chat_history)
             
             # 3. Chuẩn bị context với RAG knowledge
             context = self._prepare_context_with_rag(user_input, session_context, rag_results)
@@ -95,17 +97,20 @@ class TutorAgent(OrchestrationAgent):
             session_context["current_lesson"] = context.get("current_lesson", "N/A")
             # 4. Post-process response và chuẩn bị kết quả
             result = self._process_response(response_text, user_input, session_context)
+            # print("Result:", result)
             user_message: LearningChatHistory = LearningChatHistory(
                 chapter_id=session_context.get("chapter_id"),
                 user_id=session_context.get("user_id"),
                 role=ChatRoleEnum.USER,
-                content=user_input
+                content=user_input,
+                session_id=session_context.get("session_id")
             )
             alva_message: LearningChatHistory = LearningChatHistory(
                 chapter_id=session_context.get("chapter_id"),
                 user_id=session_context.get("user_id"),
                 role=ChatRoleEnum.ALVA,
-                content=result.get("response_text", "")
+                content=result.get("response_text", ""),
+                session_id=session_context.get("session_id")
             )
             self.db.create("learning_chat_history", [user_message, alva_message])
 
@@ -134,6 +139,7 @@ class TutorAgent(OrchestrationAgent):
         topic = session_context.get("topic", "Nền tảng tư duy AI Lab Việt")
         user_level = session_context.get("user_level", "Trung bình")
         learning_style = session_context.get("learning_style", "Tương tác")
+        current_state = session_context.get("current_state", TutorAgentStateEnum.EXPLAINING_WHAT.value)
         
         persona_prompt = f"""
 Bạn là ALVA (AI Learning & Virtual Assistant), gia sư AI thông minh và thân thiện của AI Lab Việt.
@@ -149,7 +155,8 @@ Bạn là ALVA (AI Learning & Virtual Assistant), gia sư AI thông minh và th�
 Chủ đề: {topic}
 Cấp độ học viên: {user_level}
 Phong cách học: {learning_style}
-Nội dụng bài học: 
+Trạng thái hiện tại: {current_state}
+Nội dung bài học: 
 
 === ĐÁNH GIÁ TIẾN TRÌNH HỌC TẬP ===
 Bạn phải luôn đánh giá xem học viên đang ở bước nào trong flow học tập:
@@ -167,11 +174,14 @@ Các trạng thái chính:
 9. Completion (kết thúc, trao huy hiệu, tổng kết)
 
 Nhiệm vụ của bạn:
-- Luôn trả lời theo đúng state hiện tại.
-- Nếu học viên trả lời đúng/sai trong Practice hoặc Quiz, hãy phản hồi và chuyển tiếp state phù hợp.
-- Nếu không chắc state hiện tại, hãy dựa vào session_context.lesson_state và chat_history để quyết định.
+- Bạn không có trách nhiệm đưa ra bài tập, chỉ tập trung vào giảng dạy và hỗ trợ học viên
+- Nếu học viên nói sẵn sàng hoặc bắt đầu làm bài tập hoặc đã hiểu nội dung bài mới được phép chuyển sang các trạng thái thực hành kế tiếp.
+- Nếu học viên gửi câu trả lời của họ về các bài tập, hãy chuyển sang trạng thái **Feedback** và đánh giá, phản hồi ngay lập tức và dẫn dắt ngắn gọn để học phần kiến thức tiếp theo.
+- Nếu học viên trả lời đúng/sai trong Practice hoặc Quiz, hãy phản hồi và chuyển tiếp trạng thái phù hợp.
+- Nếu không chắc trạng thái hiện tại, hãy dựa vào session_context.lesson_state và chat_history để quyết định.
 - Không nhảy sai bước, phải tuân thủ logic flow.
-- Chỉ được đề cập state ở cuối câu trả lời.
+- Dựa vào trạng thái hiện tại và câu trả lời của học viên để quyết định chuyển sang trạng thái tiếp theo, **không quay ngược trạng thái trước**.
+- Chỉ được đề cập trạng thái ở cuối câu trả lời.
 - Khi cần gọi PracticeAgent hoặc QuizAgent, hãy trả về thêm trạng thái cuối câu trả lời của bạn theo ví dụ mẫu:
 (state: 2)
 
@@ -183,6 +193,7 @@ Nhiệm vụ của bạn:
 - Luôn kết thúc bằng câu hỏi để duy trì tương tác
 - Sử dụng emoji phù hợp để tạo không khí thân thiện
 - Không trả lời các chủ đề nhạy cảm hoặc không phù hợp
+- Không bao giờ chuyển sang trạng thái trước trạng thái hiện tại, chỉ tiến tới trạng thái tiếp theo hoặc ở lại trạng thái hiện tại.
 
 === KIẾN THỨC RAG ===
 Bạn được cung cấp kiến thức từ hai nguồn:
@@ -192,10 +203,10 @@ Bạn được cung cấp kiến thức từ hai nguồn:
 Hãy sử dụng kiến thức này để trả lời chính xác và phù hợp.
 
 === PHONG CÁCH TRẢ LỜI ===
-- Bắt đầu bằng lời chào thân thiện (nếu phù hợp)
+- Bắt đầu bằng lời chào thân thiện nếu trạng thái là Greeting, các trạng thái sau có thể bỏ qua
 - Giải thích khái niệm một cách có cấu trúc
 - Đưa ra ví dụ cụ thể và dễ hiểu
-- Kết thúc bằng câu hỏi để kiểm tra hiểu biết hoặc khuyến khích tương tác tiếp
+- Kết thúc bằng câu hỏi để kiểm tra hiểu biết hoặc khuyến khích tương tác tiếp, đối với trạng thái Explain hãy hỏi học viên đã hiểu bài chưa"
 
 Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy trong hành trình học tập của học viên! 🎓✨
 """
@@ -286,27 +297,31 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         self.state = santinized_response.get("state", self.state)
 
         print(f"[{self.name}] State updated to: {self.state}")
-        print(TutorAgentStateEnum.PRACTICING_WHAT.value)
-        if int(self.state) == TutorAgentStateEnum.PRACTICING_WHAT.value:
-            job = JobData(
-                user_id=session_context.get("user_id", "unknown"),
-                context=session_context,
-            )
-            result = generate_practice_activity.delay({"job": job.model_dump()} )
 
-            print("Task id:", result.id)
+        job = JobData(
+            user_id=session_context.get("user_id", "unknown"),
+            state=int(self.state),
+            context=session_context,
+        )
+        result = None
+        if int(self.state) == TutorAgentStateEnum.PRACTICING_WHAT.value:
+            result = generate_practice_activity.delay({"job": job.model_dump()} )
+            
+        elif int(self.state) == TutorAgentStateEnum.QUIZ.value:
+            result = generate_quiz.delay({"job": job.model_dump()})
         
         return {
             "response_from": self.interaction_agent.name,
             "response_text": santinized_response.get("response_text", ""),
+            "task_id": result.id if result else None,
             "status": "success",
+            "state": self.state,
             "metadata": {
                 "lesson": session_context.get("current_lesson"),
-                "state": self.state,
-                "user_input_length": len(user_input),
-                "response_length": len(santinized_response.get("response_text", "")),
-                "interaction_type": "learning_session",
-                "agent_chain": f"{self.name} -> {self.interaction_agent.name}"
+                # "user_input_length": len(user_input),
+                # "response_length": len(santinized_response.get("response_text", "")),
+                # "interaction_type": "learning_session",
+                # "agent_chain": f"{self.name} -> {self.interaction_agent.name}"
             },
             # "suggestions": self._generate_follow_up_suggestions(user_input, session_context)
         }

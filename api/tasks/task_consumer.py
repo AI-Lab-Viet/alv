@@ -23,8 +23,12 @@ def generate_practice_activity(job: Dict[str, Any]):
     print(f"[PracticeTask] Result: {result}")
     return result
 
+@celery_queue.task(name="task_consumer.generate_quiz", queue="quiz")
 def generate_quiz(job: Dict[str, Any]):
     agent: QuizAgent = AGENT_REGISTRY.get("quiz")
-    result = agent.execute(job)
-    print(f"Generating quiz for job: {job}")
+    print(f"[QuizTask] Received job: {job}")
+    
+    result = asyncio.run(agent.execute(job))
+    
+    print(f"[QuizTask] Result: {result}")
     return result
