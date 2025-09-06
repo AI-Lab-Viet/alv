@@ -5,40 +5,26 @@ import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {
-  Send,
-  ArrowLeft,
-  CheckCircle,
-  Trophy,
-  Target,
-  Shield,
-  Brain,
-  Lightbulb,
-  Award,
-  MapPin,
-  Search,
-  AlertTriangle,
-  BookOpen,
-  Check
-} from 'lucide-react';
+import { Send, ArrowLeft, CheckCircle, Target, Shield, Brain, AlertTriangle } from 'lucide-react';
 import { mockAgentResponses } from '@/mock/agent_responses';
-import { mockQuizResponse } from '@/mock/quiz_responses';
-import { mockPracticeResponses } from '@/mock/practice_responses';
+import { getLessonsByChapter } from '@/lib/api';
+import ContentPanel from '@/components/ContentPanel';
+import { Textarea } from '@/components/ui/textarea';
 
-// Agent states enum
-enum AgentState {
+// Agent states enum for Chapter 4 specifically
+enum Chapter4States {
   GREETING = 0,
-  EXPLAINING_WHAT = 1,
-  PRACTICING_WHAT = 2,
-  FEEDBACK_WHAT = 3,
-  EXPLAINING_WHY = 4,
-  PRACTICING_WHY = 5,
-  FEEDBACK_WHY = 6,
-  EXPLAINING_HOW = 7,
-  QUIZ = 8,
-  COMPLETION = 9
+  TEACHING_GOLDEN_QUESTIONS = 1,
+  PRACTICE_FIND_ERROR = 2,
+  PRACTICE_IDENTIFY_CRITERIA = 3,
+  FEEDBACK_TRANSITION = 4,
+  TEACHING_RED_FLAGS = 5,
+  PRACTICE_RED_FLAGS = 6,
+  TEACHING_FEEDBACK_FORMULA = 7,
+  PRACTICE_FEEDBACK_FORMULA = 8,
+  FINAL_TEST = 9,
+  COMPLETION = 10
 }
 
 // Types
@@ -52,75 +38,25 @@ interface Message {
 interface AgentResponse {
   state: number;
   response_text: string;
-  task_id?: string;
   progress?: number;
   chapter_data?: any;
+  interactive_content?: any;
 }
 
-interface TaskResponse {
-  task_id: string;
-  task_type: string;
-  status: string;
-  content: any;
-  questions?: any[];
+interface LessonBlock {
+  id: string;
+  chapter: number;
+  block_type: string;
+  content: string;
+  display_order: number;
+  section: string;
 }
 
 const chapterMetadata = {
-  1: {
-    title: 'Nền tảng Tư duy',
-    description: 'Hiểu tại sao cần học và những gì đang chờ đợi bạn',
-    totalSteps: 8,
-    concepts: [
-      {
-        id: 'foundation-thinking',
-        title: 'Tư duy Nền tảng',
-        definition: 'Xây dựng nền tảng tư duy để làm việc hiệu quả với AI.',
-        icon: Lightbulb
-      }
-    ]
-  },
-  2: {
-    title: 'Nghệ thuật Phân công',
-    description: 'Học cách phân công nhiệm vụ giữa bạn và AI một cách hiệu quả',
-    totalSteps: 10,
-    concepts: [
-      {
-        id: 'delegation-role',
-        title: 'Vai trò Trưởng nhóm',
-        definition: 'Khi làm việc với AI, bạn là người vạch ra chiến lược và phân công nhiệm vụ.',
-        icon: Shield
-      },
-      {
-        id: 'goal-setting',
-        title: 'Biết rõ Đích đến',
-        definition: 'Xác định mục tiêu rõ ràng trước khi bắt đầu làm việc với AI.',
-        icon: Target
-      },
-      {
-        id: 'task-decomposition',
-        title: 'Kỹ năng Chẻ Củi',
-        definition: 'Phân rã vấn đề lớn thành các nhiệm vụ nhỏ, cụ thể.',
-        icon: Search
-      }
-    ]
-  },
-  3: {
-    title: 'Nghệ thuật Mô tả',
-    description: 'Rèn luyện kỹ năng giao tiếp chính xác với AI',
-    totalSteps: 12,
-    concepts: [
-      {
-        id: 'communication',
-        title: 'Giao tiếp Hiệu quả',
-        definition: 'Học cách diễn đạt ý tưởng một cách rõ ràng với AI.',
-        icon: Target
-      }
-    ]
-  },
   4: {
     title: 'Nghệ thuật Nhận định',
     description: 'Rèn luyện tư duy phản biện và đánh giá chất lượng',
-    totalSteps: 15,
+    totalSteps: 11,
     concepts: [
       {
         id: 'critical-thinking',
@@ -129,42 +65,22 @@ const chapterMetadata = {
         icon: Brain
       },
       {
-        id: 'quality-assessment',
-        title: 'Đánh giá Chất lượng',
-        definition: 'Học cách đánh giá độ chính xác và chất lượng của thông tin.',
+        id: 'golden-questions',
+        title: 'Bộ câu hỏi Vàng',
+        definition: 'Năm câu hỏi cốt lõi để đánh giá chất lượng sản phẩm AI.',
         icon: CheckCircle
       },
       {
-        id: 'fact-checking',
-        title: 'Kiểm tra Sự thật',
-        definition: 'Rèn luyện kỹ năng kiểm tra và xác minh thông tin.',
+        id: 'red-flags',
+        title: 'Cờ đỏ trong tư duy AI',
+        definition: 'Nhận diện các lỗi logic và tư duy của AI.',
         icon: AlertTriangle
-      }
-    ]
-  },
-  5: {
-    title: 'Nghệ thuật Trách nhiệm',
-    description: 'Rèn luyện ý thức đạo đức và trách nhiệm',
-    totalSteps: 18,
-    concepts: [
+      },
       {
-        id: 'ethics',
-        title: 'Đạo đức AI',
-        definition: 'Hiểu và áp dụng các nguyên tắc đạo đức khi sử dụng AI.',
-        icon: Shield
-      }
-    ]
-  },
-  6: {
-    title: 'Nghệ thuật Tổng hợp',
-    description: 'Biến kết quả AI thành sản phẩm giá trị của riêng bạn',
-    totalSteps: 20,
-    concepts: [
-      {
-        id: 'synthesis',
-        title: 'Tổng hợp Sáng tạo',
-        definition: 'Kết hợp và biến đổi kết quả AI thành sản phẩm độc đáo.',
-        icon: Trophy
+        id: 'feedback-formula',
+        title: 'Công thức Phản hồi',
+        definition: 'Bốn bước để đưa ra phản hồi hiệu quả cho AI.',
+        icon: Target
       }
     ]
   }
@@ -177,21 +93,29 @@ export default function JourneyPage() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentInput, setCurrentInput] = useState('');
-  const [currentState, setCurrentState] = useState<number>(AgentState.GREETING);
+  const [currentState, setCurrentState] = useState<number>(Chapter4States.GREETING);
   const [agentResponse, setAgentResponse] = useState<AgentResponse | null>(null);
   const [contentDisplay, setContentDisplay] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [currentTask, setCurrentTask] = useState<TaskResponse | null>(null);
-  const [taskPollingInterval, setTaskPollingInterval] = useState<NodeJS.Timeout | null>(null);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: any }>({});
+  const [clickedError, setClickedError] = useState(false);
+  const [selectedCriteria, setSelectedCriteria] = useState<string>('');
+
+  const [lessonBlocks, setLessonBlocks] = useState<LessonBlock[]>([]);
+  const [whySectionBlocks, setWhySectionBlocks] = useState<LessonBlock[]>([]);
+  const [howSectionBlocks, setHowSectionBlocks] = useState<LessonBlock[]>([]);
+
+  const [wrongCriteria, setWrongCriteria] = useState<string>('');
+  const [wrongClickedWord, setWrongClickedWord] = useState<string>('');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chapter = chapterMetadata[chapterId as keyof typeof chapterMetadata];
 
   useEffect(() => {
-    if (chapterId && chapterMetadata[chapterId as keyof typeof chapterMetadata]) {
+    if (chapterId === 4) {
       initializeSession();
+      loadLessonBlocks();
     }
   }, [chapterId]);
 
@@ -199,26 +123,26 @@ export default function JourneyPage() {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    return () => {
-      // Clean up polling interval when component unmounts
-      if (taskPollingInterval) {
-        clearInterval(taskPollingInterval);
-      }
-    };
-  }, [taskPollingInterval]);
-
-  console.log('JourneyPage - chapterId:', chapterId);
-  console.log('JourneyPage - mockAgentResponses:', mockAgentResponses);
-  console.log('JourneyPage - contentDisplay:', contentDisplay);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const loadLessonBlocks = async () => {
+    try {
+      const blocks = await getLessonsByChapter('4');
+      const whatSectionBlocks = blocks.filter((block) => block.section === 'what');
+      const whySectionBlocks = blocks.filter((block) => block.section === 'why');
+      const howSectionBlocks = blocks.filter((block) => block.section === 'how');
+      setLessonBlocks(whatSectionBlocks);
+      setWhySectionBlocks(whySectionBlocks);
+      setHowSectionBlocks(howSectionBlocks);
+    } catch (error) {
+      console.error('Failed to load lesson blocks:', error);
+    }
+  };
+
   const initializeSession = () => {
-    // Get initial greeting from agent
-    const initialResponse = mockAgentResponses[AgentState.GREETING];
+    const initialResponse = mockAgentResponses[Chapter4States.GREETING];
 
     if (!initialResponse) {
       console.error('No initial response found');
@@ -234,18 +158,15 @@ export default function JourneyPage() {
 
     setMessages([welcomeMessage]);
     setAgentResponse(initialResponse);
-    setCurrentState(AgentState.GREETING);
+    setCurrentState(Chapter4States.GREETING);
     setProgress(initialResponse.progress || 0);
 
-    // Set initial content display - use the chapter metadata
-    const currentChapter = chapterMetadata[chapterId as keyof typeof chapterMetadata];
-    if (currentChapter) {
-      setContentDisplay({
-        type: 'intro',
-        title: currentChapter.title,
-        description: currentChapter.description
-      });
-    }
+    // Set initial content display
+    setContentDisplay({
+      type: 'intro',
+      title: 'Nghệ thuật Nhận định',
+      description: 'Rèn luyện tư duy phản biện với AI'
+    });
   };
 
   const handleSendMessage = async () => {
@@ -262,129 +183,18 @@ export default function JourneyPage() {
     setCurrentInput('');
     setIsLoading(true);
 
-    // send to backend, mock here
+    // Handle different states based on script
     setTimeout(() => {
-      const nextState = currentState + 1;
-      const nextResponse = mockAgentResponses[nextState];
-
-      if (nextResponse) {
-        const alvaResponse: Message = {
-          id: `alva-${Date.now()}`,
-          sender: 'alva',
-          content: nextResponse.response_text,
-          timestamp: new Date().toISOString()
-        };
-
-        setMessages((prev) => [...prev, alvaResponse]);
-        setAgentResponse(nextResponse);
-        setCurrentState(nextState);
-        setProgress(nextResponse.progress || 0);
-
-        // Handle different states
-        handleStateChange(nextState, nextResponse);
-      }
-
+      handleStateTransition();
       setIsLoading(false);
     }, 1500);
   };
 
-  const handleStateChange = (state: number, response: AgentResponse) => {
-    switch (state) {
-      case AgentState.EXPLAINING_WHAT:
-      case AgentState.EXPLAINING_WHY:
-      case AgentState.EXPLAINING_HOW:
-        // Display explanation content
-        if (response.chapter_data) {
-          setContentDisplay({
-            type: 'definition',
-            ...response.chapter_data
-          });
-        }
-        break;
-
-      case AgentState.PRACTICING_WHAT:
-      case AgentState.PRACTICING_WHY:
-        // Start polling for practice task
-        if (response.task_id) {
-          startTaskPolling(response.task_id);
-        }
-        break;
-
-      case AgentState.QUIZ:
-        // Start polling for quiz
-        if (response.task_id) {
-          startTaskPolling(response.task_id);
-        }
-        break;
-
-      case AgentState.COMPLETION:
-        // Display completion content
-        if (response.chapter_data?.completion) {
-          setContentDisplay({
-            type: 'completion',
-            ...response.chapter_data.completion
-          });
-        }
-        break;
-    }
-  };
-
-  const startTaskPolling = (taskId: string) => {
-    // Clear any existing interval
-    if (taskPollingInterval) {
-      clearInterval(taskPollingInterval);
-    }
-
-    // Mock task polling - in a real implementation, this would call an API
-    const interval = setInterval(() => {
-      // Check if task is ready
-      let taskData: TaskResponse | null = null;
-
-      // For mock purposes, immediately return the data
-      if (taskId.includes('quiz')) {
-        taskData = mockQuizResponse as TaskResponse;
-      } else if (taskId in mockPracticeResponses) {
-        taskData = mockPracticeResponses[taskId as keyof typeof mockPracticeResponses];
-      }
-
-      if (taskData) {
-        setCurrentTask(taskData);
-        clearInterval(interval);
-        setTaskPollingInterval(null);
-
-        // Update content display
-        if (taskData.task_type === 'quiz') {
-          setContentDisplay({
-            type: 'quiz',
-            questions: taskData.questions
-          });
-        } else {
-          setContentDisplay({
-            type: 'practice',
-            ...taskData.content
-          });
-        }
-      }
-    }, 1000);
-
-    setTaskPollingInterval(interval);
-  };
-
-  const handleTaskSubmit = (answers: any) => {
-    setUserAnswers(answers);
-
-    // Simulate task completion and proceed to next state
+  const handleStateTransition = () => {
     const nextState = currentState + 1;
     const nextResponse = mockAgentResponses[nextState];
 
     if (nextResponse) {
-      const completionMessage: Message = {
-        id: `completion-${Date.now()}`,
-        sender: 'user',
-        content: '[Đã hoàn thành thử thách]',
-        timestamp: new Date().toISOString()
-      };
-
       const alvaResponse: Message = {
         id: `alva-${Date.now()}`,
         sender: 'alva',
@@ -392,325 +202,169 @@ export default function JourneyPage() {
         timestamp: new Date().toISOString()
       };
 
-      setMessages((prev) => [...prev, completionMessage, alvaResponse]);
+      setMessages((prev) => [...prev, alvaResponse]);
       setAgentResponse(nextResponse);
       setCurrentState(nextState);
       setProgress(nextResponse.progress || 0);
-      setCurrentTask(null);
 
-      // Handle next state
+      // Handle state-specific content
       handleStateChange(nextState, nextResponse);
     }
   };
 
-  const renderContentPanel = () => {
-    if (!contentDisplay) return null;
+  const handleStateChange = (state: number, response: AgentResponse) => {
+    switch (state) {
+      case Chapter4States.TEACHING_GOLDEN_QUESTIONS:
+        setContentDisplay({
+          type: 'lesson_with_golden_questions',
+          title: 'Bộ câu hỏi Vàng',
+          questions: response.chapter_data?.questions || [],
+          lessonBlocks: lessonBlocks
+        });
+        break;
 
-    switch (contentDisplay.type) {
-      case 'intro':
-        return (
-          <div className='text-center space-y-6'>
-            <Badge variant='secondary' className='text-sm'>
-              Chương {chapterId}
-            </Badge>
-            <h2 className='text-2xl font-bold text-foreground'>{contentDisplay.title}</h2>
-            <p className='text-muted-foreground text-lg'>{contentDisplay.description}</p>
-            <div className='w-20 h-20 mx-auto bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center'>
-              <BookOpen className='w-10 h-10 text-white' />
-            </div>
-            <div className='pt-4'>
-              <Button
-                onClick={() => handleSendMessage()}
-                className='w-full'
-                disabled={currentState > AgentState.GREETING}>
-                {currentState > AgentState.GREETING ? 'Đã bắt đầu' : 'Bắt đầu'}
-              </Button>
-            </div>
-          </div>
-        );
+      case Chapter4States.PRACTICE_FIND_ERROR:
+        setContentDisplay({
+          type: 'clickable_text',
+          title: 'Tìm lỗi sai',
+          instruction: 'Hãy click vào cụm từ sai trong đoạn văn dưới đây',
+          text: response.interactive_content?.text || '',
+          expected_click: response.interactive_content?.correct_answer || '',
+          clickable_words: response.interactive_content?.clickable_words || []
+        });
+        break;
 
-      case 'definition':
-        const IconComponent = contentDisplay.icon || Lightbulb;
-        return (
-          <div className='space-y-6'>
-            <div className='text-center'>
-              <h3 className='text-xl font-semibold text-foreground mb-2'>{contentDisplay.title}</h3>
-            </div>
-            <Card className='bg-primary/5 border-primary/20'>
-              <CardContent className='p-6'>
-                <div className='flex items-start gap-4'>
-                  <div className='w-12 h-12 bg-primary rounded-lg flex items-center justify-center flex-shrink-0'>
-                    <IconComponent className='w-6 h-6 text-white' />
-                  </div>
-                  <div className='flex-1'>
-                    <h4 className='font-semibold text-foreground mb-2'>Khái niệm</h4>
-                    <p className='text-sm text-muted-foreground mb-3'>
-                      {contentDisplay.definition || contentDisplay.concept}
-                    </p>
-                    {contentDisplay.explanation && (
-                      <div className='mt-4 p-4 bg-muted rounded-lg'>
-                        <p className='text-sm'>{contentDisplay.explanation}</p>
-                      </div>
-                    )}
-                    {contentDisplay.key_points && (
-                      <div className='mt-4 p-4 bg-secondary/10 rounded-lg border border-secondary/20'>
-                        <h5 className='text-sm font-medium text-secondary mb-2'>Điểm chính:</h5>
-                        <ul className='text-xs space-y-1'>
-                          {contentDisplay.key_points.map((point: string, index: number) => (
-                            <li key={index}>• {point}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {contentDisplay.steps && (
-                      <div className='mt-4 p-4 bg-green-50 rounded-lg border border-green-200'>
-                        <h5 className='text-sm font-medium text-green-700 mb-2'>
-                          Các bước thực hiện:
-                        </h5>
-                        <ul className='text-xs space-y-1'>
-                          {contentDisplay.steps.map((step: string, index: number) => (
-                            <li key={index}>
-                              {index + 1}. {step}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {contentDisplay.example && (
-                      <div className='mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200'>
-                        <h5 className='text-sm font-medium text-blue-700 mb-2'>Ví dụ:</h5>
-                        <p className='text-xs'>{contentDisplay.example}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
+      case Chapter4States.PRACTICE_IDENTIFY_CRITERIA:
+        setContentDisplay({
+          type: 'multiple_choice',
+          title: 'Xác định tiêu chí vi phạm',
+          question: 'Lỗi sai này vi phạm tiêu chí nào trong Bộ câu hỏi Vàng?',
+          options: response.interactive_content?.options || [],
+          correct_answer: response.interactive_content?.correct_answer
+        });
+        break;
 
-      case 'practice':
-        if (contentDisplay.task_type === 'drag_drop') {
-          return renderDragDropTask();
-        } else if (contentDisplay.task_type === 'analysis') {
-          return renderAnalysisTask();
-        }
-        return null;
+      case Chapter4States.FEEDBACK_TRANSITION:
+        setContentDisplay({
+          type: 'transition',
+          title: 'Tuyệt vời!',
+          message: response.response_text
+        });
+        setTimeout(() => {
+          setCurrentState(Chapter4States.TEACHING_RED_FLAGS);
+          const nextResponse = mockAgentResponses[Chapter4States.TEACHING_RED_FLAGS];
+          if (nextResponse) {
+            handleStateChange(Chapter4States.TEACHING_RED_FLAGS, nextResponse);
+            setProgress(nextResponse.progress || 0);
+          }
+        }, 2000);
+        break;
 
-      case 'quiz':
-        return renderQuiz();
+      case Chapter4States.TEACHING_RED_FLAGS:
+        setContentDisplay({
+          type: 'red_flags',
+          title: 'Các "Cờ đỏ" trong tư duy AI',
+          red_flags: response.chapter_data?.red_flags || [],
+          lessonBlocks: whySectionBlocks
+        });
+        break;
 
-      case 'completion':
-        return (
-          <div className='text-center space-y-6'>
-            <div className='w-24 h-24 mx-auto bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center'>
-              <Trophy className='w-12 h-12 text-white' />
-            </div>
-            <div>
-              <Badge variant='secondary' className='mb-2 text-sm'>
-                <Award className='w-3 h-3 mr-1' />
-                {contentDisplay.badge}
-              </Badge>
-              <h3 className='text-xl font-semibold text-foreground mb-2'>
-                Chúc mừng! Hoàn thành Chương {chapterId}
-              </h3>
-              <p className='text-muted-foreground mb-4'>Điểm số: {contentDisplay.score}/100</p>
-              <div className='p-4 bg-green-50 border border-green-200 rounded-lg'>
-                <p className='text-sm text-green-700 mb-2'>🎉 Thành tựu đạt được:</p>
-                <ul className='text-sm text-green-700'>
-                  {contentDisplay.achievements?.map((achievement: string, i: number) => (
-                    <li key={i} className='flex items-center gap-2 mb-1'>
-                      <Check className='w-4 h-4 text-green-500' />
-                      {achievement}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className='space-y-3'>
-              <Button onClick={() => router.push('/skill-hub')} className='w-full'>
-                <MapPin className='w-4 h-4 mr-2' />
-                Quay về Bản đồ Hành trình
-              </Button>
-              <Button
-                variant='outline'
-                onClick={() => router.push(`/skill-hub/journey/${contentDisplay.next_chapter}`)}
-                className='w-full'>
-                Tiếp tục đến {contentDisplay.next_chapter}
-              </Button>
-            </div>
-          </div>
-        );
+      case Chapter4States.PRACTICE_RED_FLAGS:
+        setContentDisplay({
+          type: 'text_analysis',
+          title: 'Nhận diện Cờ đỏ',
+          instruction: 'Đoạn văn sau đang mắc phải "cờ đỏ" nào?',
+          content: response.interactive_content?.content,
+          expected_answer: response.interactive_content?.expected_answer
+        });
+        break;
 
-      default:
-        return null;
+      case Chapter4States.TEACHING_FEEDBACK_FORMULA:
+        setContentDisplay({
+          type: 'feedback_formula',
+          title: 'Công thức Phản hồi 4 bước',
+          steps: response.chapter_data?.steps || [],
+          lessonBlocks: howSectionBlocks
+        });
+        break;
+
+      case Chapter4States.PRACTICE_FEEDBACK_FORMULA:
+        setContentDisplay({
+          type: 'feedback_practice',
+          title: 'Thực hành Công thức Phản hồi',
+          instruction: 'Áp dụng Công thức Phản hồi 4 bước cho lỗi "mùa hè rực lửa năm 1789"',
+          prompt: response.interactive_content?.prompt
+        });
+        break;
+
+      case Chapter4States.FINAL_TEST:
+        setContentDisplay({
+          type: 'final_test',
+          title: 'Trận đấu tính điểm',
+          scenario: response.interactive_content?.scenario,
+          prompt: response.interactive_content?.prompt
+        });
+        break;
+
+      case Chapter4States.COMPLETION:
+        setContentDisplay({
+          type: 'completion',
+          badge: response.chapter_data?.completion?.badge,
+          achievement: response.chapter_data?.completion?.achievement,
+          next_action: response.chapter_data?.completion?.next_action
+        });
+        break;
     }
   };
 
-  const renderDragDropTask = () => {
-    if (!contentDisplay) return null;
+  const handleClickableText = (clickedText: string) => {
+    if (contentDisplay?.expected_click === clickedText) {
+      setClickedError(true);
+      setWrongClickedWord('');
 
-    return (
-      <div className='space-y-4'>
-        <div className='text-center'>
-          <Badge variant='destructive' className='mb-2'>
-            Thực hành
-          </Badge>
-          <h3 className='text-xl font-semibold text-foreground'>{contentDisplay.title}</h3>
-        </div>
-        <Card className='bg-destructive/5 border-destructive/20'>
-          <CardContent className='p-6'>
-            <p className='text-sm text-muted-foreground mb-4'>{contentDisplay.instruction}</p>
-
-            {/* Simple drag-drop visualization (in a real implementation, use a proper drag-drop library) */}
-            <div className='grid grid-cols-2 gap-4 mt-6'>
-              {contentDisplay.categories.map((category: any) => (
-                <div key={category.id} className='border rounded-lg p-4'>
-                  <h4 className='text-sm font-medium mb-3'>{category.title}</h4>
-                  <div className='min-h-[200px] bg-muted/50 rounded-lg p-2'>
-                    {/* Items would be draggable in real implementation */}
-                    {contentDisplay.items
-                      .filter(
-                        (item: any) =>
-                          userAnswers[item.id] === category.id ||
-                          (!userAnswers[item.id] && item.correct_category === category.id)
-                      )
-                      .map((item: any) => (
-                        <div
-                          key={item.id}
-                          className='bg-background border rounded-md p-2 mb-2 text-sm cursor-move'
-                          onClick={() => {
-                            // Toggle between categories
-                            const targetCategory =
-                              category.id === contentDisplay.categories[0].id
-                                ? contentDisplay.categories[1].id
-                                : contentDisplay.categories[0].id;
-                            setUserAnswers({ ...userAnswers, [item.id]: targetCategory });
-                          }}>
-                          {item.text}
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className='mt-6'>
-              <Button onClick={() => handleTaskSubmit(userAnswers)} className='w-full'>
-                Nộp bài
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+      setTimeout(() => {
+        handleStateTransition();
+      }, 2000);
+    } else {
+      setWrongClickedWord(clickedText);
+    }
   };
 
-  const renderAnalysisTask = () => {
-    if (!contentDisplay) return null;
+  const handleMultipleChoice = (selectedOption: string) => {
+    setSelectedCriteria(selectedOption);
+    setWrongCriteria('');
 
-    return (
-      <div className='space-y-4'>
-        <div className='text-center'>
-          <Badge variant='destructive' className='mb-2'>
-            Phân tích
-          </Badge>
-          <h3 className='text-xl font-semibold text-foreground'>{contentDisplay.title}</h3>
-        </div>
-        <Card className='bg-destructive/5 border-destructive/20'>
-          <CardContent className='p-6'>
-            <div className='p-4 bg-muted rounded-lg mb-4'>
-              <p className='text-sm'>{contentDisplay.scenario}</p>
-            </div>
-
-            <div className='space-y-4'>
-              {contentDisplay.questions.map((question: string, index: number) => (
-                <div key={index}>
-                  <p className='text-sm font-medium mb-2'>{question}</p>
-                  <textarea
-                    className='w-full p-3 border rounded-md h-24 text-sm'
-                    placeholder='Nhập câu trả lời của bạn...'
-                    value={userAnswers[`q${index}`] || ''}
-                    onChange={(e) =>
-                      setUserAnswers({ ...userAnswers, [`q${index}`]: e.target.value })
-                    }
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className='mt-6'>
-              <Button
-                onClick={() => handleTaskSubmit(userAnswers)}
-                className='w-full'
-                disabled={!Object.keys(userAnswers).length}>
-                Nộp bài
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    if (selectedOption === contentDisplay?.correct_answer) {
+      setTimeout(() => {
+        handleStateTransition();
+      }, 2000);
+    } else {
+      setWrongCriteria(selectedOption);
+    }
   };
 
-  const renderQuiz = () => {
-    if (!contentDisplay?.questions) return null;
-
-    return (
-      <div className='space-y-4'>
-        <div className='text-center'>
-          <Badge variant='secondary' className='mb-2'>
-            Kiểm tra
-          </Badge>
-          <h3 className='text-xl font-semibold text-foreground'>Bài kiểm tra Chương {chapterId}</h3>
-        </div>
-
-        <div className='space-y-6'>
-          {contentDisplay.questions.slice(0, 5).map((q: any, index: number) => (
-            <Card key={index} className='border-primary/20'>
-              <CardContent className='p-4'>
-                <p className='text-sm font-medium mb-3'>
-                  Câu {index + 1}: {q.question}
-                </p>
-                <div className='space-y-2'>
-                  {q.choices.map((choice: string, choiceIndex: number) => (
-                    <div
-                      key={choiceIndex}
-                      className={`p-3 border rounded-md text-sm cursor-pointer hover:bg-muted/50 transition-colors ${
-                        userAnswers[`q${index}`] === choiceIndex
-                          ? 'bg-primary/10 border-primary'
-                          : ''
-                      }`}
-                      onClick={() =>
-                        setUserAnswers({ ...userAnswers, [`q${index}`]: choiceIndex })
-                      }>
-                      {String.fromCharCode(65 + choiceIndex)}. {choice}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className='mt-6'>
-          <Button
-            onClick={() => handleTaskSubmit(userAnswers)}
-            className='w-full'
-            disabled={Object.keys(userAnswers).length < 5}>
-            Nộp bài
-          </Button>
-        </div>
-      </div>
-    );
+  const handleTextAnalysis = () => {
+    if (currentInput.toLowerCase().includes('mâu thuẫn logic')) {
+      setTimeout(() => {
+        handleStateTransition();
+      }, 1000);
+    }
   };
 
-  if (!chapter) {
+  // Expose click handler to global scope for HTML onclick
+  useEffect(() => {
+    (window as any).handleErrorClick = handleClickableText;
+    return () => {
+      delete (window as any).handleErrorClick;
+    };
+  }, [contentDisplay]);
+
+  if (!chapter || chapterId !== 4) {
     return (
       <div className='bg-background flex items-center justify-center h-full'>
         <Card>
           <CardContent className='p-6 text-center'>
-            <p className='text-muted-foreground'>Không tìm thấy chương này.</p>
+            <p className='text-muted-foreground'>Chương này chưa được hỗ trợ.</p>
             <Button onClick={() => router.push('/skill-hub')} className='mt-4'>
               Quay về Bản đồ Hành trình
             </Button>
@@ -776,12 +430,9 @@ export default function JourneyPage() {
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-muted text-foreground'
                         }`}>
-                        <div
-                          className='text-sm'
-                          dangerouslySetInnerHTML={{
-                            __html: message.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                          }}
-                        />
+                        <div className='text-sm break-words whitespace-pre-wrap'>
+                          {message.content}
+                        </div>
                         <p className='text-xs opacity-70 mt-1'>
                           {new Date(message.timestamp).toLocaleTimeString('vi-VN', {
                             hour: '2-digit',
@@ -810,17 +461,25 @@ export default function JourneyPage() {
 
               <div className='border-t border-border p-4 flex-shrink-0'>
                 <div className='flex gap-2'>
-                  <Input
+                  <Textarea
                     value={currentInput}
                     onChange={(e) => setCurrentInput(e.target.value)}
                     placeholder={
-                      currentState === AgentState.GREETING
+                      currentState === Chapter4States.GREETING
                         ? 'Nhập "Bắt đầu" để tiếp tục...'
                         : 'Nhập câu trả lời của bạn...'
                     }
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        if (contentDisplay?.type === 'text_analysis') {
+                          handleTextAnalysis();
+                        }
+                        handleSendMessage();
+                      }
+                    }}
                     disabled={isLoading}
-                    className='flex-1'
+                    className='flex-1 resize-y min-h-[40px] max-h-40'
                   />
                   <Button
                     onClick={handleSendMessage}
@@ -847,7 +506,22 @@ export default function JourneyPage() {
 
               {/* Content */}
               <CardContent className='flex-1 overflow-y-auto'>
-                <div className='space-y-4'>{renderContentPanel()}</div>
+                <div className='space-y-4'>
+                  <ContentPanel
+                    contentDisplay={contentDisplay}
+                    chapterId={chapterId}
+                    currentState={currentState}
+                    clickedError={clickedError}
+                    selectedCriteria={selectedCriteria}
+                    onSendMessage={handleSendMessage}
+                    onClickableText={handleClickableText}
+                    onMultipleChoice={handleMultipleChoice}
+                    onRouterPush={router.push}
+                    onStateTransition={handleStateTransition}
+                    wrongCriteria={wrongCriteria}
+                    wrongClickedWord={wrongClickedWord}
+                  />
+                </div>
               </CardContent>
             </Card>
           </div>
