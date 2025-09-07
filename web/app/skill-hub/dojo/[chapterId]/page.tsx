@@ -283,6 +283,7 @@ export default function JourneyPage() {
   };
 
   const handleStateChange = (state: number, response: AgentResponse) => {
+    console.log("Handling state:", state, response);
     switch (state) {
       case Chapter4States.TEACHING_GOLDEN_QUESTIONS:
         setContentDisplay({

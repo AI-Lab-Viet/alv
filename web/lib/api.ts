@@ -3,13 +3,19 @@ export interface LearningRequest {
   query: string;
   topic: string;
   user_id: string;
+  session_id: string;
+  current_state: number;
 }
 
 export interface LearningResponse {
-  agent_name?: string;
-  response_message?: string;
-  status?: string;
-  [key: string]: any;
+  response_from: string;
+  response_text: string;
+  task_id: string | null;
+  status: "success" | "error";
+  state: number;
+  metadata: {
+    lesson: any | null;
+  };
 }
 
 export interface LessonBlock {
@@ -40,17 +46,43 @@ export interface KnowledgeVaultQuery {
   chapter?: string | number;
 }
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_LEARNING_API_URL || 'https://horses-gen-fotos-cord.trycloudflare.com';
+export interface TaskResult {
+  status: "SUCCESS" | "PENDING" | "FAILED";
+  result: any;
+}
 
-export async function postLearningRequest(data: LearningRequest): Promise<LearningResponse> {
-  const res = await fetch(`${API_BASE_URL}/learning`, {
-    method: 'POST',
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+export async function poolingExerciseDate(
+  task_id: string
+): Promise<TaskResult> {
+  const res = await fetch(`${API_BASE_URL}/tasks/${task_id}`, {
+    method: "GET",
     headers: {
-      accept: 'application/json',
-      'Content-Type': 'application/json'
+      accept: "application/json",
     },
-    body: JSON.stringify(data)
+  });
+  const data = await res.json();
+  if (data.status === "PENDING") {
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second
+    return poolingExerciseDate(task_id); // recursive call
+  }
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status}`);
+  }
+  return data;
+}
+
+export async function postLearningRequest(
+  data: LearningRequest
+): Promise<LearningResponse> {
+  const res = await fetch(`${API_BASE_URL}/learning`, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
   });
   if (!res.ok) {
     throw new Error(`API error: ${res.status}`);
@@ -58,13 +90,18 @@ export async function postLearningRequest(data: LearningRequest): Promise<Learni
   return res.json();
 }
 
-export async function getLessonsByChapter(chapter: string): Promise<LessonBlock[]> {
-  const res = await fetch(`${API_BASE_URL}/lessons?chapter=${encodeURIComponent(chapter)}`, {
-    method: 'GET',
-    headers: {
-      accept: 'application/json'
+export async function getLessonsByChapter(
+  chapter: string
+): Promise<LessonBlock[]> {
+  const res = await fetch(
+    `${API_BASE_URL}/lessons?chapter=${encodeURIComponent(chapter)}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+      },
     }
-  });
+  );
   if (!res.ok) {
     throw new Error(`API error: ${res.status}`);
   }
@@ -76,19 +113,19 @@ export async function getKnowledgeVault(
   query?: KnowledgeVaultQuery
 ): Promise<KnowledgeVaultItem[]> {
   const params = new URLSearchParams();
-  if (query?.search) params.append('search', query.search);
-  if (query?.skill) params.append('skill', query.skill);
-  if (query?.chapter) params.append('chapter', String(query.chapter));
+  if (query?.search) params.append("search", query.search);
+  if (query?.skill) params.append("skill", query.skill);
+  if (query?.chapter) params.append("chapter", String(query.chapter));
 
   const url = `${API_BASE_URL}/knowledge-vault/${encodeURIComponent(user_id)}${
-    params.toString() ? '?' + params.toString() : ''
+    params.toString() ? "?" + params.toString() : ""
   }`;
 
   const res = await fetch(url, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      accept: 'application/json'
-    }
+      accept: "application/json",
+    },
   });
   if (!res.ok) {
     throw new Error(`API error: ${res.status}`);
