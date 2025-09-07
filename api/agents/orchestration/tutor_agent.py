@@ -9,10 +9,12 @@ from agents.base import OrchestrationAgent
 from agents.execution.practice_agent import PracticeAgent
 from agents.communication.interaction_agent import InteractionAgent
 from agents.execution.quiz_agent import QuizAgent
+from constants.constants import TimeConstants
+from database.redis import RedisComponent
 from database.db_supabase import DbSupabase
 from models.schemas import JobData, LearningChatHistory
 from tasks.task_consumer import generate_practice_activity, generate_quiz
-from constants.enum import ChatRoleEnum, TutorAgentStateEnum
+from constants.enum import CacheKeys, ChatRoleEnum, TutorAgentStateEnum
 from core.rag_engine import DualSourceRAGEngine
 
 
@@ -34,7 +36,7 @@ class TutorAgent(OrchestrationAgent):
         Args:
             interaction_agent: InteractionAgent để giao tiếp với AI
         """
-        self.state = TutorAgentStateEnum.EXPLAINING_WHAT
+        self.redis = RedisComponent()
         self.interaction_agent = InteractionAgent()
         self.practice_agent = PracticeAgent(self.interaction_agent)
         self.quiz_agent = QuizAgent(self.interaction_agent)
@@ -150,6 +152,7 @@ Bạn là ALVA (AI Learning & Virtual Assistant), gia sư AI thông minh và th�
 - Giải thích từ đơn giản đến phức tạp, có ví dụ thực tế
 - Luôn kết nối kiến thức với ứng dụng trong công việc
 - Tạo không khí học tập tích cực và thú vị
+- KHÔNG lặp lại lời chào ở các bước sau khi đã vào bài học (chỉ chào ở bước Greeting)
 
 === BÀI HỌC HIỆN TẠI ===
 Chủ đề: {topic}
@@ -158,8 +161,8 @@ Phong cách học: {learning_style}
 Trạng thái hiện tại: {current_state}
 Nội dung bài học: 
 
-=== ĐÁNH GIÁ TIẾN TRÌNH HỌC TẬP ===
-Bạn phải luôn đánh giá xem học viên đang ở bước nào trong flow học tập:
+=== QUẢN LÝ TIẾN TRÌNH HỌC TẬP ===
+Bạn PHẢI quản lý trạng thái (state) theo flow sau:
 
 Các trạng thái chính:
 0. Greeting (chào mừng, khởi động)
@@ -173,22 +176,26 @@ Các trạng thái chính:
 8. Quiz (câu hỏi mở để học viên áp dụng)
 9. Completion (kết thúc, trao huy hiệu, tổng kết)
 
-Nhiệm vụ của bạn:
-- Bạn không có trách nhiệm đưa ra bài tập, chỉ tập trung vào giảng dạy và hỗ trợ học viên
-- Nếu học viên nói sẵn sàng hoặc bắt đầu làm bài tập hoặc đã hiểu nội dung bài mới được phép chuyển sang các trạng thái thực hành kế tiếp.
-- Nếu học viên gửi câu trả lời của họ về các bài tập, hãy chuyển sang trạng thái **Feedback** và đánh giá, phản hồi ngay lập tức và dẫn dắt ngắn gọn để học phần kiến thức tiếp theo.
-- Nếu học viên trả lời đúng/sai trong Practice hoặc Quiz, hãy phản hồi và chuyển tiếp trạng thái phù hợp.
-- Nếu không chắc trạng thái hiện tại, hãy dựa vào session_context.lesson_state và chat_history để quyết định.
-- Không nhảy sai bước, phải tuân thủ logic flow.
-- Dựa vào trạng thái hiện tại và câu trả lời của học viên để quyết định chuyển sang trạng thái tiếp theo, **không quay ngược trạng thái trước**.
-- Chỉ được đề cập trạng thái ở cuối câu trả lời.
-- Khi cần gọi PracticeAgent hoặc QuizAgent, hãy trả về thêm trạng thái cuối câu trả lời của bạn theo ví dụ mẫu:
-(state: 2)
+Nguyên tắc bắt buộc:
+- KHÔNG bao giờ quay ngược lại state trước đó (ví dụ: từ state 5 không được quay về state 2).  
+- KHÔNG bao giờ bỏ qua state (ví dụ: từ state 1 không được nhảy thẳng lên state 4).
+- Chỉ được giữ nguyên state hiện tại hoặc tiến tới state tiếp theo trong flow.  
+- Chỉ được phép chuyển sang Practice/Quiz khi học viên đã xác nhận "hiểu" hoặc "sẵn sàng thực hành".  
+- Khi học viên gửi đáp án, chuyển sang state Feedback ngay, sau đó dẫn dắt sang Explain tiếp theo. 
+
+=== NHIỆM VỤ ===
+- Bạn KHÔNG tự tạo bài tập, chỉ giảng dạy và phản hồi. 
+- Nếu học viên nói sẵn sàng hoặc bắt đầu làm bài tập hoặc đã hiểu nội dung bài mới được phép chuyển sang các trạng thái thực hành tương ứng sau phần lý thuyết trước đó và nói với học viên hãy thực hành.
+Ví dụ: khi ở trạng thái Explain "What", nếu học viên nói "Tôi đã hiểu, tôi sẵn sàng làm bài tập" thì bạn mới chuyển sang trạng thái Practice 1 và nói với học viên hãy thực hành. Tương tự với Explain "Why" và Practice 2.
+- Nếu học viên gửi câu trả lời của họ về các bài tập, hãy chuyển sang trạng thái **Feedback** và đánh giá, phản hồi ngay lập tức và dẫn dắt ngắn gọn để học phần kiến thức tiếp theo (ví dụ: hãy cùng tìm hiểu tại sao phải học cách nhận định,...).
+- Nếu học viên trả lời đúng/sai trong Practice hoặc Quiz, hãy phản hồi tích cực/động viên và chuyển tiếp trạng thái tiếp theo kèm lời dẫn (ví dụ: hãy cùng tìm hiểu tại sao phải học cách nhận định,...).
+- Hãy trả về thêm trạng thái cuối câu trả lời của bạn theo ví dụ mẫu: (state: 2)
 
 === NGUYÊN TẮC ===
-- **ƯU TIÊN GIÁO TRÌNH**: Luôn dựa vào kiến thức từ giáo trình được cung cấp
+- **ƯU TIÊN GIÁO TRÌNH**: Trả lời của bạn phải luôn bám sát và dựa vào kiến thức từ giáo trình được cung cấp
 - **CHÍNH XÁC**: Không bịa đặt thông tin, chỉ sử dụng nguồn đáng tin cậy
 - **NGỮ CẢNH**: Tham khảo lịch sử chat để hiểu câu hỏi trong ngữ cảnh
+- **KHÔNG CHÀO LẠI**: Chỉ chào trong state 0, các bước sau đi thẳng vào nội dung. 
 - Nếu câu hỏi ngoài phạm vi, hãy định hướng về bài học
 - Luôn kết thúc bằng câu hỏi để duy trì tương tác
 - Sử dụng emoji phù hợp để tạo không khí thân thiện
@@ -200,10 +207,9 @@ Bạn được cung cấp kiến thức từ hai nguồn:
 1. **GIÁO TRÌNH** (Nguồn chính): Định nghĩa, nguyên tắc, ví dụ chính thức
 2. **LỊCH SỬ CHAT** (Ngữ cảnh): Để hiểu câu hỏi trong bối cảnh cuộc trò chuyện
 
-Hãy sử dụng kiến thức này để trả lời chính xác và phù hợp.
+Chỉ dùng các nguồn này để trả lời.
 
 === PHONG CÁCH TRẢ LỜI ===
-- Bắt đầu bằng lời chào thân thiện nếu trạng thái là Greeting, các trạng thái sau có thể bỏ qua
 - Giải thích khái niệm một cách có cấu trúc
 - Đưa ra ví dụ cụ thể và dễ hiểu
 - Kết thúc bằng câu hỏi để kiểm tra hiểu biết hoặc khuyến khích tương tác tiếp, đối với trạng thái Explain hãy hỏi học viên đã hiểu bài chưa"
@@ -293,21 +299,40 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         # - Thêm metadata
         # - Cập nhật learning progress
         
+        session_id = session_context.get("session_id", "unknown")
         santinized_response = parse_alva_response(response_text)
-        self.state = santinized_response.get("state", self.state)
+        updated_state = santinized_response.get("state", TutorAgentStateEnum.GREETING.value)
+        current_agent_state = self.redis.get(f"{CacheKeys.AGENT_STATE.value}_{session_id}")
+        if current_agent_state is not None:
+            try:
+                current_agent_state_int = int(current_agent_state)
+            except (ValueError, TypeError):
+                current_agent_state_int = updated_state
+            self.redis.set(
+                f"{CacheKeys.AGENT_STATE.value}_{session_id}", 
+                updated_state if int(updated_state) > current_agent_state_int else current_agent_state_int,
+                TimeConstants.ONE_DAY * 7
+            )
+            updated_state = updated_state if int(updated_state) > current_agent_state_int else current_agent_state_int
 
-        print(f"[{self.name}] State updated to: {self.state}")
+        else:
+            self.redis.set(f"{CacheKeys.AGENT_STATE.value}_{session_id}", updated_state)
+
+        print(f"[{self.name}] State updated to: {updated_state}")
 
         job = JobData(
             user_id=session_context.get("user_id", "unknown"),
-            state=int(self.state),
+            state=int(updated_state),
             context=session_context,
         )
         result = None
-        if int(self.state) == TutorAgentStateEnum.PRACTICING_WHAT.value:
+        if int(updated_state) == TutorAgentStateEnum.PRACTICING_WHAT.value:
+            result = generate_practice_activity.delay({"job": job.model_dump()} )
+
+        elif int(updated_state) == TutorAgentStateEnum.PRACTICING_WHY.value:
             result = generate_practice_activity.delay({"job": job.model_dump()} )
             
-        elif int(self.state) == TutorAgentStateEnum.QUIZ.value:
+        elif int(updated_state) == TutorAgentStateEnum.QUIZ.value:
             result = generate_quiz.delay({"job": job.model_dump()})
         
         return {
@@ -315,7 +340,7 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
             "response_text": santinized_response.get("response_text", ""),
             "task_id": result.id if result else None,
             "status": "success",
-            "state": self.state,
+            "state": updated_state,
             "metadata": {
                 "lesson": session_context.get("current_lesson"),
                 # "user_input_length": len(user_input),

@@ -19,6 +19,7 @@ class JourneyEnum(str, Enum):
     
 class TutorAgentStateEnum(int, Enum):
     """Enum cho trạng thái của TutorAgent."""
+    GREETING = 0
     EXPLAINING_WHAT = 1
     PRACTICING_WHAT = 2
     FEEDBACK_WHAT = 3
@@ -33,6 +34,7 @@ class CacheKeys(str, Enum):
     """Enum cho các khóa cache."""
     CURRICULUM_DATA = "CURRICULUM_DATA"
     LESSON_DATA = "LESSON_DATA"
+    AGENT_STATE = "STATE"
     
 class InteractionTypeEnum(str, Enum):
     """Enum cho các loại tương tác."""

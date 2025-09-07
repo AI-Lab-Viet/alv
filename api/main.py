@@ -398,7 +398,7 @@ def get_learning_chat_history(
         limit=limit
     )
 
-@app.get("/task/{task_id}")
+@app.get("/tasks/{task_id}")
 def get_task_status(task_id: str):
     """
     Polling kết quả task
