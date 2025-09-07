@@ -110,7 +110,7 @@ export default function ContentPanel({
         </div>
       );
 
-    case "lesson_with_golden_questions":
+    case "lesson":
       return (
         <div className="space-y-6">
           {/* Lesson Documentation */}
@@ -131,10 +131,10 @@ export default function ContentPanel({
                         .map((block: LessonBlock) => renderLessonBlock(block))}
                     </div>
                   </div>
+                  <Button onClick={onStateTransition} className="w-full mt-6">
+                    Tôi đã hiểu
+                  </Button>
                 </CardContent>
-                <Button onClick={onStateTransition} className="w-full mt-6">
-                  Tôi đã hiểu
-                </Button>
               </Card>
             )}
 
@@ -339,11 +339,14 @@ export default function ContentPanel({
                         .map((block: LessonBlock) => renderLessonBlock(block))}
                     </div>
                   </div>
+                  <Button onClick={onStateTransition} className="w-full mt-6">
+                    Tôi đã hiểu
+                  </Button>
                 </CardContent>
               </Card>
             )}
 
-          <div className="text-center">
+          {/* <div className="text-center">
             <h3 className="text-xl font-semibold text-foreground mb-2">
               {contentDisplay.title}
             </h3>
@@ -367,7 +370,7 @@ export default function ContentPanel({
                 Tôi đã hiểu
               </Button>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       );
 

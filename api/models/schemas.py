@@ -61,6 +61,7 @@ class LearningRequest(BaseModel):
     user_id: str = Field(..., description="ID người dùng")
     chapter_id: str = Field(..., description="ID chương học")
     session_id: str = Field(..., description="ID phiên làm việc")
+    exercise_data: Optional[Dict[str, Any]] = Field(None, description="Dữ liệu bài tập nếu có")
     
     class Config:
         json_schema_extra = {

@@ -120,6 +120,7 @@ async def learning_interaction(request: LearningRequest):
         "user_id": request.user_id,
         "current_state": request.current_state,
         "session_id": request.session_id,
+        "exercise_data": request.exercise_data
     }
     
     try:

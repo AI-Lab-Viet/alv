@@ -5,6 +5,7 @@ export interface LearningRequest {
   user_id: string;
   session_id: string;
   current_state: number;
+  exercise_data?: any;
 }
 
 export interface LearningResponse {

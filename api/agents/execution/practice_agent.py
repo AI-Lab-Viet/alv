@@ -56,7 +56,14 @@ class PracticeAgent(ExecutionAgent):
         exercise_scope = 'WHAT' if state == TutorAgentStateEnum.PRACTICING_WHAT.value else 'WHY'
         chapter_id = data.get('context').get('chapter_id', 'Chủ đề chung')
         exercise_type = random.choice([e.value for e in InteractionTypeEnum])
-        lesson_content = data.get('context').get('lesson_content', 'Nội dung bài học')
+        raw_lesson_contents = data.get('context').get('current_lesson', 'Nội dung bài học')
+        lesson_contents = raw_lesson_contents if isinstance(raw_lesson_contents, str) else json.dumps(raw_lesson_contents)
+        if isinstance(raw_lesson_contents, list):
+            lesson_content = "\n".join(
+                str(item.get("content", "")) for item in raw_lesson_contents if isinstance(item, dict)
+            )
+        else:
+            lesson_content = lesson_contents
 
         if not self.interaction_agent:
             print(f"[{self.name}] No InteractionAgent available, using fallback...")
