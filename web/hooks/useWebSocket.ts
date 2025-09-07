@@ -1,14 +1,15 @@
 import { HANH_BACKEND_URL, HANH_BE_WS_URL } from "@/consts/urls";
+import { useAuth } from "@/contexts/auth-context";
 import { Message } from "@/interfaces/chat.interface";
 import { useState, useEffect, useRef } from "react";
 
 const useWebSocket = () => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [userId, setUserId] = useState<string>();
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { userId } = useAuth();
 
   const connectWebSocket = () => {
     try {
@@ -57,7 +58,6 @@ const useWebSocket = () => {
       };
 
       setSocket(ws);
-      setUserId(localStorage.getItem("accessToken") || "abcxyz123");
     } catch (error) {
       console.error("Failed to create WebSocket connection:", error);
       setError("Failed to establish WebSocket connection");

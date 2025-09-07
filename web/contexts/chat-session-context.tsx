@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { IStartSessionResponse } from "@/interfaces/session.interface";
 import { startSession } from "@/services/chat.service";
+import { useAxiosInterceptor } from "@/hooks/useAxiosInterceptor";
 
 interface ChatSessionContextType {
   sessionId: string | undefined;
@@ -29,6 +30,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     useState<DetailedProject>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  useAxiosInterceptor();
 
   async function startNewSession(missionId: string) {
     setIsLoading(true);

@@ -34,8 +34,8 @@ export default function ChatArea({
         completedObjectives={completedObjectives}
         onCompleteObjective={handleCompleteObjective}
       />
-      <div className="lg:flex-1 flex flex-col">
-        <Card className="flex-1 pb-0 flex flex-col  max-h-[85vh] border-none">
+      <div className=" flex flex-col h-full">
+        <Card className="flex-1 pb-0 flex flex-col  border-none">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-300 to-blue-500 flex items-center justify-center">

@@ -1,10 +1,12 @@
-import type React from "react";
-import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
-import "./globals.css";
+import NavBarWrapper from "@/components/nav-bar-wrapper";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ChatSessionProvider } from "@/contexts/chat-session-context";
-import NavBarWrapper from "@/components/nav-bar-wrapper";
+import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
+import { cookies } from "next/headers";
+import type React from "react";
+import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -25,11 +27,17 @@ export const metadata: Metadata = {
   generator: "v0.app",
 };
 
-export default function RootLayout({
+export const dynamic = "force-dynamic";
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  console.log("User in RootLayout:", user);
   return (
     <html
       lang="vi"
@@ -37,7 +45,7 @@ export default function RootLayout({
     >
       <body className="font-sans h-full overflow-hidden">
         {" "}
-        <AuthProvider>
+        <AuthProvider userId={user?.id ?? null}>
           <ChatSessionProvider>
             <NavBarWrapper>{children}</NavBarWrapper>
           </ChatSessionProvider>

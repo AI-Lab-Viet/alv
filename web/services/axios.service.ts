@@ -7,24 +7,24 @@ const api = axios.create({
 });
 
 // Add a request interceptor
-api.interceptors.request.use(
-  (config) => {
-    // Get token (from localStorage, cookie, or context)
-    const token = localStorage.getItem("accessToken");
-    const userId = "daylaminh123";
+// api.interceptors.request.use(
+//   (config) => {
+//     // Get token (from localStorage, cookie, or context)
+//     const token = localStorage.getItem("accessToken");
+//     const userId = "daylaminh123";
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    config.headers["user-id"] = userId;
+//     if (token) {
+//       config.headers["Authorization"] = `Bearer ${token}`;
+//     }
+//     config.headers["user-id"] = userId;
 
-    return config;
-  },
-  (error) => {
-    console.error("Request interceptor error:", error);
-    return Promise.reject(error);
-  }
-);
+//     return config;
+//   },
+//   (error) => {
+//     console.error("Request interceptor error:", error);
+//     return Promise.reject(error);
+//   }
+// );
 
 // Add a response interceptor
 api.interceptors.response.use(

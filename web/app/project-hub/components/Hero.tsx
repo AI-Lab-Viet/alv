@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import useToggleDialog from "@/hooks/useToggleDialog";
 import DialogSearch from "./DialogSearch";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Hero() {
   const [isOpenSearch, toggleSearch, shouldRenderSearch] = useToggleDialog();
@@ -12,7 +13,7 @@ export default function Hero() {
         <div className="relative">
           <h1 className="font-semibold text-4xl lg:text-6xl mt-6 mb-6">
             <span className="bg-gradient-to-r from-slate-600 tracking-tighter to-blue-600 bg-clip-text text-transparent">
-              Chào mừng đến với <br /> Xưởng thực chiến
+              Chào mừng đến với <br /> Xưởng thực chiến!
             </span>
           </h1>
           <p className="text-md text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
