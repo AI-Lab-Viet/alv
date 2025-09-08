@@ -1,5 +1,6 @@
 import { HANH_BACKEND_URL, HANH_BE_WS_URL } from "@/consts/urls";
 import { useAuth } from "@/contexts/auth-context";
+import { useChatSession } from "@/contexts/chat-session-context";
 import { Message } from "@/interfaces/chat.interface";
 import { useState, useEffect, useRef } from "react";
 
@@ -10,6 +11,7 @@ const useWebSocket = () => {
   const [error, setError] = useState<string | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { userId } = useAuth();
+  const { sessionId, missionId } = useChatSession();
 
   const connectWebSocket = () => {
     try {
@@ -19,6 +21,15 @@ const useWebSocket = () => {
         console.log("🟢 WebSocket đã kết nối!");
         setIsConnected(true);
         setError(null);
+        ws.send(
+          JSON.stringify({
+            type: "chat",
+            message: "init",
+            user_id: userId,
+            session_id: sessionId,
+            mission_id: missionId,
+          })
+        );
       };
 
       ws.onclose = (event) => {
@@ -95,6 +106,7 @@ const useWebSocket = () => {
             type: "chat",
             message: message,
             user_id: userId,
+            session_id: sessionId,
           })
         );
         setMessages((prev) => [...prev, chatMessage]);

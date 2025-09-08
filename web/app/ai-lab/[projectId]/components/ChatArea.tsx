@@ -34,29 +34,33 @@ export default function ChatArea({
         completedObjectives={completedObjectives}
         onCompleteObjective={handleCompleteObjective}
       />
-      <div className=" flex flex-col h-full">
-        <Card className="flex-1 pb-0 flex flex-col  border-none">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-300 to-blue-500 flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-white" />
-              </div>
-              <span className="bg-gradient-to-r from-sky-300 to-blue-500 bg-clip-text text-transparent">
-                AI Lab - Môi trường làm việc
-              </span>
-            </CardTitle>
-          </CardHeader>
+      <div className="flex flex-col h-full flex-1">
+        {/* Fixed Card Header */}
+        <CardHeader className="py-3 shrink-0">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-300 to-blue-500 flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-white" />
+            </div>
+            <span className="bg-gradient-to-r from-sky-300 to-blue-500 bg-clip-text text-transparent">
+              AI Lab - Môi trường làm việc
+            </span>
+          </CardTitle>
+        </CardHeader>
 
-          <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-            <Chats messages={messages} isLoading={isLoading} />
-            <ChatInput
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-              onSendMessage={onSendMessage}
-              isLoading={isLoading}
-            />
-          </CardContent>
-        </Card>
+        {/* Scrollable Chat Content */}
+        <div className="flex-1 min-h-0">
+          <Chats messages={messages} isLoading={isLoading} />
+        </div>
+
+        {/* Fixed Chat Input */}
+        <div className="shrink-0 px-6 pb-1">
+          <ChatInput
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            onSendMessage={onSendMessage}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
     </div>
   );

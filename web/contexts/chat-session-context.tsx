@@ -8,6 +8,7 @@ import { useAxiosInterceptor } from "@/hooks/useAxiosInterceptor";
 
 interface ChatSessionContextType {
   sessionId: string | undefined;
+  missionId: string | undefined;
   currentMissionDetail: DetailedProject | undefined;
   isLoading: boolean;
   error: string | null;
@@ -69,6 +70,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
 
   const value: ChatSessionContextType = {
     sessionId,
+    missionId: currentMissionDetail?.id,
     currentMissionDetail,
     isLoading,
     error,
