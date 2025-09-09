@@ -21,6 +21,10 @@ const useWebSocket = () => {
         console.log("🟢 WebSocket đã kết nối!");
         setIsConnected(true);
         setError(null);
+        console.log({
+          sessionId,
+          missionId,
+        });
         ws.send(
           JSON.stringify({
             type: "chat",
@@ -57,8 +61,15 @@ const useWebSocket = () => {
         try {
           const response = JSON.parse(event.data);
           console.log(response);
+          // if(response.type === "user_authenticated") {
+          //   return;
+          // }
+          let message = response.response || response.message 
+          if(!message) {
+            return}
+
           const newMessage: Message = {
-            message: response.response || response.message || "No response",
+            message: message,
             sender: "ai",
           };
           setMessages((prev) => [...prev, newMessage]);
@@ -75,7 +86,16 @@ const useWebSocket = () => {
     }
   };
 
+  // (Re)connect whenever key identifiers change
   useEffect(() => {
+    // If either identifier is missing, don't attempt connection
+    if (!sessionId || !missionId) return;
+
+    // Close any existing socket before creating a new one
+    if (socket) {
+      socket.close(1000);
+    }
+
     connectWebSocket();
 
     return () => {
@@ -86,7 +106,7 @@ const useWebSocket = () => {
         socket.close(1000); // Normal closure
       }
     };
-  }, []);
+  }, [sessionId, missionId]);
 
   function sendMessage(message: string) {
     if (!message.trim()) {
@@ -104,7 +124,7 @@ const useWebSocket = () => {
         socket.send(
           JSON.stringify({
             type: "chat",
-            message: message,
+            user_input: message,
             user_id: userId,
             session_id: sessionId,
           })

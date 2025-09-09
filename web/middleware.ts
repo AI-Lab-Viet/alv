@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log("user", user);
+  // console.log("user", user);
 
   const isAuthRoute =
     request.nextUrl.pathname.startsWith("/auth/login") ||

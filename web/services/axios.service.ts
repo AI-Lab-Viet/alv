@@ -27,37 +27,37 @@ const api = axios.create({
 // );
 
 // Add a response interceptor
-api.interceptors.response.use(
-  (response) => {
-    // Any status code that lies within the range of 2xx causes this function to trigger
-    return response;
-  },
-  (error) => {
-    // Any status codes that fall outside the range of 2xx causes this function to trigger
-    console.error("API Error:", {
-      message: error.message,
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      data: error.response?.data,
-      url: error.config?.url,
-    });
+// api.interceptors.response.use(
+//   (response) => {
+//     // Any status code that lies within the range of 2xx causes this function to trigger
+//     return response;
+//   },
+//   (error) => {
+//     // Any status codes that fall outside the range of 2xx causes this function to trigger
+//     console.error("API Error:", {
+//       message: error.message,
+//       status: error.response?.status,
+//       statusText: error.response?.statusText,
+//       data: error.response?.data,
+//       url: error.config?.url,
+//     });
 
-    // Handle specific error cases
-    if (error.response?.status === 401) {
-      // Unauthorized - redirect to login or refresh token
-      console.error("Unauthorized access - consider redirecting to login");
-      // localStorage.removeItem("accessToken");
-      // window.location.href = "/login";
-    } else if (error.response?.status === 403) {
-      console.error("Forbidden access");
-    } else if (error.response?.status === 404) {
-      console.error("Resource not found");
-    } else if (error.response?.status >= 500) {
-      console.error("Server error");
-    }
+//     // Handle specific error cases
+//     if (error.response?.status === 401) {
+//       // Unauthorized - redirect to login or refresh token
+//       console.error("Unauthorized access - consider redirecting to login");
+//       // localStorage.removeItem("accessToken");
+//       // window.location.href = "/login";
+//     } else if (error.response?.status === 403) {
+//       console.error("Forbidden access");
+//     } else if (error.response?.status === 404) {
+//       console.error("Resource not found");
+//     } else if (error.response?.status >= 500) {
+//       console.error("Server error");
+//     }
 
-    return Promise.reject(error);
-  }
-);
+//     return Promise.reject(error);
+//   }
+// );
 
 export default api;

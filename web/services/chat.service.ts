@@ -1,15 +1,36 @@
-import { Message } from "@/interfaces/chat.interface";
+import { ISessionHistoryResponse } from "@/interfaces/chat.interface";
 import api from "./axios.service";
-import { IStartSessionResponse } from "@/interfaces/session.interface";
+import axios, { AxiosError } from "axios";
 
-export async function getChatHistory({ sessionId }: { sessionId: string }) {
+export async function getChatHistory({
+  sessionId,
+}: {
+  sessionId: string;
+}): Promise<ISessionHistoryResponse> {
   try {
-    const response = await api.get(`/api/history/${sessionId}`);
+    const response = await api.get(`/api/history/`, {
+      params: {
+        session_id: sessionId,
+      },
+    });
     console.log("Chat history response:", response);
-    return response.data.chats as Message[];
-  } catch (error) {
-    console.error("Failed to get chat history:", error);
-    throw new Error("Unable to retrieve chat history");
+    return {
+      mission_detail: response.data.mission_detail,
+      chat_history: response.data.chat_history,
+    };
+  } catch (error: unknown) {
+    // Gracefully handle "no history yet" case
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      console.info("No chat history yet for session", sessionId);
+      // Return an empty history so the caller can treat it as a non-fatal state
+      return {
+        mission_detail: undefined as unknown as ISessionHistoryResponse["mission_detail"],
+        chat_history: [],
+      } as ISessionHistoryResponse;
+    }
+
+    // Re-throw original error so callers still have access to status code etc.
+    throw error;
   }
 }
 

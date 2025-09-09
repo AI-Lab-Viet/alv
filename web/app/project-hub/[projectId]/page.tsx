@@ -3,6 +3,7 @@ import MissionPageSkeletion from "@/components/skeleton/MissionPageSkeletion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
 import { useChatSession } from "@/contexts/chat-session-context";
 import { projectData } from "@/data/mockdata";
 import { DetailedProject } from "@/interfaces/project.interface";
@@ -29,7 +30,7 @@ export default function ProjectDetailPage() {
   const [project, setProject] = useState<DetailedProject>();
   const [isStartingSession, setIsStartingSession] = useState(false);
   const router = useRouter();
-  const { startNewSession, sessionId } = useChatSession();
+  const { startNewSession } = useChatSession();
 
   const handleStartProject = async () => {
     if (!missionId) {
@@ -38,21 +39,29 @@ export default function ProjectDetailPage() {
     }
     try {
       setIsStartingSession(true);
-      await startNewSession(missionId);
+      const newSessionId = await startNewSession(missionId);
+      console.log("newSessionId:", newSessionId);
+      setIsStartingSession(false);
+      router.push(`/ai-lab/${newSessionId}`);
       // sessionId will be set in the context and useEffect will handle navigation
     } catch (error) {
       console.error("Error starting new session:", error);
-      setIsStartingSession(false);
+      setIsStartingSession(false);  
+      toast({
+        title: "Error starting new session",
+        description: "Please try again later",
+        variant: "destructive",
+      });
     }
   };
 
   // Navigate when sessionId becomes available
-  useEffect(() => {
-    if (isStartingSession && sessionId) {
-      router.push(`/ai-lab/${sessionId}`);
-      setIsStartingSession(false);
-    }
-  }, [sessionId, isStartingSession, router]);
+  // useEffect(() => {
+  //   if (isStartingSession && sessionId) {
+  //     router.push(`/ai-lab/${sessionId}`);
+  //     setIsStartingSession(false);
+  //   }
+  // }, [sessionId, isStartingSession, router]);
 
   useEffect(() => {
     async function fetchProject() {

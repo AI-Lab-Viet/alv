@@ -13,6 +13,7 @@ import ChatArea from "./components/ChatArea";
 import Header from "./components/Header";
 import SubmissionModal from "./components/SubmissionModal";
 import UserNote from "./components/UserNote";
+import { useAuth } from "@/contexts/auth-context";
 
 interface PageProps {
   params: Promise<{
@@ -23,8 +24,8 @@ interface PageProps {
 export default function AILabPage(props: PageProps) {
   const params = use(props.params);
   const sessionId = params.projectId; // This is actually sessionId from URL
-  const { currentMissionDetail, sessionId: contextSessionId } =
-    useChatSession();
+  const { currentMissionDetail, fetchSessionDetails } = useChatSession();
+  const { userId } = useAuth();
   const {
     sendMessage,
     messages,
@@ -60,6 +61,14 @@ export default function AILabPage(props: PageProps) {
     }, 1000);
     return () => clearInterval(timer);
   }, [startTime]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const fetchData = async () => {
+      await fetchSessionDetails(sessionId, setMessages);
+    };
+    fetchData();
+  }, [userId]);
 
   if (!currentMissionDetail) {
     return <MissionPageSkeletion />;

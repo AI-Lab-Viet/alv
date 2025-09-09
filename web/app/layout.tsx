@@ -7,6 +7,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import { cookies } from "next/headers";
 import type React from "react";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -48,6 +49,7 @@ export default async function RootLayout({
         <AuthProvider userId={user?.id ?? null}>
           <ChatSessionProvider>
             <NavBarWrapper>{children}</NavBarWrapper>
+            <Toaster position="top-right"/>
           </ChatSessionProvider>
         </AuthProvider>
       </body>
