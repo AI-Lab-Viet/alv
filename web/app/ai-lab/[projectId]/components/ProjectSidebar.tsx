@@ -1,7 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { CheckCircle, PanelLeft } from "lucide-react";
@@ -44,7 +42,7 @@ export default function ProjectSidebar({
         </button>
       </div>
       {isOpen && (
-        <ScrollArea className="px-2">
+        <div className="px-2 overflow-y-auto">
           <Card className="bg-white/80 backdrop-blur-sm border-none rounded-none shadow-none">
             <CardHeader className="">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -124,7 +122,7 @@ export default function ProjectSidebar({
               </ul>
             </CardContent>
           </Card>
-        </ScrollArea>
+        </div>
       )}
     </div>
   );

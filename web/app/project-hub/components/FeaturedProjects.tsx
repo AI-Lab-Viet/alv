@@ -1,39 +1,28 @@
 "use client";
 import FeaturedCard from "@/components/project-cards/FeaturedCard";
-import {
-  Carousel,
-  CarouselApi,
-  CarouselContent,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DIFFICULTY } from "@/consts/common";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { getFeaturedProject } from "@/services/projects.service";
 import { useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
 export default function FeaturedProjects() {
   const [featuredProjects, setFeaturedProjects] = useState<DetailedProject[]>(
     []
   );
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
+  const [autoplayPlugin, setAutoplayPlugin] = useState<any>(null);
+
   useEffect(() => {
     const fetchFeaturedProjects = async () => {
       const projects = await getFeaturedProject({});
+      console.log(projects);
       setFeaturedProjects(projects.missions);
     };
     fetchFeaturedProjects();
@@ -41,33 +30,68 @@ export default function FeaturedProjects() {
   if (featuredProjects.length === 0) {
     return <Skeleton className="w-full h-64 mb-8" />; // Or a loading spinner, or a placeholder
   }
+  const handleMouseEnter = () => {
+    if (autoplayPlugin) {
+      autoplayPlugin.stop();
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (autoplayPlugin) {
+      autoplayPlugin.play();
+    }
+  };
+
+
   return (
     <section className="mb-20">
-      <Carousel
-        className="mx-auto relative group"
-        setApi={setApi}
-        plugins={[
-          Autoplay({
-            delay: 5000,
-          }),
-        ]}
+      <h1 className="text-2xl font-bold tracking-tight mb-4">Dự án nổi bật</h1>
+      <div
+        className="relative"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <CarouselPrevious className="absolute left-4 top-1/2 text-white group-hover:flex hidden z-10 bg-transparent" />
-        <CarouselNext className="absolute right-8 top-1/2 text-white group-hover:flex hidden z-10 bg-transparent" />
-        <CarouselContent className="w-full rounded-2xl">
-          {featuredProjects.map((project) => (
-            <FeaturedCard key={project.id} project={project} />
-          ))}
-        </CarouselContent>
-      </Carousel>
-      <div className="text-muted-foreground py-2 text-center text-sm">
-        {Array.from({ length: count }).map((_, index) => (
-          <span
-            key={index}
-            className={`inline-block w-8 h-2 rounded-full mx-1 ${index === current - 1 ? "bg-current" : "bg-muted"
-              }`}
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 4000,
+              stopOnInteraction: false,
+              stopOnMouseEnter: false,
+            }),
+          ]}
+          setApi={(api) => {
+            if (api) {
+              const autoplayInstance = api.plugins()?.autoplay;
+              setAutoplayPlugin(autoplayInstance);
+            }
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {featuredProjects.map((project) => (
+              <CarouselItem
+                key={project.id}
+                className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3"
+              >
+                <div className="p-1">
+                  <FeaturedCard project={project} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious
+            className="left-2"
+          // onClick={handleNavigationClick}
           />
-        ))}
+          <CarouselNext
+            className="right-2"
+          // onClick={handleNavigationClick}
+          />
+        </Carousel>
       </div>
     </section>
   );

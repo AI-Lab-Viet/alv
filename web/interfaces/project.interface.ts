@@ -11,10 +11,11 @@ export interface DetailedProject {
   tips: string[];
   participants: number;
   rating: number;
-  core_skills: string[];
+  domain_skills: string[];
+  skills_required?: string[];
   thumbnail: string;
   featured?: boolean;
-  skills_required: string[];
+  alv_skills: string[];
 }
 
 export interface IAnalysisResponse {
@@ -28,6 +29,13 @@ export interface IFinishSessionResponse {
   analysis: IAnalysisResponse;
   mission: DetailedProject;
   session_id: string;
-  
-  
+}
+
+export interface PortfolioProject {
+  id: string;
+  final_product: string;
+  key_prompts: string[];
+  skills_applied: string[];
+  completeion_time: number;
+  created_at: string;
 }

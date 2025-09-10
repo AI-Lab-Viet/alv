@@ -3,9 +3,11 @@ import AllProjectCard from "@/components/project-cards/AllProjectCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { categories } from "@/consts/categories";
 import { DetailedProject } from "@/interfaces/project.interface";
+import { useIsMobile } from "@/components/ui/use-mobile";
 import {
   getAllProject,
   getProjectByCategory,
@@ -17,6 +19,7 @@ export default function AllProjects() {
   const [activeTab, setActiveTab] = useState("all");
   const [pagination, setPagination] = useState<Record<string, { currentPage: number; totalPages: number; projects: DetailedProject[] }>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useIsMobile();
   const pageSize = 10;
 
   const fetchProjectsForTab = async (tab: string, page: number = 1) => {
@@ -120,6 +123,11 @@ export default function AllProjects() {
     );
   }, [isLoading, pagination, activeTab]);
 
+  const getCategoryDisplayName = (value: string) => {
+    if (value === "all") return "Tất cả";
+    return value;
+  };
+
   return (
     <section>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -128,14 +136,37 @@ export default function AllProjects() {
             Tất cả dự án
           </h2>
         </div>
-        <TabsList className="rounded-lg mb-6 w-full">
-          <TabsTrigger value="all">Tất cả</TabsTrigger>
-          {categories.map((category) => (
-            <TabsTrigger key={category} value={category}>
-              {category}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+
+        {/* Mobile Select Component */}
+        {isMobile ? (
+          <div className="mb-6">
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Chọn danh mục">
+                  {getCategoryDisplayName(activeTab)}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ) : (
+          /* Desktop Tabs Component */
+          <TabsList className="rounded-lg mb-6 w-full">
+            <TabsTrigger value="all">Tất cả</TabsTrigger>
+            {categories.map((category) => (
+              <TabsTrigger key={category} value={category}>
+                {category}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        )}
 
         {renderTabsContent()}
       </Tabs>

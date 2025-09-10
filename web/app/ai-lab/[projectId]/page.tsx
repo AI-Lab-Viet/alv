@@ -42,6 +42,7 @@ export default function AILabPage(props: PageProps) {
   const [startTime] = useState(new Date());
   const [elapsedTime, setElapsedTime] = useState(0);
   const [focusedPanel, setFocusedPanel] = useState<'sidebar' | 'chat' | 'note' | null>('chat');
+  const [isNotePanelCollapsed, setIsNotePanelCollapsed] = useState(true);
 
   const [showSubmissionForm, toggleShowSubmissionForm, shouldRenderShowSubmissionForm] = useToggleDialog();
 
@@ -111,6 +112,10 @@ export default function AILabPage(props: PageProps) {
     setFocusedPanel('chat');
   };
 
+  const toggleNotePanel = () => {
+    setIsNotePanelCollapsed(!isNotePanelCollapsed);
+  };
+
   const progress =
     (completedObjectives.length /
       currentMissionDetail.learning_objectives.length) *
@@ -132,9 +137,9 @@ export default function AILabPage(props: PageProps) {
           className="h-full w-full rounded-2xl"
         >
           <ResizablePanel
-            defaultSize={75}
-            minSize={50}
-            maxSize={90}
+            defaultSize={isNotePanelCollapsed ? 100 : 75}
+            minSize={isNotePanelCollapsed ? 100 : 50}
+            maxSize={100}
             className="h-full"
           >
             <ChatArea
@@ -148,20 +153,26 @@ export default function AILabPage(props: PageProps) {
               handleCompleteObjective={handleCompleteObjective}
               focusedPanel={focusedPanel}
               onPanelFocus={handlePanelFocus}
+              isNotePanelCollapsed={isNotePanelCollapsed}
+              toggleNotePanel={toggleNotePanel}
             />
           </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel
-            defaultSize={25}
-            minSize={10}
-            maxSize={50}
-            className="h-full"
-          >
-            <UserNote
-              focusedPanel={focusedPanel}
-              onPanelFocus={handlePanelFocus}
-            />
-          </ResizablePanel>
+          {!isNotePanelCollapsed && (
+            <>
+              <ResizableHandle />
+              <ResizablePanel
+                defaultSize={25}
+                minSize={10}
+                maxSize={50}
+                className="h-full"
+              >
+                <UserNote
+                  focusedPanel={focusedPanel}
+                  onPanelFocus={handlePanelFocus}
+                />
+              </ResizablePanel>
+            </>
+          )}
         </ResizablePanelGroup>
       </div>
       {shouldRenderShowSubmissionForm && (

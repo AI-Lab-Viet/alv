@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Message } from "@/interfaces/chat.interface";
 import { DetailedProject } from "@/interfaces/project.interface";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, ChevronLeft, ChevronRight, Notebook } from "lucide-react";
 import ChatInput from "./ChatInput";
 import Chats from "./Chats";
 import ProjectSidebar from "./ProjectSidebar";
 import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ChatAreaProps {
   messages: Message[];
@@ -18,6 +20,8 @@ interface ChatAreaProps {
   handleCompleteObjective: (index: number) => void;
   focusedPanel: 'sidebar' | 'chat' | 'note' | null;
   onPanelFocus: (panel: 'sidebar' | 'chat' | 'note' | null) => void;
+  isNotePanelCollapsed: boolean;
+  toggleNotePanel: () => void;
 }
 
 export default function ChatArea({
@@ -31,6 +35,8 @@ export default function ChatArea({
   handleCompleteObjective,
   focusedPanel,
   onPanelFocus,
+  isNotePanelCollapsed,
+  toggleNotePanel,
 }: ChatAreaProps) {
   return (
     <div className="w-full h-full overflow-hidden flex flex-row bg-white backdrop-blur-sm  shadow-lg rounded-none">
@@ -58,13 +64,45 @@ export default function ChatArea({
       >
         {/* Fixed Card Header */}
         <CardHeader className="h-12 py-3 shrink-0 bg-zinc-200/20 backdrop-blur-lg border-none rounded-none shadow-none ">
-          <CardTitle className="text-lg flex items-center gap-2 pb-3">
-            <MessageSquare className="w-5 h-5 text-zinc-500" />
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg flex items-center gap-2 pb-3">
+              <MessageSquare className="w-5 h-5 text-zinc-500" />
 
-            <span className="font-semibold">
-              AI Lab - Môi trường làm việc
-            </span>
-          </CardTitle>
+              <span className="font-semibold">
+                AI Lab - Môi trường làm việc
+              </span>
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleNotePanel();
+              }}
+              className="h-8 w-8 pb-3 hover:bg-zinc-200"
+              title={isNotePanelCollapsed ? "Show notes panel" : "Hide notes panel"}
+            >
+              {isNotePanelCollapsed ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost"><Notebook className="w-4 h-4" /></Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Mở ghi chú</p>
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost"><Notebook className="w-4 h-4" /></Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Đóng ghi chú</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </Button>
+          </div>
         </CardHeader>
         {/* <Separator className="my-0 bg-gray-50" /> */}
 

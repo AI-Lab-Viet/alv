@@ -159,7 +159,7 @@ export default function ProjectDetailPage() {
             <p className="text-xl text-gray-700 mb-6">{project.description}</p>
 
             <div className="flex flex-wrap gap-2 mb-8">
-              {project.skills_required.map((skill) => (
+              {(project.skills_required || project.domain_skills).map((skill) => (
                 <Badge
                   key={skill}
                   variant={"outline"}

@@ -1,10 +1,16 @@
 "use client";
-import { Separator } from "@/components/ui/separator";
-import { DetailedProject } from "@/interfaces/project.interface";
-import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 import {
-  CarouselItem
-} from "../ui/carousel";
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { DetailedProject } from "@/interfaces/project.interface";
+import { ChevronRight, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 export default function FeaturedCard({
   project,
@@ -14,55 +20,57 @@ export default function FeaturedCard({
   const router = useRouter();
   // console.log(project);
   return (
-    <CarouselItem className="shadow-none">
-      <div
-        className="w-full group relative h-72 bg-cover bg-center rounded-2xl flex flex-col justify-end p-6 text-white cursor-pointer"
+    <Card
+      className="w-full group cursor-pointer overflow-hidden hover:shadow-lg transition-shadow duration-300 p-2"
+      onClick={() => router.push(`/project-hub/${project.id}`)}
+    >
+      <CardHeader
+        className=" rounded-lg overflow-hidden h-48 bg-cover bg-center bg-no-repeat relative"
         style={{ backgroundImage: `url(${project.thumbnail})` }}
-        onClick={() => router.push(`/project-hub/${project.id}`)}
       >
-        {/* Black overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/50 rounded-2xl"></div>
+        <Badge
+          variant="outline"
+          className="text-xs text-white absolute top-2 left-2 bg-black/50 border-none"
+        >
+          <Star className="inline mr-1" fill="currentColor" /> {project.rating}
+        </Badge>
+      </CardHeader>
+      <CardContent className="p-4 space-y-3 ">
+        <CardTitle className="text-black tracking-tight text-xl font-semibold line-clamp-2">
+          {project.title}
+        </CardTitle>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary" className="text-xs">
+            {project.category}
+          </Badge>
+          <Badge variant="outline" className="text-xs">
+            {project.difficulty}
+          </Badge>
+        </div>
 
-        <div className="absolute left-4 h-20 top-36 flex flex-col gap-2 w-[calc(100%-2rem)] z-10">
-          <div className="ml-4">
-            <h3 className="text-4xl tracking-tight font-semibold">
-              {project.title}
-            </h3>
-          </div>
-          <div className="flex-grow w-full flex items-center justify-between flex-row  p-4">
-            {/* <Separator orientation="vertical" className="mx-4 bg-white/20" /> */}
-
-            <div className="flex flex-row items-center h-full w-fit">
-              <div className="col-span-2">
-                <h3 className="text-sm tracking-tight ">Thể loại</h3>
-                <p className="text-lg font-semibold ">{project.category}</p>
-              </div>
-              <Separator orientation="vertical" className="mx-4 bg-white/20" />
-
-              <div className="">
-                <h3 className="text-sm tracking-tight ">Độ khó</h3>
-                <p className="text-xl font-semibold ">{project.difficulty}</p>
-              </div>
-              <Separator orientation="vertical" className="mx-4 bg-white/20" />
-              <div className="min-w-18">
-                <h3 className="text-sm tracking-tight ">Đánh giá</h3>
-                <p className="text-xl font-semibold ">{project.rating}</p>
-              </div>
-              <Separator orientation="vertical" className="mx-4 bg-white/20" />
-              <div className="min-w-18">
-                <h3 className="text-sm tracking-tight ">Kỹ năng</h3>
-                <p className="text-md font-semibold ">
-                  {project.skills_required.join(", ").length > 60 ? (
-                    <>{project.skills_required.join(", ").slice(0, 60)}...</>
-                  ) : (
-                    project.skills_required.join(", ")
-                  )}
-                </p>
-              </div>
-            </div>
+        <div className="space-y-2">
+          <div className="text-sm text-muted-foreground">
+            <span className="font-medium">Kỹ năng: </span>
+            <span className="text-foreground">
+              {(project.skills_required || project.domain_skills).join(", ").length > 50 ? (
+                <>{(project.skills_required || project.domain_skills).join(", ").slice(0, 50)}...</>
+              ) : (
+                (project.skills_required || project.domain_skills).join(", ")
+              )}
+            </span>
           </div>
         </div>
-      </div>
-    </CarouselItem>
+        <CardFooter className="p-0 mt-2">
+          <Button
+            className="flex flex-row items-center w-full cursor-pointer"
+            variant={"outline"}
+            onClick={() => router.push(`/project-hub/${project.id}`)}
+          >
+            Thực hành ngay
+            <ChevronRight className="w-4 h-4 inline-block ml-1" />
+          </Button>
+        </CardFooter>
+      </CardContent>
+    </Card>
   );
 }
