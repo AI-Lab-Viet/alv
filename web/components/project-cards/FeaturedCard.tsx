@@ -1,17 +1,10 @@
 "use client";
-import { Clock, Users, Star, Link, ChevronRight, Car } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "../ui/badge";
-import { Card, CardContent } from "../ui/card";
-import { DetailedProject } from "@/interfaces/project.interface";
-import {
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
 import { Separator } from "@/components/ui/separator";
+import { DetailedProject } from "@/interfaces/project.interface";
 import { useRouter } from "next/navigation";
+import {
+  CarouselItem
+} from "../ui/carousel";
 
 export default function FeaturedCard({
   project,
@@ -19,7 +12,7 @@ export default function FeaturedCard({
   project: DetailedProject;
 }) {
   const router = useRouter();
-  console.log(project);
+  // console.log(project);
   return (
     <CarouselItem className="shadow-none">
       <div

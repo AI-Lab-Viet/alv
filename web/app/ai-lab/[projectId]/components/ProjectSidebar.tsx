@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { CheckCircle, PanelLeft } from "lucide-react";
@@ -10,38 +11,40 @@ interface ProjectSidebarProps {
   project: DetailedProject;
   completedObjectives: number[];
   onCompleteObjective: (index: number) => void;
+  focusedPanel?: 'sidebar' | 'chat' | 'note' | null;
+  onPanelFocus?: (panel: 'sidebar' | 'chat' | 'note' | null) => void;
 }
 
 export default function ProjectSidebar({
   project,
   completedObjectives,
   onCompleteObjective,
+  focusedPanel,
+  onPanelFocus,
 }: ProjectSidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
   return (
     <div
-      className={`lg:col-span-1 overflow-y-auto bg-white rounded-none relative border-r border-gray-200 flex-shrink-0 transition-all duration-300 ease-in-out ${
-        isOpen ? "w-64" : "w-12"
-      }`}
+      className={`lg:col-span-1 overflow-y-auto bg-white rounded-none relative border-r border-gray-200 flex-shrink-0 transition-all duration-300 ease-in-out ${isOpen ? "w-64" : "w-12"
+        }`}
     >
       {/* Context */}
-      <div className="flex items-center justify-between w-full h-12 border-b border-gray-200 pb-1 px-2 pt-2 sticky z-10 top-0 bg-white">
+      <div className="flex items-center justify-between w-full h-12  pb-1 px-2 pt-2 sticky z-10 top-0 bg-zinc-50">
         {isOpen && (
           <h1 className="tracking-tighter text-md p-1 whitespace-nowrap">
             Thông tin dự án
           </h1>
         )}
         <button
-          className={`text-sm p-0 mb-1 ${
-            isOpen ? "mr-2" : "mx-auto"
-          } cursor-pointer`}
+          className={`text-sm p-0 mb-1 ${isOpen ? "mr-2" : "mx-auto"
+            } cursor-pointer`}
           onClick={() => setIsOpen(!isOpen)}
         >
           <PanelLeft className="w-4 h-4 text-gray-600 inline-block" />
         </button>
       </div>
       {isOpen && (
-        <div className="px-2 overflow-y-auto">
+        <ScrollArea className="px-2">
           <Card className="bg-white/80 backdrop-blur-sm border-none rounded-none shadow-none">
             <CardHeader className="">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -73,22 +76,20 @@ export default function ProjectSidebar({
                   <li key={index} className="flex items-start gap-2">
                     <button
                       onClick={() => onCompleteObjective(index)}
-                      className={`w-4 h-4 rounded-full border-2 flex-shrink-0 mt-0.5 transition-colors ${
-                        completedObjectives.includes(index)
-                          ? "bg-blue-600 border-blue-600"
-                          : "border-gray-300 hover:border-blue-400"
-                      }`}
+                      className={`w-4 h-4 rounded-full border-2 flex-shrink-0 mt-0.5 transition-colors ${completedObjectives.includes(index)
+                        ? "bg-blue-600 border-blue-600"
+                        : "border-gray-300 hover:border-blue-400"
+                        }`}
                     >
                       {completedObjectives.includes(index) && (
                         <CheckCircle className="w-3 h-3 text-white" />
                       )}
                     </button>
                     <span
-                      className={`text-sm ${
-                        completedObjectives.includes(index)
-                          ? "text-blue-700 line-through"
-                          : "text-gray-700"
-                      }`}
+                      className={`text-sm ${completedObjectives.includes(index)
+                        ? "text-blue-700 line-through"
+                        : "text-gray-700"
+                        }`}
                     >
                       {objective}
                     </span>
@@ -123,7 +124,7 @@ export default function ProjectSidebar({
               </ul>
             </CardContent>
           </Card>
-        </div>
+        </ScrollArea>
       )}
     </div>
   );

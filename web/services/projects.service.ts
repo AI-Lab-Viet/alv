@@ -30,7 +30,10 @@ export async function getAllProject({
 
     console.log("Get all projects response:", response);
 
-    return response.data.missions as DetailedProject[];
+    return {
+      missions: response.data.missions as DetailedProject[],
+      total: response.data.total || 0,
+    };
   } catch (error) {
     console.error("Failed to get all projects:", error);
     if (error instanceof Error && error.message.includes("validation")) {
@@ -60,7 +63,10 @@ export async function getFeaturedProject({
 
     console.log("Get featured projects response:", response);
 
-    return response.data.missions as DetailedProject[];
+    return {
+      missions: response.data.missions as DetailedProject[],
+      total: response.data.total || 0,
+    };
   } catch (error) {
     console.error("Failed to get featured projects:", error);
     if (error instanceof Error && error.message.includes("validation")) {
@@ -95,7 +101,10 @@ export async function getProjectByCategory({
 
     console.log("Get projects by category response:", response);
 
-    return response.data.missions as DetailedProject[];
+    return {
+      missions: response.data.missions as DetailedProject[],
+      total: response.data.total || 0,
+    };
   } catch (error) {
     console.error(`Failed to get projects for category "${category}":`, error);
     if (error instanceof Error && error.message.includes("validation")) {

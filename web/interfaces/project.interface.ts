@@ -16,3 +16,18 @@ export interface DetailedProject {
   featured?: boolean;
   skills_required: string[];
 }
+
+export interface IAnalysisResponse {
+  featured_prompts: string[];
+  skills: string[];
+  summary: string;
+}
+
+export interface IFinishSessionResponse {
+  status: string;
+  analysis: IAnalysisResponse;
+  mission: DetailedProject;
+  session_id: string;
+  
+  
+}

@@ -1,6 +1,8 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useChatSession } from "@/contexts/chat-session-context";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { ChevronLeft, Clock, Upload } from "lucide-react";
 import Image from "next/image";
@@ -11,7 +13,7 @@ interface HeaderProps {
   projectId: string;
   elapsedTime: number;
   progress: number;
-  onSubmissionClick: () => void;
+  toggleSubmissionForm: () => void;
 }
 
 export default function Header({
@@ -19,8 +21,9 @@ export default function Header({
   projectId,
   elapsedTime,
   progress,
-  onSubmissionClick,
+  toggleSubmissionForm,
 }: HeaderProps) {
+  // const { finishCurrentSession } = useChatSession();
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -72,8 +75,11 @@ export default function Header({
               <Progress value={progress} className="w-32 h-2" />
             </div>
             <Button
-              onClick={onSubmissionClick}
-              disabled={progress < 100}
+              onClick={() => {
+                // finishCurrentSession();
+                toggleSubmissionForm();
+              }}
+              // disabled={progress < 100}
               className="gap-2 bg-gradient-to-r from-sky-300 to-blue-500 hover:from-slate-700 hover:to-blue-700 transition-all duration-200"
             >
               <Upload className="w-4 h-4" />

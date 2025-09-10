@@ -9,9 +9,9 @@ import React, {
   useMemo,
 } from "react";
 import axios from "axios";
-import { DetailedProject } from "@/interfaces/project.interface";
+import { DetailedProject, IAnalysisResponse, IFinishSessionResponse } from "@/interfaces/project.interface";
 import { IStartSessionResponse } from "@/interfaces/session.interface";
-import { getChatHistory, startSession } from "@/services/chat.service";
+import { finishSession, getChatHistory, startSession } from "@/services/chat.service";
 import { useAxiosInterceptor } from "@/hooks/useAxiosInterceptor";
 import { Message } from "@/interfaces/chat.interface";
 
@@ -28,6 +28,8 @@ interface ChatSessionContextType {
     sessionId: string,
     setMessages: (msg: Message[]) => void
   ) => Promise<void>;
+  finishCurrentSession: () => Promise<void>;
+  analysis: IFinishSessionResponse | undefined;
 }
 
 const ChatSessionContext = createContext<ChatSessionContextType | undefined>(
@@ -44,6 +46,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     useState<DetailedProject>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<IFinishSessionResponse>();
   useAxiosInterceptor();
 
   async function startNewSession(missionId: string): Promise<string> {
@@ -56,11 +59,10 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
       if (response.status < 200 || response.status >= 300) {
         throw new Error(`Error creating new session: ${response.status}`);
       }
-      console.log("Start session full response:", response);
       const responseData = response.data as IStartSessionResponse;
       setSessionId(responseData.session_id);
-      console.log("sessionId:", responseData.session_id);
       setCurrentMissionDetail(responseData.mission);
+      setIsLoading(false);
       return responseData.session_id;
     } catch (error) {
       const errorMessage =
@@ -120,6 +122,28 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     }
   }
 
+  async function finishCurrentSession() {
+    setIsLoading(true);
+    setError(null);
+    if(!sessionId) {
+      setIsLoading(false);
+      return;
+    }
+    try {
+      console.log("Finishing session:", sessionId);
+      const response = await finishSession(sessionId);
+      console.log("Session finished:", response);
+      setAnalysis(response);
+      clearSession();
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Failed to finish session:", error);
+      setError(error instanceof Error ? error.message : "Failed to finish session");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const value: ChatSessionContextType = useMemo(() => ({
     sessionId,
     missionId: currentMissionDetail?.id,
@@ -130,7 +154,9 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     clearError,
     clearSession,
     fetchSessionDetails,
-  }), [sessionId, currentMissionDetail, isLoading, error]);
+    finishCurrentSession,
+    analysis,
+  }), [sessionId, currentMissionDetail, isLoading, error, analysis]);
 
   return (
     <ChatSessionContext.Provider value={value}>

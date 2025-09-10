@@ -34,7 +34,7 @@ export default function FeaturedProjects() {
   useEffect(() => {
     const fetchFeaturedProjects = async () => {
       const projects = await getFeaturedProject({});
-      setFeaturedProjects(projects);
+      setFeaturedProjects(projects.missions);
     };
     fetchFeaturedProjects();
   }, []);
@@ -64,9 +64,8 @@ export default function FeaturedProjects() {
         {Array.from({ length: count }).map((_, index) => (
           <span
             key={index}
-            className={`inline-block w-8 h-2 rounded-full mx-1 ${
-              index === current - 1 ? "bg-current" : "bg-muted"
-            }`}
+            className={`inline-block w-8 h-2 rounded-full mx-1 ${index === current - 1 ? "bg-current" : "bg-muted"
+              }`}
           />
         ))}
       </div>

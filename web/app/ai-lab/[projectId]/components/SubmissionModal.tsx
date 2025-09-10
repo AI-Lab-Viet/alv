@@ -1,25 +1,31 @@
+'use client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { useChatSession } from "@/contexts/chat-session-context";
 import { Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface SubmissionModalProps {
-  isOpen: boolean;
-  finalSubmission: string;
-  setFinalSubmission: (value: string) => void;
-  onSubmit: () => void;
-  onClose: () => void;
+  toggleSubmissionForm: () => void;
+  missionId: string;
 }
 
 export default function SubmissionModal({
-  isOpen,
-  finalSubmission,
-  setFinalSubmission,
-  onSubmit,
-  onClose,
+  toggleSubmissionForm,
+  missionId,
 }: SubmissionModalProps) {
-  if (!isOpen) return null;
+  const { finishCurrentSession } = useChatSession();
+  const router = useRouter();
 
+  async function handleSubmit() {
+    try {
+      await finishCurrentSession();
+      toggleSubmissionForm();
+      router.push(`/project-hub/${missionId}?finished=true`);
+    } catch (error) {
+      console.error("Failed to finish session:", error);
+    }
+  }
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-2xl bg-white/95 backdrop-blur-sm border-white/20 shadow-2xl">
@@ -29,26 +35,16 @@ export default function SubmissionModal({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium mb-2 block">
-              Sản phẩm hoàn thành
-            </label>
-            <Textarea
-              value={finalSubmission}
-              onChange={(e) => setFinalSubmission(e.target.value)}
-              placeholder="Dán nội dung sản phẩm cuối cùng của bạn tại đây..."
-              rows={10}
-              className="bg-white/80 backdrop-blur-sm border-white/20"
-            />
-          </div>
-
+          <p>
+            Bạn đã chắc chưa? Nếu nộp sẽ không thể sửa hoặc xóa sản phẩm cuối cùng này.
+          </p>
           <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outline" onClick={toggleSubmissionForm}>
               Hủy
             </Button>
             <Button
-              onClick={onSubmit}
-              disabled={!finalSubmission.trim()}
+              onClick={handleSubmit}
+              // disabled={!finalSubmission.trim()}
               className="bg-gradient-to-r from-sky-300 to-blue-500 hover:from-slate-700 hover:to-blue-700 transition-all duration-200"
             >
               <Save className="w-4 h-4 mr-2" />

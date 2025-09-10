@@ -1,19 +1,20 @@
 "use client";
 
-import MissionPageSkeletion from "@/components/skeleton/MissionPageSkeletion";
+import AiLabSkeleton from "@/components/skeleton/AiLabSkeleton";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { useAuth } from "@/contexts/auth-context";
 import { useChatSession } from "@/contexts/chat-session-context";
+import useToggleDialog from "@/hooks/useToggleDialog";
 import useWebSocket from "@/hooks/useWebSocket";
 import { use, useEffect, useState } from "react";
 import ChatArea from "./components/ChatArea";
 import Header from "./components/Header";
 import SubmissionModal from "./components/SubmissionModal";
 import UserNote from "./components/UserNote";
-import { useAuth } from "@/contexts/auth-context";
 
 interface PageProps {
   params: Promise<{
@@ -38,10 +39,11 @@ export default function AILabPage(props: PageProps) {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [completedObjectives, setCompletedObjectives] = useState<number[]>([]);
-  const [finalSubmission, setFinalSubmission] = useState("");
-  const [showSubmissionForm, setShowSubmissionForm] = useState(false);
   const [startTime] = useState(new Date());
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [focusedPanel, setFocusedPanel] = useState<'sidebar' | 'chat' | 'note' | null>('chat');
+
+  const [showSubmissionForm, toggleShowSubmissionForm, shouldRenderShowSubmissionForm] = useToggleDialog();
 
   // // Verify session exists and matches URL
   // useEffect(() => {
@@ -71,7 +73,7 @@ export default function AILabPage(props: PageProps) {
   }, [userId]);
 
   if (!currentMissionDetail) {
-    return <MissionPageSkeletion />;
+    return <AiLabSkeleton />;
   }
 
   const handleSendMessage = async () => {
@@ -101,11 +103,12 @@ export default function AILabPage(props: PageProps) {
     }
   };
 
-  const handleSubmitProject = () => {
-    // Here would be the logic to save the project and chat history
-    alert(
-      "Dự án đã được nộp thành công! Kết quả sẽ được thêm vào portfolio của bạn."
-    );
+  const handlePanelFocus = (panel: 'sidebar' | 'chat' | 'note' | null) => {
+    setFocusedPanel(panel);
+  };
+
+  const handleContainerClick = () => {
+    setFocusedPanel('chat');
   };
 
   const progress =
@@ -114,13 +117,13 @@ export default function AILabPage(props: PageProps) {
     100;
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100" onClick={handleContainerClick}>
       <Header
         project={currentMissionDetail}
         projectId={currentMissionDetail.id}
         elapsedTime={elapsedTime}
         progress={progress}
-        onSubmissionClick={() => setShowSubmissionForm(true)}
+        toggleSubmissionForm={toggleShowSubmissionForm}
       />
 
       <div className="flex-1 w-full mx-auto px-4 py-6 lg:px-8 min-h-0">
@@ -143,6 +146,8 @@ export default function AILabPage(props: PageProps) {
               project={currentMissionDetail}
               completedObjectives={completedObjectives}
               handleCompleteObjective={handleCompleteObjective}
+              focusedPanel={focusedPanel}
+              onPanelFocus={handlePanelFocus}
             />
           </ResizablePanel>
           <ResizableHandle />
@@ -152,18 +157,19 @@ export default function AILabPage(props: PageProps) {
             maxSize={50}
             className="h-full"
           >
-            <UserNote />
+            <UserNote
+              focusedPanel={focusedPanel}
+              onPanelFocus={handlePanelFocus}
+            />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
-
-      <SubmissionModal
-        isOpen={showSubmissionForm}
-        finalSubmission={finalSubmission}
-        setFinalSubmission={setFinalSubmission}
-        onSubmit={handleSubmitProject}
-        onClose={() => setShowSubmissionForm(false)}
-      />
+      {shouldRenderShowSubmissionForm && (
+        <SubmissionModal
+          toggleSubmissionForm={toggleShowSubmissionForm}
+          missionId={currentMissionDetail.id}
+        />
+      )}
     </div>
   );
 }

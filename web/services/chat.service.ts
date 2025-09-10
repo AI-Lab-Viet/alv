@@ -1,6 +1,7 @@
 import { ISessionHistoryResponse } from "@/interfaces/chat.interface";
 import api from "./axios.service";
 import axios, { AxiosError } from "axios";
+import { IFinishSessionResponse } from "@/interfaces/project.interface";
 
 export async function getChatHistory({
   sessionId,
@@ -47,13 +48,14 @@ export async function startSession(missionId: string) {
   }
 }
 
-export async function finishSession(missionId: string) {
+export async function finishSession(sessionId: string) {
   try {
-    const response = await api.post(`/api/end`, {
-      mission_id: missionId,
+    const response = await api.post(`/api/end`, null, {
+      params: {
+        session_id: sessionId,
+      }
     });
-    console.log("Finish session response:", response);
-    return response.data;
+    return response.data as IFinishSessionResponse;
   } catch (error) {
     console.error("Failed to finish session:", error);
     throw new Error("Unable to finish session");
