@@ -1,18 +1,16 @@
 "use client";
 import AllProjectCard from "@/components/project-cards/AllProjectCard";
-import { Button } from "@/components/ui/button";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { useIsMobile } from "@/components/ui/use-mobile";
 import { categories } from "@/consts/categories";
 import { DetailedProject } from "@/interfaces/project.interface";
-import { useIsMobile } from "@/components/ui/use-mobile";
 import {
   getAllProject,
   getProjectByCategory,
 } from "@/services/projects.service";
-import { BookOpen } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 export default function AllProjects() {
@@ -31,6 +29,7 @@ export default function AllProjects() {
       } else {
         result = await getProjectByCategory({ category: tab, currentPage: page, pageSize });
       }
+      console.log("result", result);
       const totalPages = Math.ceil(result.total / pageSize);
       setPagination((prev) => ({
         ...prev,
@@ -47,30 +46,75 @@ export default function AllProjects() {
     if (!pagination[activeTab]) {
       fetchProjectsForTab(activeTab);
     }
-  }, [activeTab, pagination]);
+  }, [activeTab]);
 
-  const handlePageChange = (page: number) => {
-    fetchProjectsForTab(activeTab, page);
-  };
+  const handlePageChange = useCallback((page: number) => {
+    if (page >= 1 && page <= (pagination[activeTab]?.totalPages || 1)) {
+      fetchProjectsForTab(activeTab, page);
+    }
+  }, [activeTab, pagination]);
 
   const renderPagination = () => {
     const { currentPage = 1, totalPages = 0 } = pagination[activeTab] || {};
-    if (totalPages <= 1) return null;
+
+    // Debug logging
+    console.log('Pagination debug:', { activeTab, currentPage, totalPages, hasData: !!pagination[activeTab] });
+
+    if (totalPages <= 1) {
+      console.log('Pagination not rendering: totalPages <= 1');
+      // Temporarily force pagination to show for debugging
+      // return null;
+    }
 
     const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-        pages.push(i);
-      } else if (i === currentPage - 2 || i === totalPages - 1) {
+    const delta = 2; // Number of pages to show around current page
+
+    // Ensure we have at least 1 page for debugging
+    const effectiveTotalPages = Math.max(1, totalPages);
+
+    // Always show first page
+    if (1 < currentPage - delta) {
+      pages.push(1);
+      if (2 < currentPage - delta) {
         pages.push("ellipsis");
       }
+    }
+
+    // Show pages around current page
+    for (let i = Math.max(1, currentPage - delta); i <= Math.min(effectiveTotalPages, currentPage + delta); i++) {
+      pages.push(i);
+    }
+
+    // Always show last page
+    if (effectiveTotalPages > currentPage + delta) {
+      if (effectiveTotalPages - 1 > currentPage + delta) {
+        pages.push("ellipsis");
+      }
+      pages.push(effectiveTotalPages);
+    }
+
+    // If no pages were added, add page 1
+    if (pages.length === 0) {
+      pages.push(1);
     }
 
     return (
       <Pagination className="mt-6">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious onClick={() => { if (currentPage > 1) handlePageChange(currentPage - 1); }} />
+            <PaginationPrevious
+              onClick={() => { if (currentPage > 1) handlePageChange(currentPage - 1); }}
+              onKeyDown={(e) => {
+                if ((e.key === 'Enter' || e.key === ' ') && currentPage > 1) {
+                  e.preventDefault();
+                  handlePageChange(currentPage - 1);
+                }
+              }}
+              className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              tabIndex={currentPage <= 1 ? -1 : 0}
+              aria-disabled={currentPage <= 1}
+              aria-label="Go to previous page"
+            />
           </PaginationItem>
           {pages.map((page, index) => (
             <PaginationItem key={index}>
@@ -80,6 +124,16 @@ export default function AllProjects() {
                 <PaginationLink
                   isActive={page === currentPage}
                   onClick={() => handlePageChange(Number(page))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handlePageChange(Number(page));
+                    }
+                  }}
+                  className="cursor-pointer"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Go to page ${page}`}
                 >
                   {page}
                 </PaginationLink>
@@ -87,7 +141,19 @@ export default function AllProjects() {
             </PaginationItem>
           ))}
           <PaginationItem>
-            <PaginationNext onClick={() => { if (currentPage < totalPages) handlePageChange(currentPage + 1); }} />
+            <PaginationNext
+              onClick={() => { if (currentPage < effectiveTotalPages) handlePageChange(currentPage + 1); }}
+              onKeyDown={(e) => {
+                if ((e.key === 'Enter' || e.key === ' ') && currentPage < effectiveTotalPages) {
+                  e.preventDefault();
+                  handlePageChange(currentPage + 1);
+                }
+              }}
+              className={currentPage >= effectiveTotalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              tabIndex={currentPage >= effectiveTotalPages ? -1 : 0}
+              aria-disabled={currentPage >= effectiveTotalPages}
+              aria-label="Go to next page"
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
@@ -118,6 +184,16 @@ export default function AllProjects() {
             <AllProjectCard project={project} key={project.id} />
           ))}
         </div>
+
+        {/* Debug info
+        <div className="mt-4 p-4 bg-gray-100 rounded text-sm">
+          <p>Debug Info:</p>
+          <p>Active Tab: {activeTab}</p>
+          <p>Current Page: {pagination[activeTab]?.currentPage || 'N/A'}</p>
+          <p>Total Pages: {pagination[activeTab]?.totalPages || 'N/A'}</p>
+          <p>Projects Count: {projects.length}</p>
+        </div> */}
+
         {renderPagination()}
       </>
     );

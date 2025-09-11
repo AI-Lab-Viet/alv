@@ -125,7 +125,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
   async function finishCurrentSession() {
     setIsLoading(true);
     setError(null);
-    if(!sessionId) {
+    if (!sessionId) {
       setIsLoading(false);
       return;
     }
@@ -134,7 +134,8 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
       const response = await finishSession(sessionId);
       console.log("Session finished:", response);
       setAnalysis(response);
-      clearSession();
+      // Don't clear session immediately - let the analysis modal handle navigation
+      // clearSession();
       setIsLoading(false);
     } catch (error) {
       console.error("Failed to finish session:", error);

@@ -49,11 +49,17 @@ export default function FeaturedCard({
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground min-h-12">
             <span className="font-medium">Kỹ năng: </span>
             <span className="text-foreground">
-              {(project.skills_required || project.domain_skills).join(", ").length > 50 ? (
-                <>{(project.skills_required || project.domain_skills).join(", ").slice(0, 50)}...</>
+              {(project.skills_required || project.domain_skills).join(", ")
+                .length > 50 ? (
+                <>
+                  {(project.skills_required || project.domain_skills)
+                    .join(", ")
+                    .slice(0, 50)}
+                  ...
+                </>
               ) : (
                 (project.skills_required || project.domain_skills).join(", ")
               )}

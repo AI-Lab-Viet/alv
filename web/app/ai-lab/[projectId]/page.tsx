@@ -11,6 +11,7 @@ import { useChatSession } from "@/contexts/chat-session-context";
 import useToggleDialog from "@/hooks/useToggleDialog";
 import useWebSocket from "@/hooks/useWebSocket";
 import { use, useEffect, useState } from "react";
+import AnalysisModal from "./components/AnalysisModal";
 import ChatArea from "./components/ChatArea";
 import Header from "./components/Header";
 import SubmissionModal from "./components/SubmissionModal";
@@ -25,26 +26,39 @@ interface PageProps {
 export default function AILabPage(props: PageProps) {
   const params = use(props.params);
   const sessionId = params.projectId; // This is actually sessionId from URL
-  const { currentMissionDetail, fetchSessionDetails } = useChatSession();
+  const { currentMissionDetail, fetchSessionDetails, analysis } = useChatSession();
   const { userId } = useAuth();
   const {
     sendMessage,
     messages,
     setMessages,
     isConnected,
-    error: wsError,
     clearError,
+    showPromptStarters,
+    hidePromptStarters,
+    promptStarters,
   } = useWebSocket();
 
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [completedObjectives, setCompletedObjectives] = useState<number[]>([]);
   const [startTime] = useState(new Date());
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [focusedPanel, setFocusedPanel] = useState<'sidebar' | 'chat' | 'note' | null>('chat');
+  const [focusedPanel, setFocusedPanel] = useState<
+    "sidebar" | "chat" | "note" | null
+  >("chat");
   const [isNotePanelCollapsed, setIsNotePanelCollapsed] = useState(true);
 
-  const [showSubmissionForm, toggleShowSubmissionForm, shouldRenderShowSubmissionForm] = useToggleDialog();
+  const [
+    showSubmissionForm,
+    toggleShowSubmissionForm,
+    shouldRenderShowSubmissionForm,
+  ] = useToggleDialog();
+
+  const [
+    showAnalysis,
+    toggleShowAnalysis,
+    shouldRenderShowAnalysis,
+  ] = useToggleDialog();
 
   // // Verify session exists and matches URL
   // useEffect(() => {
@@ -57,21 +71,19 @@ export default function AILabPage(props: PageProps) {
   // Initialize welcome message
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setElapsedTime(
-        Math.floor((new Date().getTime() - startTime.getTime()) / 1000)
-      );
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [startTime]);
-
-  useEffect(() => {
     if (!userId) return;
     const fetchData = async () => {
       await fetchSessionDetails(sessionId, setMessages);
     };
     fetchData();
   }, [userId]);
+
+  useEffect(() => {
+    console.log("analysis:", analysis);
+    if (analysis && !showAnalysis) {
+      toggleShowAnalysis();
+    }
+  }, [analysis, showAnalysis, toggleShowAnalysis]);
 
   if (!currentMissionDetail) {
     return <AiLabSkeleton />;
@@ -104,12 +116,12 @@ export default function AILabPage(props: PageProps) {
     }
   };
 
-  const handlePanelFocus = (panel: 'sidebar' | 'chat' | 'note' | null) => {
+  const handlePanelFocus = (panel: "sidebar" | "chat" | "note" | null) => {
     setFocusedPanel(panel);
   };
 
   const handleContainerClick = () => {
-    setFocusedPanel('chat');
+    setFocusedPanel("chat");
   };
 
   const toggleNotePanel = () => {
@@ -122,11 +134,13 @@ export default function AILabPage(props: PageProps) {
     100;
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100" onClick={handleContainerClick}>
+    <div
+      className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100"
+      onClick={handleContainerClick}
+    >
       <Header
         project={currentMissionDetail}
         projectId={currentMissionDetail.id}
-        elapsedTime={elapsedTime}
         progress={progress}
         toggleSubmissionForm={toggleShowSubmissionForm}
       />
@@ -155,6 +169,9 @@ export default function AILabPage(props: PageProps) {
               onPanelFocus={handlePanelFocus}
               isNotePanelCollapsed={isNotePanelCollapsed}
               toggleNotePanel={toggleNotePanel}
+              showPromptStarters={showPromptStarters}
+              promptStarters={promptStarters}
+              hidePromptStarters={hidePromptStarters}
             />
           </ResizablePanel>
           {!isNotePanelCollapsed && (
@@ -178,6 +195,14 @@ export default function AILabPage(props: PageProps) {
       {shouldRenderShowSubmissionForm && (
         <SubmissionModal
           toggleSubmissionForm={toggleShowSubmissionForm}
+          missionId={currentMissionDetail.id}
+        />
+      )}
+      {shouldRenderShowAnalysis && (
+        <AnalysisModal
+          isOpen={showAnalysis}
+          toggleAnalysis={toggleShowAnalysis}
+          analysis={analysis}
           missionId={currentMissionDetail.id}
         />
       )}

@@ -2,6 +2,7 @@ import AllProjects from "./components/AllProjects";
 import FeaturedProjects from "./components/FeaturedProjects";
 import Hero from "./components/Hero";
 import ProjectCategories from "./components/ProjectCategories";
+import DraggableMascot from "@/components/DraggableMascot";
 
 export default function ProjectHubPageContent() {
   return (
@@ -18,6 +19,14 @@ export default function ProjectHubPageContent() {
         {/* All Projects */}
         <AllProjects />
       </div>
+
+      {/* Draggable Mascot */}
+      {/* <DraggableMascot
+        width={140}
+        height={140}
+        initialPosition={{ x: 50, y: 100 }}
+        className="opacity-80 hover:opacity-100 transition-opacity duration-300"
+      /> */}
     </div>
   );
 }

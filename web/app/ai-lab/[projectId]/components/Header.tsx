@@ -4,14 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useChatSession } from "@/contexts/chat-session-context";
 import { DetailedProject } from "@/interfaces/project.interface";
-import { ChevronLeft, Clock, Upload } from "lucide-react";
+import { ChevronLeft, Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 interface HeaderProps {
   project: DetailedProject;
   projectId: string;
-  elapsedTime: number;
   progress: number;
   toggleSubmissionForm: () => void;
 }
@@ -19,16 +18,10 @@ interface HeaderProps {
 export default function Header({
   project,
   projectId,
-  elapsedTime,
   progress,
   toggleSubmissionForm,
 }: HeaderProps) {
   // const { finishCurrentSession } = useChatSession();
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
 
   return (
     <header className="bg-white/80 backdrop-blur-sm border-b border-white/20 shrink-0">
@@ -59,10 +52,6 @@ export default function Header({
                 <Badge className="bg-gradient-to-r from-slate-100 to-blue-100 text-slate-700 border-slate-200">
                   {project.category}
                 </Badge>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  {formatTime(elapsedTime)}
-                </span>
               </div>
             </div>
           </div>

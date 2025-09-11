@@ -9,3 +9,8 @@ export interface ISessionHistoryResponse {
   mission_detail: DetailedProject;
   chat_history: Message[];
 }
+
+export interface PromptStarterType {
+  prompt: string;
+  title: string;
+}

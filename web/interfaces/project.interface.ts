@@ -39,3 +39,8 @@ export interface PortfolioProject {
   completeion_time: number;
   created_at: string;
 }
+
+export interface IGetProjectByNameResponse {
+  total_missions: number;
+  missions: DetailedProject[];
+}

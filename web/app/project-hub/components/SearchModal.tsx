@@ -9,8 +9,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter, SearchIcon } from "lucide-react";
+import { useState } from "react";
 
 export default function SearchModal() {
+  const [searchQuery, setSearchQuery] = useState<string>("");
   return (
     <Select>
       <SelectTrigger className="w-48 bg-white/80 backdrop-blur-sm border-white/20">

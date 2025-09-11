@@ -1,6 +1,11 @@
 "use client";
 import MissionPageSkeletion from "@/components/skeleton/MissionPageSkeletion";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,17 +15,16 @@ import { useChatSession } from "@/contexts/chat-session-context";
 import useToggleDialog from "@/hooks/useToggleDialog";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { getProjectById } from "@/services/projects.service";
+import { Clock, Loader2, Play, Star, Users } from "lucide-react";
 import {
-  Clock,
-  Loader2,
-  Play,
-  Star,
-  Users,
-} from "lucide-react";
-import { notFound, useParams, useRouter, useSearchParams } from "next/navigation";
+  notFound,
+  useParams,
+  useRouter,
+} from "next/navigation";
 import { useEffect, useState } from "react";
-import AnalysisModal from "../components/AnalysisModal";
 import ProjectAccordionItem from "../components/ProjectAccordionItem";
+import projectPageMascot from "@/public/images/mascot/project_page.png";
+import Image from "next/image";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -29,10 +33,7 @@ export default function ProjectDetailPage() {
   const [project, setProject] = useState<DetailedProject>();
   const [isStartingSession, setIsStartingSession] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isFinished = searchParams.get("finished") === "true";
-  const { startNewSession, isLoading, analysis } = useChatSession();
-  const [showAnalysis, toggleShowAnalysis, shouldRenderShowAnalysis] = useToggleDialog();
+  const { startNewSession, isLoading } = useChatSession();
 
   const handleStartProject = async () => {
     if (!missionId) {
@@ -83,12 +84,6 @@ export default function ProjectDetailPage() {
     fetchProject();
   }, [missionId]);
 
-  useEffect(() => {
-    console.log("analysis:", analysis);
-    if (analysis && isFinished && !showAnalysis) {
-      toggleShowAnalysis();
-    }
-  }, []);
 
   if (!project) {
     return <MissionPageSkeletion />;
@@ -119,18 +114,16 @@ export default function ProjectDetailPage() {
           </div>
         </div>
       </header> */}
-      <header className="w-full h-48 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm">
-        <h1 className="font-semibold text-4xl lg:text-5xl tracking-tighter mb-2">
+      <header className="w-full h-48 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm relative overflow-hidden">
+        <h1 className="font-semibold text-4xl lg:text-5xl tracking-tighter mb-2 text-center">
           {project.title}
         </h1>
-        <p className="text-sm text-gray-500">
-          #{project.category}
-        </p>
+        <p className="text-sm text-gray-500">#{project.category}</p>
       </header>
       <Separator />
       <div className="mx-auto px-4 py-8 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 h-[calc(100vh-(6rem+var(--spacing)*48))]">
         {/* Project Header */}
-        <div className=" border border-zinc-200  rounded-2xl p-2 h-full flex flex-col  bg-white/60 backdrop-blur-sm">
+        <div className=" border border-zinc-200  rounded-2xl p-2 h-full flex flex-col  bg-white/60 backdrop-blur-sm relative overflow-y-auto">
           <div className="border border-zinc-100 h-full p-6 rounded-xl flex flex-col">
             <div className="flex flex-wrap items-center gap-3 mb-4">
               <Badge className="bg-gradient-to-r from-sky-300 to-blue-500 text-white border-0">
@@ -155,20 +148,43 @@ export default function ProjectDetailPage() {
               </div>
             </div>
 
-
             <p className="text-xl text-gray-700 mb-6">{project.description}</p>
 
             <div className="flex flex-wrap gap-2 mb-8">
-              {(project.skills_required || project.domain_skills).map((skill) => (
-                <Badge
-                  key={skill}
-                  variant={"outline"}
-                  className="bg-white/80 text-gray-700 rounded-full"
-                >
-                  {skill}
-                </Badge>
-              ))}
+              {(project.skills_required || project.domain_skills).map(
+                (skill) => (
+                  <Badge
+                    key={skill}
+                    variant={"outline"}
+                    className="bg-white/80 text-gray-700 rounded-full"
+                  >
+                    {skill}
+                  </Badge>
+                )
+              )}
             </div>
+            {/* <ProjectAccordionItem
+              value="note"
+              title="Lưu ý quan trọng"
+              type="text"
+              content=""
+            /> */}
+            <div>
+              <h3 className="font-semibold text-lg lg:text-2xl tracking-tight pb-2">
+                Lưu ý quan trọng
+              </h3>
+              <p>
+                Toàn bộ quá trình tương tác với AI sẽ được ghi lại để tạo thành
+                portfolio của bạn. Hãy thực hiện một cách chỉn chu và sáng tạo.
+              </p>
+            </div>
+            <Image
+              src={projectPageMascot}
+              alt="Project Page Mascot"
+              className="absolute bottom-20 right-20 translate-x-1/2 translate-y-1/2"
+              width={50}
+              height={50}
+            />
             <div className="mt-auto">
               <Button
                 size="lg"
@@ -176,7 +192,11 @@ export default function ProjectDetailPage() {
                 onClick={handleStartProject}
                 disabled={isLoading}
               >
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Play className="w-5 h-5" />
+                )}
                 Bắt đầu trong AI Lab
               </Button>
             </div>
@@ -184,7 +204,11 @@ export default function ProjectDetailPage() {
         </div>
 
         <div className="h-full col-span-1 md:overflow-y-auto pr-2 w-full">
-          <Accordion type="multiple" className="grid gap-4" defaultValue={["context", "note"]}>
+          <Accordion
+            type="multiple"
+            className="grid gap-4"
+            defaultValue={["context", "note"]}
+          >
             <ProjectAccordionItem
               value="context"
               title="Bối cảnh dự án"
@@ -212,22 +236,9 @@ export default function ProjectDetailPage() {
               items={project.tips}
               listType="dots"
             />
-            <ProjectAccordionItem
-              value="note"
-              title="Lưu ý quan trọng"
-              type="text"
-              content="Toàn bộ quá trình tương tác với AI sẽ được ghi lại để tạo thành portfolio của bạn. Hãy thực hiện một cách chỉn chu và sáng tạo."
-            />
           </Accordion>
         </div>
       </div>
-      {shouldRenderShowAnalysis && (
-        <AnalysisModal
-          isOpen={showAnalysis}
-          toggleAnalysis={toggleShowAnalysis}
-          analysis={analysis}
-        />
-      )}
     </div>
   );
 }

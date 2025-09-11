@@ -1,13 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
 import { Button } from "@/components/ui/button";
-import { Message } from "@/interfaces/chat.interface";
+import { CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Message, PromptStarterType } from "@/interfaces/chat.interface";
 import { DetailedProject } from "@/interfaces/project.interface";
-import { MessageSquare, ChevronLeft, ChevronRight, Notebook } from "lucide-react";
+import { MessageSquare, Notebook } from "lucide-react";
 import ChatInput from "./ChatInput";
 import Chats from "./Chats";
 import ProjectSidebar from "./ProjectSidebar";
-import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ChatAreaProps {
   messages: Message[];
@@ -18,10 +22,13 @@ interface ChatAreaProps {
   project: DetailedProject;
   completedObjectives: number[];
   handleCompleteObjective: (index: number) => void;
-  focusedPanel: 'sidebar' | 'chat' | 'note' | null;
-  onPanelFocus: (panel: 'sidebar' | 'chat' | 'note' | null) => void;
+  focusedPanel: "sidebar" | "chat" | "note" | null;
+  onPanelFocus: (panel: "sidebar" | "chat" | "note" | null) => void;
   isNotePanelCollapsed: boolean;
   toggleNotePanel: () => void;
+  showPromptStarters: boolean;
+  promptStarters: PromptStarterType[];
+  hidePromptStarters: () => void;
 }
 
 export default function ChatArea({
@@ -37,14 +44,23 @@ export default function ChatArea({
   onPanelFocus,
   isNotePanelCollapsed,
   toggleNotePanel,
+  showPromptStarters,
+  promptStarters,
+  hidePromptStarters,
 }: ChatAreaProps) {
+  console.log(promptStarters);
+  console.log("showPromptStarters:", showPromptStarters);
   return (
     <div className="w-full h-full overflow-hidden flex flex-row bg-white backdrop-blur-sm  shadow-lg rounded-none">
       <div
-        className={`transition-all duration-300 ${focusedPanel && focusedPanel !== 'sidebar' ? 'opacity-50' : 'opacity-100'}`}
+        className={`transition-all duration-300 ${
+          focusedPanel && focusedPanel !== "sidebar"
+            ? "opacity-50"
+            : "opacity-100"
+        }`}
         onClick={(e) => {
           e.stopPropagation();
-          onPanelFocus('sidebar');
+          onPanelFocus("sidebar");
         }}
       >
         <ProjectSidebar
@@ -56,10 +72,12 @@ export default function ChatArea({
         />
       </div>
       <div
-        className={`flex flex-col h-full flex-1 transition-all duration-300 ${focusedPanel && focusedPanel !== 'chat' ? 'opacity-50' : 'opacity-100'}`}
+        className={`flex flex-col h-full flex-1 transition-all duration-300 relative ${
+          focusedPanel && focusedPanel !== "chat" ? "opacity-50" : "opacity-100"
+        }`}
         onClick={(e) => {
           e.stopPropagation();
-          onPanelFocus('chat');
+          onPanelFocus("chat");
         }}
       >
         {/* Fixed Card Header */}
@@ -72,36 +90,24 @@ export default function ChatArea({
                 AI Lab - Môi trường làm việc
               </span>
             </CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleNotePanel();
-              }}
-              className="h-8 w-8 pb-3 hover:bg-zinc-200"
-              title={isNotePanelCollapsed ? "Show notes panel" : "Hide notes panel"}
-            >
-              {isNotePanelCollapsed ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost"><Notebook className="w-4 h-4" /></Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Mở ghi chú</p>
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost"><Notebook className="w-4 h-4" /></Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Đóng ghi chú</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleNotePanel();
+                  }}
+                  className="h-8 w-8 pb-3 hover:bg-zinc-200"
+                >
+                  <Notebook className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isNotePanelCollapsed ? "Mở ghi chú" : "Đóng ghi chú"}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </CardHeader>
         {/* <Separator className="my-0 bg-gray-50" /> */}
@@ -110,6 +116,28 @@ export default function ChatArea({
         <div className="flex-1 min-h-0">
           <Chats messages={messages} isLoading={isLoading} />
         </div>
+        {showPromptStarters && (
+          <div className="absolute w-full h-fit flex flex-col items-start  bottom-20 left-0 bg-white border-t border-gray-200 rounded-md mt-2 z-50">
+            <p className="text-sm tracking-tight text-gray-400 px-4 pt-2">
+              Đang gặp khó khăn? Thử bắt đầu với các prompt mẫu:
+            </p>
+            <div className="px-4 py-2 w-full h-fit flex flex-wrap gap-2">
+              {promptStarters.map((starter, index) => (
+                <Button
+                  variant={"outline"}
+                  key={index}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setInputValue(starter.prompt);
+                    // hidePromptStarters();
+                  }}
+                >
+                  {starter.prompt}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Fixed Chat Input */}
         <div className="shrink-0 px-6 pb-1">
@@ -118,6 +146,9 @@ export default function ChatArea({
             setInputValue={setInputValue}
             onSendMessage={onSendMessage}
             isLoading={isLoading}
+            showPromptStarters={showPromptStarters}
+            promptStarters={promptStarters}
+            hidePromptStarters={hidePromptStarters}
           />
         </div>
       </div>

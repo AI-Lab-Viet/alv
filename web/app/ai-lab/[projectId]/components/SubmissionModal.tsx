@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useChatSession } from "@/contexts/chat-session-context";
-import { Save } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Loader2, Save } from "lucide-react";
+import { useState } from "react";
 
 interface SubmissionModalProps {
   toggleSubmissionForm: () => void;
@@ -15,15 +15,18 @@ export default function SubmissionModal({
   missionId,
 }: SubmissionModalProps) {
   const { finishCurrentSession } = useChatSession();
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit() {
     try {
+      setIsLoading(true);
       await finishCurrentSession();
       toggleSubmissionForm();
-      router.push(`/project-hub/${missionId}?finished=true`);
+      // router.push(`/project-hub/${missionId}?finished=true`);
     } catch (error) {
       console.error("Failed to finish session:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
   return (
@@ -46,8 +49,9 @@ export default function SubmissionModal({
               onClick={handleSubmit}
               // disabled={!finalSubmission.trim()}
               className="bg-gradient-to-r from-sky-300 to-blue-500 hover:from-slate-700 hover:to-blue-700 transition-all duration-200"
+              disabled={isLoading}
             >
-              <Save className="w-4 h-4 mr-2" />
+              {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
               Nộp dự án
             </Button>
           </div>

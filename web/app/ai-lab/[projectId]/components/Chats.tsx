@@ -1,25 +1,32 @@
 "use client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Message } from "@/interfaces/chat.interface";
 import { Bot, User } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import avatarMascot from "@/public/images/mascot/face-removebg-preview.png";
 
-export default function Chats({
-  messages,
-  isLoading,
-}: {
+interface ChatsProps {
   messages: Message[];
   isLoading: boolean;
-}) {
+}
+
+export default function Chats({ messages, isLoading }: ChatsProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    if (messages.length > 0 && messages[messages.length - 1].sender === "user") {
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].sender === "user"
+    ) {
       setWaitingForResponse(true);
-    } else if (messages.length > 0 && messages[messages.length - 1].sender === "ai") {
+    } else if (
+      messages.length > 0 &&
+      messages[messages.length - 1].sender === "ai"
+    ) {
       setWaitingForResponse(false);
     }
 
@@ -43,20 +50,30 @@ export default function Chats({
           {messages.map((message) => (
             <div
               key={Math.random().toString(36).substring(7)}
-              className={`flex gap-3 mb-4 ${message.sender === "user" ? "justify-end" : "justify-start"
-                }`}
+              className={`flex gap-3 mb-4 ${
+                message.sender === "user" ? "justify-end" : "justify-start"
+              }`}
             >
               {message.sender === "ai" && (
                 <div className="w-8 h-8 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center flex-shrink-0 border border-slate-200">
-                  <Bot className="w-4 h-4 text-slate-600" />
+                  {/* <Bot className="w-4 h-4 text-slate-600" /> */}
+                  <Avatar>
+                    <AvatarImage
+                      src={avatarMascot.src}
+                      alt="AI Lab Việt"
+                      className="bg-white"
+                    />
+                    <AvatarFallback>AI</AvatarFallback>
+                  </Avatar>
                 </div>
               )}
 
               <div
-                className={`max-w-[80%]  rounded-2xl ${message.sender === "user"
-                  ? "p-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-lg"
-                  : "bg-white/90 backdrop-blur-sm text-gray-900 border border-gray-200 p-4"
-                  }`}
+                className={`max-w-[80%]  rounded-2xl ${
+                  message.sender === "user"
+                    ? "p-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-lg"
+                    : "bg-white/90 backdrop-blur-sm text-gray-900 border border-gray-200 p-4"
+                }`}
               >
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
@@ -96,7 +113,14 @@ export default function Chats({
           {waitingForResponse && (
             <div className="flex gap-3 justify-start">
               <div className="w-8 h-8 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center border border-slate-200">
-                <Bot className="w-4 h-4 text-slate-600" />
+                <Avatar>
+                  <AvatarImage
+                    src={avatarMascot.src}
+                    alt="AI Lab Việt"
+                    className="bg-white"
+                  />
+                  <AvatarFallback>AI</AvatarFallback>
+                </Avatar>
               </div>
               <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-gray-200 shadow-md">
                 <div className="flex gap-1">

@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import useToggleDialog from "@/hooks/useToggleDialog";
 import DialogSearch from "./DialogSearch";
 import { useAuth } from "@/contexts/auth-context";
+import Image from "next/image";
+import projectMainMascot from "@/public/images/mascot/project_main.png";
 
 export default function Hero() {
   const [isOpenSearch, toggleSearch, shouldRenderSearch] = useToggleDialog();
@@ -32,6 +34,13 @@ export default function Hero() {
               <span className="font-semibold">dự án nổi bật</span>
             </p>
           </footer>
+          <Image
+            src={projectMainMascot}
+            alt="Hero Mascot"
+            className="absolute top-0 right-0 "
+            width={150}
+            height={150}
+          />
         </div>
       </div>
       {shouldRenderSearch && (

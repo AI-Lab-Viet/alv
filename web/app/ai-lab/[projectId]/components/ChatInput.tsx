@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PromptStarterType } from "@/interfaces/chat.interface";
 import { Send } from "lucide-react";
 
 interface ChatInputProps {
@@ -7,6 +8,9 @@ interface ChatInputProps {
   setInputValue: (value: string) => void;
   onSendMessage: () => void;
   isLoading: boolean;
+  showPromptStarters: boolean;
+  promptStarters: PromptStarterType[];
+  hidePromptStarters: () => void;
 }
 
 export default function ChatInput({
@@ -22,7 +26,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="p-4 border-t border-gray-200/50 bg-white/50 backdrop-blur-sm">
+    <div className="p-4 border-t border-gray-200/50 bg-white/50 backdrop-blur-sm relative">
       <div className="flex gap-3">
         <Input
           value={inputValue}
@@ -30,7 +34,7 @@ export default function ChatInput({
           placeholder="Nhập câu hỏi hoặc yêu cầu cho AI..."
           onKeyPress={handleKeyPress}
           disabled={isLoading}
-          className="flex-1 bg-white/80 backdrop-blur-sm border-white/20"
+          className="flex-1 bg-zinc-200/20 shadow-none backdrop-blur-sm border-white/20"
         />
         <Button
           onClick={onSendMessage}

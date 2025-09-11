@@ -1,12 +1,37 @@
-import { HANH_BACKEND_URL, HANH_BE_WS_URL } from "@/consts/urls";
+import { HANH_BE_WS_URL } from "@/consts/urls";
 import { useAuth } from "@/contexts/auth-context";
 import { useChatSession } from "@/contexts/chat-session-context";
-import { Message } from "@/interfaces/chat.interface";
-import { useState, useEffect, useRef } from "react";
+import { Message, PromptStarterType } from "@/interfaces/chat.interface";
+import { useEffect, useRef, useState } from "react";
+
+enum MESSAGE_TYPE {
+  CHAT = "chat",
+  AUTH = "user_authenticated",
+  STARTERS = "prompt_starters",
+  OBJECTIVE_DONE = "objective",
+}
+
+const mockPromptStarters = [
+  {
+    prompt: "hé hé",
+    title: "123",
+  },
+  {
+    prompt: "hé hé",
+    title: "123",
+  },
+  {
+    prompt: "hé hé",
+    title: "123",
+  },
+];
 
 const useWebSocket = () => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [showPromptStarters, setShowPromptStarters] = useState<boolean>(false);
+  const [promptStarters, setPromptStarters] =
+    useState<PromptStarterType[]>(mockPromptStarters);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -64,15 +89,23 @@ const useWebSocket = () => {
           // if(response.type === "user_authenticated") {
           //   return;
           // }
-          let message = response.response || response.message 
-          if(!message) {
-            return}
+          if (response.type === MESSAGE_TYPE.STARTERS) {
+            setShowPromptStarters(true);
+            setPromptStarters(response.prompts);
+          }
 
-          const newMessage: Message = {
-            message: message,
-            sender: "ai",
-          };
-          setMessages((prev) => [...prev, newMessage]);
+          let message = response.response || response.message;
+          if (!message) {
+            return;
+          }
+
+          if (response.type === MESSAGE_TYPE.CHAT) {
+            const newMessage: Message = {
+              message: message,
+              sender: "ai",
+            };
+            setMessages((prev) => [...prev, newMessage]);
+          }
         } catch (error) {
           console.error("Error parsing WebSocket message:", error);
           setError("Error parsing server response");
@@ -129,6 +162,9 @@ const useWebSocket = () => {
             session_id: sessionId,
           })
         );
+        if (showPromptStarters) {
+          hidePromptStarters();
+        }
         setMessages((prev) => [...prev, chatMessage]);
         setError(null);
       } catch (error) {
@@ -152,6 +188,9 @@ const useWebSocket = () => {
     }
     connectWebSocket();
   };
+  const hidePromptStarters = () => {
+    setShowPromptStarters(false), setPromptStarters([]);
+  };
 
   return {
     sendMessage,
@@ -161,6 +200,9 @@ const useWebSocket = () => {
     error,
     clearError,
     reconnect,
+    showPromptStarters,
+    hidePromptStarters,
+    promptStarters,
   };
 };
 

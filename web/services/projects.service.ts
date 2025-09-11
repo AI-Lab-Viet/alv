@@ -1,4 +1,7 @@
-import { DetailedProject } from "@/interfaces/project.interface";
+import {
+  DetailedProject,
+  IGetProjectByNameResponse,
+} from "@/interfaces/project.interface";
 import api from "./axios.service";
 
 // Utility function to validate parameters
@@ -32,7 +35,7 @@ export async function getAllProject({
 
     return {
       missions: response.data.missions as DetailedProject[],
-      total: response.data.total || 0,
+      total: response.data.total_missions || 0,
     };
   } catch (error) {
     console.error("Failed to get all projects:", error);
@@ -65,7 +68,7 @@ export async function getFeaturedProject({
 
     return {
       missions: response.data.missions as DetailedProject[],
-      total: response.data.total || 0,
+      total: response.data.total_missions || 0,
     };
   } catch (error) {
     console.error("Failed to get featured projects:", error);
@@ -103,7 +106,7 @@ export async function getProjectByCategory({
 
     return {
       missions: response.data.missions as DetailedProject[],
-      total: response.data.total || 0,
+      total: response.data.total_missions || 0,
     };
   } catch (error) {
     console.error(`Failed to get projects for category "${category}":`, error);
@@ -131,5 +134,35 @@ export async function getProjectById({ missionId }: { missionId: string }) {
       throw error; // Re-throw validation errors as-is
     }
     throw new Error(`Unable to retrieve project with ID: ${missionId}`);
+  }
+}
+
+export async function getProjectByName({
+  name,
+  page = 1,
+  pageSize = 3,
+}: {
+  name: string;
+  page: number;
+  pageSize: number;
+}) {
+  try {
+    const response = await api.get("/missions/search", {
+      params: {
+        name: name,
+        page: page,
+        page_size: pageSize,
+      },
+    });
+
+    console.log("Get project by ID response:", response);
+
+    return response.data as IGetProjectByNameResponse;
+  } catch (error) {
+    console.error(`Failed to get project with name "${name}":`, error);
+    if (error instanceof Error && error.message.includes("validation")) {
+      throw error; // Re-throw validation errors as-is
+    }
+    throw new Error(`Unable to retrieve project with ID: ${name}`);
   }
 }
