@@ -9,11 +9,15 @@ import { useState } from "react";
 interface SubmissionModalProps {
   toggleSubmissionForm: () => void;
   missionId: string;
+  handleCompleteObjective: (objective: string) => void;
+  learningObjectives: string[];
 }
 
 export default function SubmissionModal({
   toggleSubmissionForm,
   missionId,
+  handleCompleteObjective,
+  learningObjectives,
 }: SubmissionModalProps) {
   const { finishCurrentSession } = useChatSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +27,13 @@ export default function SubmissionModal({
   async function handleSubmit() {
     try {
       setIsLoading(true);
+
+      // Mark the last objective as completed
+      if (learningObjectives.length > 0) {
+        const lastObjective = learningObjectives[learningObjectives.length - 1];
+        handleCompleteObjective(lastObjective);
+      }
+
       await finishCurrentSession({ finalSubmission, reflection });
       toggleSubmissionForm();
       // router.push(`/project-hub/${missionId}?finished=true`);

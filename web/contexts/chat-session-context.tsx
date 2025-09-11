@@ -32,6 +32,7 @@ interface ChatSessionContextType {
   startNewSession: (missionId: string) => Promise<string>;
   clearError: () => void;
   clearSession: () => void;
+  clearAnalysis: () => void;
   fetchSessionDetails: (
     sessionId: string,
     setMessages: (msg: Message[]) => void
@@ -66,6 +67,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
   async function startNewSession(missionId: string): Promise<string> {
     setIsLoading(true);
     setError(null);
+    clearAnalysis(); // Clear any existing analysis when starting new session
 
     try {
       const response = await startSession(missionId);
@@ -92,10 +94,13 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
 
   const clearError = () => setError(null);
 
+  const clearAnalysis = () => setAnalysis(undefined);
+
   const clearSession = () => {
     setSessionId(undefined);
     setCurrentMissionDetail(undefined);
     setError(null);
+    clearAnalysis(); // Clear analysis when clearing session
   };
 
   async function fetchSessionDetails(
@@ -183,6 +188,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
       startNewSession,
       clearError,
       clearSession,
+      clearAnalysis,
       fetchSessionDetails,
       finishCurrentSession,
       analysis,

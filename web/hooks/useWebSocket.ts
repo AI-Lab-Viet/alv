@@ -107,7 +107,10 @@ const useWebSocket = () => {
             };
             setMessages((prev) => [...prev, newMessage]);
 
-            if (response.current_progress) {
+            if (
+              response.current_progress &&
+              response.current_progress.trim() !== "Ý tưởng"
+            ) {
               console.log(
                 "response.current_progress",
                 response.current_progress

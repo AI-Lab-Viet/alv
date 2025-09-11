@@ -37,15 +37,17 @@ export default function AnalysisModal({
   missionId,
 }: AnalysisModalProps) {
   const router = useRouter();
-  const { clearSession } = useChatSession();
+  const { clearSession, clearAnalysis } = useChatSession();
 
   const handleCloseAndRedirect = () => {
     toggleAnalysis();
+    clearAnalysis(); // Clear analysis data when modal is closed
     clearSession(); // Clear session when user navigates away
     router.push(`/project-hub/${missionId}`);
   };
 
   const handleViewPortfolio = () => {
+    clearAnalysis(); // Clear analysis data when modal is closed
     clearSession(); // Clear session when user navigates to portfolio
     router.push(`/profile`);
   };

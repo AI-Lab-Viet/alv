@@ -80,10 +80,14 @@ export default function AILabPage(props: PageProps) {
 
   useEffect(() => {
     console.log("analysis:", analysis);
-    if (analysis && !showAnalysis) {
+    // Only show analysis modal if:
+    // 1. Analysis data exists
+    // 2. Modal is not already showing
+    // 3. Analysis belongs to the current session (session_id matches)
+    if (analysis && !showAnalysis && analysis.session_id?.trim() === sessionId?.trim()) {
       toggleShowAnalysis();
     }
-  }, [analysis, showAnalysis, toggleShowAnalysis]);
+  }, [analysis, showAnalysis, toggleShowAnalysis, sessionId]);
 
 
   if (!currentMissionDetail) {
@@ -194,6 +198,8 @@ export default function AILabPage(props: PageProps) {
         <SubmissionModal
           toggleSubmissionForm={toggleShowSubmissionForm}
           missionId={currentMissionDetail.id}
+          handleCompleteObjective={handleCompleteObjective}
+          learningObjectives={currentMissionDetail.learning_objectives}
         />
       )}
       {shouldRenderShowAnalysis && (
