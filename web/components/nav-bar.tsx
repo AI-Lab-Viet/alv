@@ -118,6 +118,7 @@ export default function NavBar({ currentPath, routeBack }: NavBarProps) {
 
   const handleLogout = useCallback(async () => {
     await signOut();
+    localStorage.removeItem("user");
   }, []);
 
   return (

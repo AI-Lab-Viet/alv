@@ -30,7 +30,10 @@ import {
   Crown,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase/client";
+import { Viewer, Worker } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 const userProgress = {
   completedStations: 3,
@@ -126,6 +129,7 @@ const getNextStation = () => {
 };
 
 export default function SkillHubPage() {
+  // const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const [selectedStation, setSelectedStation] = useState<
     null | (typeof journeyStations)[0]
   >(null);
@@ -189,23 +193,38 @@ export default function SkillHubPage() {
               </CardHeader>
               <CardContent>
                 <div className="relative h-[700px] overflow-hidden">
-                  <svg
-                    className="absolute inset-0 w-full h-full z-0"
-                    viewBox="0 0 600 800"
-                    preserveAspectRatio="xMidYMid meet"
-                  >
-                    <path
-                      d="M 450 100
-     C 350 50, 150 100, 150 250
-     C 150 400, 450 400, 450 550
-     C 450 700, 150 700, 150 650"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      fill="none"
-                      className="text-border opacity-80"
-                      strokeDasharray="10,5"
+                  <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+                    <svg
+                      className="absolute inset-0 w-full h-full"
+                      viewBox="0 0 600 800"
+                      preserveAspectRatio="xMidYMid meet"
+                    >
+                      <path
+                        d="M 450 100
+                         C 350 50, 150 100, 150 250
+                         C 150 400, 450 400, 450 550
+                         C 450 700, 150 700, 150 650"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        fill="none"
+                        className="text-border opacity-80"
+                        strokeDasharray="10,5"
+                      />
+                    </svg>
+                    <Image
+                      src="/images/alva-flag.png"
+                      width={150}
+                      height={150}
+                      alt="Alva Book"
+                      className="hidden md:block pointer-events-none"
+                      style={{
+                        position: "absolute",
+                        right: 25,
+                        bottom: 25,
+                        zIndex: 10,
+                      }}
                     />
-                  </svg>
+                  </div>
 
                   <div className="absolute left-[85%] top-[8%] -translate-x-1/2 text-center z-5">
                     <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border">
@@ -402,6 +421,47 @@ export default function SkillHubPage() {
                     {nextStation ? nextStation.worldName : "Hoàn thành"}
                   </Badge>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+              <Viewer
+                fileUrl="https://wojvcxygxpxocmtsxjbk.supabase.co/storage/v1/object/public/documents/Giao_Trinh_AI_Lab_Viet_new.pdf"
+                // plugins={[defaultLayoutPluginInstance]}
+              />
+            </Worker> */}
+
+            <Card className="bg-card text-card-foreground border-border">
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  💡 Truy cập giáo trình
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Tải về giáo trình chi tiết để học tập hiệu quả hơn
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={async () => {
+                    const { data } = await supabase.storage
+                      .from("documents")
+                      .download("Giao_Trinh_AI_Lab_Viet_new.pdf");
+                    if (data) {
+                      const url = URL.createObjectURL(data);
+                      const link = document.createElement("a");
+                      link.href = url;
+                      link.download = "Giao_Trinh_AI_Lab_Viet_new.pdf";
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      URL.revokeObjectURL(url);
+                    }
+                  }}
+                >
+                  Tải về giáo trình
+                </Button>
               </CardContent>
             </Card>
           </div>

@@ -52,7 +52,8 @@ export interface TaskResult {
   result: any;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 export async function poolingExerciseDate(
   task_id: string

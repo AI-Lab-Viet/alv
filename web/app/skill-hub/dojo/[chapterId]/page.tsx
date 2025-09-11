@@ -23,20 +23,25 @@ import {
 } from "@/lib/api";
 import ContentPanel from "@/components/ContentPanel";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
+import { motion, AnimatePresence } from "framer-motion";
+import { set } from "react-hook-form";
+import { supabase } from "@/lib/supabase/client";
 
 // Agent states enum for Chapter 4 specifically
 enum Chapter4States {
   GREETING = 0,
   TEACHING_GOLDEN_QUESTIONS = 1,
   PRACTICE_FIND_ERROR = 2,
-  FEEDBACK_TRANSITION = 3,
-  TEACHING_RED_FLAGS = 4,
-  PRACTICE_RED_FLAGS = 5,
-  TEACHING_FEEDBACK_FORMULA = 6,
-  PRACTICE_FEEDBACK_FORMULA = 7,
-  FINAL_TEST = 8,
-  COMPLETION = 9,
+  PRACTICE_IDENTIFY_CRITERIA = 3,
+  FEEDBACK_TRANSITION = 4,
+  TEACHING_RED_FLAGS = 5,
+  PRACTICE_RED_FLAGS = 6,
+  TEACHING_FEEDBACK_FORMULA = 7,
+  PRACTICE_FEEDBACK_FORMULA = 8,
+  FINAL_TEST = 9,
+  COMPLETION = 10,
 }
 
 // Types
@@ -98,10 +103,21 @@ const chapterMetadata = {
   },
 };
 
+const whiteListUserIds = [
+  "2dd996ec-b829-4d26-bdc7-e696e98edf83",
+  "18645595-da81-43f7-b9ce-1834bec4d6d4",
+  "a9be56d8-1db4-4777-8ad5-94171f381ef0",
+  "c8cf6d7b-e47b-4bf1-8d14-84108dd92fbf",
+  "ee451465-8419-4e16-8d1b-15c18c930523",
+  "1f4e1fbf-bc78-45fc-bf38-79d6cd414ddb",
+  "6e8d244a-2f38-431c-bc6d-c2937b364c52",
+];
+
 export default function JourneyPage() {
   const params = useParams();
   const router = useRouter();
   const chapterId = parseInt(params.chapterId as string);
+  const [showEffect, setShowEffect] = useState(false);
   const [sessionId, setSessionId] = useState<string>(uuidv4());
   const [taskId, setTaskId] = useState<string | null>(null);
   const [exerciseData, setExerciseData] = useState<any>(null);
@@ -127,15 +143,23 @@ export default function JourneyPage() {
 
   const [wrongCriteria, setWrongCriteria] = useState<string>("");
   const [wrongClickedWord, setWrongClickedWord] = useState<string>("");
-
+  const [frameTitle, setFrameTitle] = useState<string>("Khung Tri thức");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(
+    JSON.parse(localStorage.getItem("user") || "null")?.id || null
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chapter = chapterMetadata[chapterId as keyof typeof chapterMetadata];
 
   useEffect(() => {
-    if (chapterId === 4) {
-      loadLessonBlocks();
-      initializeSession();
-    }
+    const init = async () => {
+      if (chapterId === 4) {
+        // const { data } = await supabase.auth.getUser();
+        // setCurrentUserId(data?.user?.id || null);
+        loadLessonBlocks();
+        initializeSession();
+      }
+    };
+    init();
   }, [chapterId]);
 
   useEffect(() => {
@@ -146,16 +170,26 @@ export default function JourneyPage() {
         setExerciseData(data.result);
       }
     };
+
     fetchExerciseData();
   }, [taskId]);
+
+  const triggerLoading = () => {
+    if (currentUserId && !whiteListUserIds.includes(currentUserId)) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  useEffect(() => {
+    if (currentUserId && whiteListUserIds.includes(currentUserId)) return;
+    handleStateChange(currentState, agentResponse as AgentResponse);
+  }, [currentState, agentResponse]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    handleStateChange(currentState, agentResponse as AgentResponse);
-  }, [currentState, agentResponse]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -182,46 +216,84 @@ export default function JourneyPage() {
   };
 
   const initializeSession = async () => {
+    if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+      const initialMessage: Message = {
+        id: "init",
+        sender: "user",
+        content: "Xin chào ALVA!",
+        timestamp: new Date().toISOString(),
+      };
+
+      setMessages([initialMessage]);
+      setIsLoading(true);
+
+      const agentResponse = await postLearningRequest({
+        chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
+        current_state: Chapter4States.GREETING,
+        query: "Xin chào ALVA!",
+        session_id: sessionId,
+        topic: "Nghệ thuật nhận định",
+        user_id: currentUserId,
+        exercise_data: exerciseData,
+      });
+
+      let agentMessage: Message | null = null;
+
+      if (agentResponse && agentResponse.status === "success") {
+        agentMessage = {
+          id: `alva-${Date.now()}`,
+          sender: "alva",
+          content: agentResponse.response_text,
+          timestamp: new Date().toISOString(),
+        };
+      }
+
+      setMessages((prev) => [...prev, ...(agentMessage ? [agentMessage] : [])]);
+      setIsLoading(false);
+      setProgress((currentState / 10) * 100 || 0);
+      return;
+    }
+
+    const initialResponse = mockAgentResponses[Chapter4States.GREETING];
+
+    if (!initialResponse) {
+      console.error("No initial response found");
+      return;
+    }
+
+    const welcomeMessage: Message = {
+      id: "welcome",
+      sender: "alva",
+      content: initialResponse.response_text,
+      timestamp: new Date().toISOString(),
+    };
+
+    triggerLoading();
+
+    setMessages([welcomeMessage]);
+    setAgentResponse(initialResponse);
+    setCurrentState(Chapter4States.GREETING);
+    setProgress(initialResponse.progress || 0);
+
+    // Set initial content display
     setContentDisplay({
       type: "intro",
       title: "Nghệ thuật Nhận định",
       description: "Rèn luyện tư duy phản biện với AI",
     });
-    const initialMessage: Message = {
-      id: "init",
-      sender: "user",
-      content: "Xin chào ALVA!",
-      timestamp: new Date().toISOString(),
-    };
-    setMessages([initialMessage]);
-
-    setIsLoading(true);
-    const agentResponse = await postLearningRequest({
-      chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
-      current_state: Chapter4States.GREETING,
-      query: "Xin chào ALVA!",
-      session_id: sessionId,
-      topic: "Nghệ thuật nhận định",
-      user_id: "18645595-da81-43f7-b9ce-1834bec4d6d4",
-      exercise_data: exerciseData,
-    });
-
-    let agentMessage: Message | null = null;
-    if (agentResponse && agentResponse.status === "success") {
-      agentMessage = {
-        id: `alva-${Date.now()}`,
-        sender: "alva",
-        content: agentResponse.response_text,
-        timestamp: new Date().toISOString(),
-      };
-    }
-
-    setMessages((prev) => [...prev, ...(agentMessage ? [agentMessage] : [])]);
-    setIsLoading(false);
-    // setAgentResponse(initialResponse);
-    // setCurrentState(Chapter4States.GREETING);
-    setProgress((currentState / 10) * 100 || 0);
   };
+
+  useEffect(() => {
+    const lastMsg = messages[messages.length - 1];
+    if (
+      lastMsg?.sender !== "user" &&
+      lastMsg?.content.includes("Bạn hãy xem ở bên phải nhé")
+    ) {
+      setTimeout(() => setShowEffect(true), 1000);
+      const t = setTimeout(() => setShowEffect(false), 2000); // 2 giây
+      return () => clearTimeout(t);
+    }
+  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!currentInput.trim()) return;
@@ -234,156 +306,235 @@ export default function JourneyPage() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-
-    let agentMessage: Message | null = null;
-
-    setIsLoading(true);
-    const agentApiResponse = await postLearningRequest({
-      chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
-      current_state: currentState,
-      query: currentInput,
-      session_id: sessionId,
-      topic: "Nghệ thuật nhận định là gì?",
-      user_id: "18645595-da81-43f7-b9ce-1834bec4d6d4",
-    });
-
-    if (agentApiResponse && agentApiResponse.status === "success") {
-      agentMessage = {
-        id: `alva-${Date.now()}`,
-        sender: "alva",
-        content: agentApiResponse.response_text,
-        timestamp: new Date().toISOString(),
-      };
-      setCurrentState(agentApiResponse.state);
-      setTaskId(agentApiResponse.task_id);
-    }
-    setProgress((currentState / 10) * 100 || 0);
-    setMessages((prev) => (agentMessage ? [...prev, agentMessage] : [...prev]));
-    setIsLoading(false);
     setCurrentInput("");
+    setIsLoading(true);
+
+    if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+      let agentMessage: Message | null = null;
+
+      const agentApiResponse = await postLearningRequest({
+        chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
+        current_state: currentState,
+        query: currentInput,
+        session_id: sessionId,
+        topic: "Nghệ thuật nhận định là gì?",
+        user_id: currentUserId,
+      });
+
+      if (agentApiResponse && agentApiResponse.status === "success") {
+        agentMessage = {
+          id: `alva-${Date.now()}`,
+          sender: "alva",
+          content: agentApiResponse.response_text,
+          timestamp: new Date().toISOString(),
+        };
+        setCurrentState(agentApiResponse.state);
+        setTaskId(agentApiResponse.task_id);
+      }
+      setProgress((currentState / 10) * 100 || 0);
+      setMessages((prev) =>
+        agentMessage ? [...prev, agentMessage] : [...prev]
+      );
+      setIsLoading(false);
+      setCurrentInput("");
+      return;
+    }
+
+    // Handle different states based on script
+    setTimeout(() => {
+      handleStateTransition();
+      setIsLoading(false);
+    }, 1500);
   };
 
   const handleStateTransition = () => {
-    // const nextState = currentState + 1;
-    // const nextResponse = mockAgentResponses[nextState];
-    // if (nextResponse) {
-    //   const alvaResponse: Message = {
-    //     id: `alva-${Date.now()}`,
-    //     sender: "alva",
-    //     content: nextResponse.response_text,
-    //     timestamp: new Date().toISOString(),
-    //   };
-    //   setMessages((prev) => [...prev, alvaResponse]);
-    //   setAgentResponse(nextResponse);
-    //   setCurrentState(nextState);
-    //   setProgress(nextResponse.progress || 0);
-    //   // Handle state-specific content
-    //   handleStateChange(nextState, nextResponse);
-    // }
+    if (currentUserId && !whiteListUserIds.includes(currentUserId)) return;
+    triggerLoading();
+    const nextState = currentState + 1;
+    const nextResponse = mockAgentResponses[nextState];
+
+    if (nextResponse) {
+      const alvaResponse: Message = {
+        id: `alva-${Date.now()}`,
+        sender: "alva",
+        content: nextResponse.response_text,
+        timestamp: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, alvaResponse]);
+      setAgentResponse(nextResponse);
+      setIsLoading(false);
+      setCurrentState(nextState);
+      setProgress(nextResponse.progress || 0);
+
+      // Handle state-specific content
+      handleStateChange(nextState, nextResponse);
+    }
   };
 
   const handleStateChange = (state: number, response: AgentResponse) => {
+    triggerLoading();
     switch (state) {
       case Chapter4States.TEACHING_GOLDEN_QUESTIONS:
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          setContentDisplay({
+            type: "lesson",
+            lessonBlocks: lessonBlocks,
+          });
+          break;
+        }
+
         setContentDisplay({
-          type: "lesson",
-          // title: "Bộ câu hỏi Vàng",
-          // questions: response.chapter_data?.questions || [],
+          type: "lesson_with_golden_questions",
+          title: "Bộ câu hỏi Vàng",
+          questions: response.chapter_data?.questions || [],
           lessonBlocks: lessonBlocks,
         });
         break;
 
       case Chapter4States.PRACTICE_FIND_ERROR:
+        setFrameTitle("Thử thách nhỏ");
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          setContentDisplay({
+            type: "loading",
+            title: "Đang tạo bài tập...",
+          });
+          break;
+        }
+
         setContentDisplay({
-          type: "loading",
-          title: "Đang tạo bài tập...",
+          type: "clickable_text",
+          title: "Tìm lỗi sai",
+          instruction: "Hãy click vào cụm từ sai trong đoạn văn dưới đây",
+          text: response.interactive_content?.text || "",
+          correct_answer: response.interactive_content?.correct_answer || "",
+          clickable_words: response.interactive_content?.clickable_words || [],
         });
         break;
 
-      // case Chapter4States.PRACTICE_IDENTIFY_CRITERIA:
-      //   setContentDisplay({
-      //     type: "multiple_choice",
-      //     title: "Xác định tiêu chí vi phạm",
-      //     question: "Lỗi sai này vi phạm tiêu chí nào trong Bộ câu hỏi Vàng?",
-      //     options: response.interactive_content?.options || [],
-      //     correct_answer: response.interactive_content?.correct_answer,
-      //   });
-      //   break;
+      case Chapter4States.PRACTICE_IDENTIFY_CRITERIA:
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          break;
+        }
+        setContentDisplay({
+          type: "multiple_choice",
+          title: "Xác định tiêu chí vi phạm",
+          question: "Lỗi sai này vi phạm tiêu chí nào trong Bộ câu hỏi Vàng?",
+          options: response.interactive_content?.options || [],
+          correct_answer: response.interactive_content?.correct_answer,
+        });
+        break;
 
-      // case Chapter4States.FEEDBACK_TRANSITION:
-      //   setContentDisplay({
-      //     type: "transition",
-      //     title: "Tuyệt vời!",
-      //     message: response.response_text,
-      //   });
-      //   setTimeout(() => {
-      //     setCurrentState(Chapter4States.TEACHING_RED_FLAGS);
-      //     const nextResponse =
-      //       mockAgentResponses[Chapter4States.TEACHING_RED_FLAGS];
-      //     if (nextResponse) {
-      //       handleStateChange(Chapter4States.TEACHING_RED_FLAGS, nextResponse);
-      //       setProgress(nextResponse.progress || 0);
-      //     }
-      //   }, 2000);
-      //   break;
+      case Chapter4States.FEEDBACK_TRANSITION:
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          setContentDisplay({
+            type: "red_flags",
+            title: 'Các "Cờ đỏ" trong tư duy AI',
+            lessonBlocks: whySectionBlocks,
+          });
+          break;
+        }
+        setContentDisplay({
+          type: "transition",
+          title: "Tuyệt vời!",
+          message: response.response_text,
+        });
+        setTimeout(() => {
+          setCurrentState(Chapter4States.TEACHING_RED_FLAGS);
+          const nextResponse =
+            mockAgentResponses[Chapter4States.TEACHING_RED_FLAGS];
+          if (nextResponse) {
+            handleStateChange(Chapter4States.TEACHING_RED_FLAGS, nextResponse);
+            setProgress(nextResponse.progress || 0);
+          }
+        }, 2000);
+        break;
 
       case Chapter4States.TEACHING_RED_FLAGS:
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          setFrameTitle("Thử thách nhỏ");
+          setContentDisplay({
+            type: "loading",
+            title: "Đang tạo bài tập...",
+          });
+          break;
+        }
+        setFrameTitle("Khung Tri thức");
         setContentDisplay({
           type: "red_flags",
           title: 'Các "Cờ đỏ" trong tư duy AI',
-          // red_flags: response.chapter_data?.red_flags || [],
+          red_flags: response.chapter_data?.red_flags || [],
           lessonBlocks: whySectionBlocks,
         });
         break;
 
       case Chapter4States.PRACTICE_RED_FLAGS:
-        // setContentDisplay({
-        //   type: "text_analysis",
-        //   title: "Nhận diện Cờ đỏ",
-        //   instruction: 'Đoạn văn sau đang mắc phải "cờ đỏ" nào?',
-        //   content: response.interactive_content?.content,
-        //   expected_answer: response.interactive_content?.expected_answer,
-        // });
+        setFrameTitle("Thử thách nhỏ");
         setContentDisplay({
-          type: "loading",
-          title: "Đang tạo bài tập...",
+          type: "text_analysis",
+          title: "Nhận diện Cờ đỏ",
+          instruction: 'Đoạn văn sau đang mắc phải "cờ đỏ" nào?',
+          content: response.interactive_content?.content,
+          expected_answer: response.interactive_content?.expected_answer,
         });
         break;
 
-      // case Chapter4States.TEACHING_FEEDBACK_FORMULA:
-      //   setContentDisplay({
-      //     type: "feedback_formula",
-      //     title: "Công thức Phản hồi 4 bước",
-      //     steps: response.chapter_data?.steps || [],
-      //     lessonBlocks: howSectionBlocks,
-      //   });
-      //   break;
+      case Chapter4States.TEACHING_FEEDBACK_FORMULA:
+        setFrameTitle("Khung Tri thức");
+        setContentDisplay({
+          type: "feedback_formula",
+          title: "Công thức Phản hồi 4 bước",
+          steps: response.chapter_data?.steps || [],
+          lessonBlocks: howSectionBlocks,
+        });
+        break;
 
       case Chapter4States.PRACTICE_FEEDBACK_FORMULA:
-        // setContentDisplay({
-        //   type: "feedback_practice",
-        //   title: "Thực hành Công thức Phản hồi",
-        //   instruction:
-        //     'Áp dụng Công thức Phản hồi 4 bước cho lỗi "mùa hè rực lửa năm 1789"',
-        //   prompt: response.interactive_content?.prompt,
-        // });
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          setFrameTitle("Trận đấu tính điểm");
+          setContentDisplay({
+            type: "loading",
+            title: "Đang tạo bài kiểm tra...",
+          });
+          break;
+        }
+        setFrameTitle("Thử thách nhỏ");
+        setContentDisplay({
+          type: "feedback_practice",
+          title: "Thực hành Công thức Phản hồi",
+          instruction:
+            'Áp dụng Công thức Phản hồi 4 bước cho lỗi "mùa hè rực lửa năm 1789"',
+          prompt: response.interactive_content?.prompt,
+        });
         break;
 
       case Chapter4States.FINAL_TEST:
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          setFrameTitle("Phần thưởng");
+          setContentDisplay({
+            type: "completion",
+            badge: "Discernment Shield",
+            achievement: "Nghệ thuật Nhận định - Hoàn thành",
+            next_action: "Quay về Bản đồ Hành trình",
+          });
+          break;
+        }
+        setFrameTitle("Trận đấu tính điểm");
         setContentDisplay({
-          type: "loading",
-          title: "Đang tạo bài kiểm tra...",
-          // scenario: response.interactive_content?.scenario,
-          // prompt: response.interactive_content?.prompt,
+          type: "final_test",
+          title: "Trận đấu tính điểm",
+          scenario: response.interactive_content?.scenario,
+          prompt: response.interactive_content?.prompt,
         });
         break;
 
       case Chapter4States.COMPLETION:
+        setFrameTitle("Phần thưởng");
         setContentDisplay({
           type: "completion",
-          badge: "Discernment Shield",
-          achievement: "Nghệ thuật Nhận định - Hoàn thành",
-          next_action: "Quay về Bản đồ Hành trình",
+          badge: response.chapter_data?.completion?.badge,
+          achievement: response.chapter_data?.completion?.achievement,
+          next_action: response.chapter_data?.completion?.next_action,
         });
         break;
     }
@@ -393,38 +544,49 @@ export default function JourneyPage() {
     if (contentDisplay?.correct_answer.includes(clickedText)) {
       setClickedError(true);
       setWrongClickedWord("");
+      if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+        const userMessage: Message = {
+          id: "submission-" + Date.now().toString(),
 
-      const userMessage: Message = {
-        id: "submission-" + Date.now().toString(),
-        sender: "user",
-        content: `Tôi đã tìm thấy lỗi: "${clickedText}"`,
-        timestamp: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, userMessage]);
+          sender: "user",
 
-      setIsLoading(true);
-      const agentResponse = await postLearningRequest({
-        chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
-        current_state: currentState,
-        query: `Tôi đã tìm thấy lỗi: "${clickedText}"`,
-        session_id: sessionId,
-        topic: "Nghệ thuật nhận định",
-        user_id: "18645595-da81-43f7-b9ce-1834bec4d6d4",
-        exercise_data: exerciseData,
-      });
+          content: `Tôi đã tìm thấy lỗi: "${clickedText}"`,
 
-      if (agentResponse && agentResponse.status === "success") {
-        const agentMessage: Message = {
-          id: `alva-${Date.now()}`,
-          sender: "alva",
-          content: agentResponse.response_text,
           timestamp: new Date().toISOString(),
         };
-        setMessages((prev) => [...prev, agentMessage]);
-        setCurrentState(agentResponse.state);
+
+        setMessages((prev) => [...prev, userMessage]);
+
+        setIsLoading(true);
+
+        const agentResponse = await postLearningRequest({
+          chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
+          current_state: currentState,
+          query: `Tôi đã tìm thấy lỗi: "${clickedText}"`,
+          session_id: sessionId,
+          topic: "Nghệ thuật nhận định",
+          user_id: currentUserId,
+          exercise_data: exerciseData,
+        });
+
+        if (agentResponse && agentResponse.status === "success") {
+          const agentMessage: Message = {
+            id: `alva-${Date.now()}`,
+            sender: "alva",
+            content: agentResponse.response_text,
+            timestamp: new Date().toISOString(),
+          };
+
+          setMessages((prev) => [...prev, agentMessage]);
+          setCurrentState(agentResponse.state);
+        }
+        setIsLoading(false);
+        setProgress((currentState / 10) * 100 || 0);
       }
-      setIsLoading(false);
-      setProgress((currentState / 10) * 100 || 0);
+
+      setTimeout(() => {
+        handleStateTransition();
+      }, 2000);
     } else {
       setWrongClickedWord(clickedText);
     }
@@ -435,80 +597,132 @@ export default function JourneyPage() {
     setWrongCriteria("");
 
     if (selectedOption === contentDisplay?.correct_answer) {
-      const userMessage: Message = {
-        id: "submission-" + Date.now().toString(),
-        sender: "user",
-        content: `Tôi chọn đáp án: "${selectedOption}"`,
-        timestamp: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, userMessage]);
+      if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+        const userMessage: Message = {
+          id: "submission-" + Date.now().toString(),
 
-      setIsLoading(true);
-      const agentResponse = await postLearningRequest({
-        chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
-        current_state: currentState,
-        query: `Tôi chọn đáp án: "${selectedOption}"`,
-        session_id: sessionId,
-        topic: "Nghệ thuật nhận định",
-        user_id: "18645595-da81-43f7-b9ce-1834bec4d6d4",
-        exercise_data: exerciseData,
-      });
+          sender: "user",
 
-      if (agentResponse && agentResponse.status === "success") {
-        const agentMessage: Message = {
-          id: `alva-${Date.now()}`,
-          sender: "alva",
-          content: agentResponse.response_text,
+          content: `Tôi chọn đáp án: "${selectedOption}"`,
+
           timestamp: new Date().toISOString(),
         };
-        setMessages((prev) => [...prev, agentMessage]);
-        setCurrentState(agentResponse.state);
+
+        setMessages((prev) => [...prev, userMessage]);
+
+        setIsLoading(true);
+
+        const agentResponse = await postLearningRequest({
+          chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
+
+          current_state: currentState,
+
+          query: `Tôi chọn đáp án: "${selectedOption}"`,
+
+          session_id: sessionId,
+
+          topic: "Nghệ thuật nhận định",
+
+          user_id: "18645595-da81-43f7-b9ce-1834bec4d6d4",
+
+          exercise_data: exerciseData,
+        });
+
+        if (agentResponse && agentResponse.status === "success") {
+          const agentMessage: Message = {
+            id: `alva-${Date.now()}`,
+
+            sender: "alva",
+
+            content: agentResponse.response_text,
+
+            timestamp: new Date().toISOString(),
+          };
+
+          setMessages((prev) => [...prev, agentMessage]);
+
+          setCurrentState(agentResponse.state);
+        }
+
+        setIsLoading(false);
+
+        setProgress((currentState / 10) * 100 || 0);
+        return;
       }
-      setIsLoading(false);
-      setProgress((currentState / 10) * 100 || 0);
+      setTimeout(() => {
+        handleStateTransition();
+      }, 2000);
     } else {
       setWrongCriteria(selectedOption);
     }
   };
 
   const handleTextAnalysis = async () => {
-    if (
-      exerciseData.validation_keywords.some((keyword: string) =>
-        currentInput.toLowerCase().includes(keyword)
-      )
-    ) {
-      const userMessage: Message = {
-        id: "submission-" + Date.now().toString(),
-        sender: "user",
-        content: `Câu trả lời của tôi: "${currentInput}"`,
-        timestamp: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, userMessage]);
+    if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+      if (
+        exerciseData.validation_keywords.some((keyword: string) =>
+          currentInput.toLowerCase().includes(keyword)
+        )
+      ) {
+        const userMessage: Message = {
+          id: "submission-" + Date.now().toString(),
 
-      setIsLoading(true);
-      const agentResponse = await postLearningRequest({
-        chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
-        current_state: currentState,
-        query: `Câu trả lời của tôi: "${currentInput}"`,
-        session_id: sessionId,
-        topic: "Nghệ thuật nhận định",
-        user_id: "18645595-da81-43f7-b9ce-1834bec4d6d4",
-        exercise_data: exerciseData,
-      });
+          sender: "user",
 
-      if (agentResponse && agentResponse.status === "success") {
-        const agentMessage: Message = {
-          id: `alva-${Date.now()}`,
-          sender: "alva",
-          content: agentResponse.response_text,
+          content: `Câu trả lời của tôi: "${currentInput}"`,
+
           timestamp: new Date().toISOString(),
         };
-        setMessages((prev) => [...prev, agentMessage]);
-        setCurrentState(agentResponse.state);
+
+        setMessages((prev) => [...prev, userMessage]);
+
+        setIsLoading(true);
+
+        const agentResponse = await postLearningRequest({
+          chapter_id: "622f8ec2-0c4c-4874-81e7-912e1e4f4522",
+
+          current_state: currentState,
+
+          query: `Câu trả lời của tôi: "${currentInput}"`,
+
+          session_id: sessionId,
+
+          topic: "Nghệ thuật nhận định",
+
+          user_id: "18645595-da81-43f7-b9ce-1834bec4d6d4",
+
+          exercise_data: exerciseData,
+        });
+
+        if (agentResponse && agentResponse.status === "success") {
+          const agentMessage: Message = {
+            id: `alva-${Date.now()}`,
+
+            sender: "alva",
+
+            content: agentResponse.response_text,
+
+            timestamp: new Date().toISOString(),
+          };
+
+          setMessages((prev) => [...prev, agentMessage]);
+
+          setCurrentState(agentResponse.state);
+        }
+
+        setIsLoading(true);
+
+        setProgress((currentState / 10) * 100 || 0);
+
+        setCurrentInput("");
+        return;
       }
-      setIsLoading(true);
-      setProgress((currentState / 10) * 100 || 0);
-      setCurrentInput("");
+    }
+
+    if (currentInput.toLowerCase().includes("mâu thuẫn logic")) {
+      setTimeout(() => {
+        handleStateTransition();
+      }, 1000);
     }
   };
 
@@ -586,40 +800,76 @@ export default function JourneyPage() {
               {/* Messages */}
               <div className="flex-1 overflow-y-auto px-4 pb-4">
                 <div className="space-y-4">
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`flex ${
-                        message.sender === "user"
-                          ? "justify-end"
-                          : "justify-start"
-                      }`}
-                    >
+                  {messages.map((message, idx) => {
+                    // If message is from ALVA, delay its rendering for a simple "typing" effect
+                    if (
+                      message.sender !== "user" &&
+                      idx === messages.length - 1 &&
+                      isLoading
+                    ) {
+                      // Don't render the last ALVA message while loading
+                      return null;
+                    }
+                    return (
                       <div
-                        className={`max-w-[80%] rounded-lg p-3 ${
+                        key={message.id}
+                        className={`flex ${
                           message.sender === "user"
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-foreground"
+                            ? "justify-end"
+                            : "justify-start"
                         }`}
                       >
-                        <div className="text-sm break-words whitespace-pre-wrap">
-                          {message.content}
+                        {message.sender !== "user" && (
+                          <Image
+                            alt="ALVA"
+                            src="/images/alva-avatar.png"
+                            width={36}
+                            height={36}
+                            className="rounded-full mr-2 self-end"
+                          />
+                        )}
+                        <div
+                          className={`max-w-[80%] rounded-lg p-3 ${
+                            message.sender === "user"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-muted text-foreground"
+                          }`}
+                        >
+                          <div className="text-sm break-words whitespace-pre-wrap">
+                            {message.sender === "user" ? (
+                              message.content
+                            ) : (
+                              // <TypeAnimation
+                              //   sequence={[message.content]}
+                              //   speed={90}
+                              //   cursor={false}
+                              // />
+                              <div>{message.content}</div>
+                            )}
+                          </div>
+                          <p className="text-xs opacity-70 mt-1">
+                            {new Date(message.timestamp).toLocaleTimeString(
+                              "vi-VN",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </p>
                         </div>
-                        <p className="text-xs opacity-70 mt-1">
-                          {new Date(message.timestamp).toLocaleTimeString(
-                            "vi-VN",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </p>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
 
                   {isLoading && (
                     <div className="flex justify-start">
+                      <Image
+                        src="/images/alva-avatar.png"
+                        alt="Alva Avatar"
+                        width={36}
+                        height={36}
+                        className="rounded-full mr-2"
+                      />
                       <div className="bg-muted text-muted-foreground rounded-lg p-3">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-current rounded-full animate-bounce" />
@@ -629,8 +879,6 @@ export default function JourneyPage() {
                       </div>
                     </div>
                   )}
-
-                  <div ref={messagesEndRef} />
                 </div>
               </div>
 
@@ -676,7 +924,7 @@ export default function JourneyPage() {
                   <div className="w-8 h-8 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center">
                     <CheckCircle className="w-4 h-4 text-white" />
                   </div>
-                  Khung Tri thức
+                  {frameTitle}
                 </CardTitle>
               </CardHeader>
 
@@ -701,6 +949,41 @@ export default function JourneyPage() {
               </CardContent>
             </Card>
           </div>
+          {/* Hiệu ứng kết nối */}
+          <AnimatePresence>
+            {showEffect && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="pointer-events-none absolute top-0 left-0 w-full h-full"
+              >
+                <svg
+                  className="absolute inset-0 w-full h-full"
+                  style={{ filter: "blur(5px)" }}
+                >
+                  <defs>
+                    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="rgba(59,130,246,0)" />
+                      <stop offset="50%" stopColor="rgba(107, 163, 253, 0.6)" />
+                      <stop offset="100%" stopColor="rgba(59,130,246,0)" />
+                    </linearGradient>
+                  </defs>
+                  <motion.line
+                    x1="25%"
+                    y1="60%"
+                    x2="75%"
+                    y2="40%"
+                    stroke="url(#glow)"
+                    strokeWidth="4"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1.2 }}
+                  />
+                </svg>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

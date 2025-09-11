@@ -11,6 +11,7 @@ import {
   MapPin,
   BookOpen,
 } from "lucide-react";
+import { useState } from "react";
 
 interface LessonBlock {
   id: string;
@@ -50,7 +51,6 @@ export default function ContentPanel({
   wrongCriteria = "",
   wrongClickedWord = "",
 }: ContentPanelProps) {
-  console.log("Rendering ContentPanel with contentDisplay:", contentDisplay);
   if (!contentDisplay) return null;
 
   const renderLessonBlock = (block: LessonBlock) => {
@@ -98,7 +98,7 @@ export default function ContentPanel({
           <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center">
             <Shield className="w-10 h-10 text-white" />
           </div>
-          {/* <div className="pt-4">
+          <div className="pt-4">
             <Button
               onClick={onStateTransition}
               className="w-full"
@@ -106,11 +106,11 @@ export default function ContentPanel({
             >
               {currentState > 0 ? "Đã bắt đầu" : "Bắt đầu"}
             </Button>
-          </div> */}
+          </div>
         </div>
       );
 
-    case "lesson":
+    case "lesson_with_golden_questions":
       return (
         <div className="space-y-6">
           {/* Lesson Documentation */}
@@ -131,14 +131,11 @@ export default function ContentPanel({
                         .map((block: LessonBlock) => renderLessonBlock(block))}
                     </div>
                   </div>
-                  <Button onClick={onStateTransition} className="w-full mt-6">
-                    Tôi đã hiểu
-                  </Button>
                 </CardContent>
               </Card>
             )}
 
-          {/* Golden Questions
+          {/* Golden Questions */}
           <div className="text-center">
             <h3 className="text-xl font-semibold text-foreground mb-2">
               {contentDisplay.title}
@@ -170,8 +167,11 @@ export default function ContentPanel({
                   </div>
                 </div>
               </div>
+              <Button onClick={onStateTransition} className="w-full mt-6">
+                Tôi đã hiểu
+              </Button>
             </CardContent>
-          </Card> */}
+          </Card>
         </div>
       );
 
@@ -214,7 +214,7 @@ export default function ContentPanel({
         </div>
       );
 
-    case "identify_error":
+    case "clickable_text":
       return (
         <div className="space-y-6">
           <div className="text-center">
@@ -264,7 +264,7 @@ export default function ContentPanel({
         </div>
       );
 
-    case "categorize_error":
+    case "multiple_choice":
       return (
         <div className="space-y-6">
           <div className="text-center">
@@ -275,7 +275,7 @@ export default function ContentPanel({
               {contentDisplay.question}
             </p>
           </div>
-          <Card className="bg-purple-50 border-purple-200">
+          <Card className="bg-slate-50 border">
             <CardContent className="p-6">
               <div className="space-y-3">
                 {contentDisplay.options.map((option: string, index: number) => (
@@ -286,7 +286,7 @@ export default function ContentPanel({
                         ? option === contentDisplay.correct_answer
                           ? "bg-green-100 border-green-400"
                           : "bg-red-100 border-red-400"
-                        : "bg-white border-purple-200 hover:bg-purple-100"
+                        : "bg-white border hover:border"
                     }`}
                     onClick={() => onMultipleChoice(option)}
                   >
@@ -339,14 +339,11 @@ export default function ContentPanel({
                         .map((block: LessonBlock) => renderLessonBlock(block))}
                     </div>
                   </div>
-                  <Button onClick={onStateTransition} className="w-full mt-6">
-                    Tôi đã hiểu
-                  </Button>
                 </CardContent>
               </Card>
             )}
 
-          {/* <div className="text-center">
+          <div className="text-center">
             <h3 className="text-xl font-semibold text-foreground mb-2">
               {contentDisplay.title}
             </h3>
@@ -370,11 +367,11 @@ export default function ContentPanel({
                 Tôi đã hiểu
               </Button>
             </CardContent>
-          </Card> */}
+          </Card>
         </div>
       );
 
-    case "free_text_response":
+    case "text_analysis":
       return (
         <div className="space-y-6">
           <div className="text-center">
@@ -388,7 +385,7 @@ export default function ContentPanel({
           <Card className="bg-orange-50 border-orange-200">
             <CardContent className="p-6">
               <div className="p-4 bg-white border border-orange-200 rounded-lg mb-4">
-                <p className="text-sm italic">"{contentDisplay.question}"</p>
+                <p className="text-sm italic">"{contentDisplay.content}"</p>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Nhập câu trả lời vào ô chat và nhấn Enter
@@ -480,23 +477,6 @@ export default function ContentPanel({
               </p>
             </CardContent>
           </Card>
-        </div>
-      );
-
-    case "loading":
-      return (
-        <div className="text-center space-y-6">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center">
-            <Shield className="w-10 h-10 text-white" />
-          </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">
-            {contentDisplay.title}
-          </h3>
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-current rounded-full animate-bounce" />
-            <div className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:0.2s]" />
-            <div className="w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:0.4s]" />
-          </div>
         </div>
       );
 
