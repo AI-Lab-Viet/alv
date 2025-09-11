@@ -1,6 +1,7 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { useChatSession } from "@/contexts/chat-session-context";
 import { Loader2, Save } from "lucide-react";
 import { useState } from "react";
@@ -16,11 +17,13 @@ export default function SubmissionModal({
 }: SubmissionModalProps) {
   const { finishCurrentSession } = useChatSession();
   const [isLoading, setIsLoading] = useState(false);
+  const [finalSubmission, setFinalSubmission] = useState("");
+  const [reflection, setReflection] = useState("");
 
   async function handleSubmit() {
     try {
       setIsLoading(true);
-      await finishCurrentSession();
+      await finishCurrentSession({ finalSubmission, reflection });
       toggleSubmissionForm();
       // router.push(`/project-hub/${missionId}?finished=true`);
     } catch (error) {
@@ -39,8 +42,21 @@ export default function SubmissionModal({
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
-            Bạn đã chắc chưa? Nếu nộp sẽ không thể sửa hoặc xóa sản phẩm cuối cùng này.
+            Bạn đã chắc chưa? Nếu nộp sẽ không thể sửa hoặc xóa sản phẩm cuối
+            cùng này.
           </p>
+          <Textarea
+            placeholder="Nhập mô tả sản phẩm cuối cùng của bạn ở đây..."
+            value={finalSubmission}
+            className="resize-none"
+            onChange={(e) => setFinalSubmission(e.target.value)}
+          />
+          <Textarea
+            placeholder="Viết vài dòng cảm nghĩ của bạn ở đây..."
+            value={reflection}
+            className="resize-none"
+            onChange={(e) => setReflection(e.target.value)}
+          />
           <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={toggleSubmissionForm}>
               Hủy
@@ -51,7 +67,11 @@ export default function SubmissionModal({
               className="bg-gradient-to-r from-sky-300 to-blue-500 hover:from-slate-700 hover:to-blue-700 transition-all duration-200"
               disabled={isLoading}
             >
-              {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4 mr-2" />
+              )}
               Nộp dự án
             </Button>
           </div>

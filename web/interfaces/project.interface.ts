@@ -36,8 +36,11 @@ export interface PortfolioProject {
   final_product: string;
   key_prompts: string[];
   skills_applied: string[];
-  completeion_time: number;
+  total_messages: number;
   created_at: string;
+  mission_name: string;
+  mission_description: string;
+  reflection: string;
 }
 
 export interface IGetProjectByNameResponse {

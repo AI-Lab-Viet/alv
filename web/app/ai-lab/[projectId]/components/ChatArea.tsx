@@ -9,6 +9,7 @@ import {
 import { Message, PromptStarterType } from "@/interfaces/chat.interface";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { MessageSquare, Notebook } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
 import ChatInput from "./ChatInput";
 import Chats from "./Chats";
 import ProjectSidebar from "./ProjectSidebar";
@@ -16,12 +17,8 @@ import ProjectSidebar from "./ProjectSidebar";
 interface ChatAreaProps {
   messages: Message[];
   isLoading: boolean;
-  inputValue: string;
-  setInputValue: (value: string) => void;
-  onSendMessage: () => void;
+  onSendMessage: (inputValue: string) => void;
   project: DetailedProject;
-  completedObjectives: number[];
-  handleCompleteObjective: (index: number) => void;
   focusedPanel: "sidebar" | "chat" | "note" | null;
   onPanelFocus: (panel: "sidebar" | "chat" | "note" | null) => void;
   isNotePanelCollapsed: boolean;
@@ -29,17 +26,16 @@ interface ChatAreaProps {
   showPromptStarters: boolean;
   promptStarters: PromptStarterType[];
   hidePromptStarters: () => void;
+  completedObjective: string;
+  totalCompletedObjectives: string[];
+  handleCompleteObjective: (objective: string) => void;
 }
 
 export default function ChatArea({
   messages,
   isLoading,
-  inputValue,
-  setInputValue,
   onSendMessage,
   project,
-  completedObjectives,
-  handleCompleteObjective,
   focusedPanel,
   onPanelFocus,
   isNotePanelCollapsed,
@@ -47,17 +43,23 @@ export default function ChatArea({
   showPromptStarters,
   promptStarters,
   hidePromptStarters,
+  completedObjective,
+  totalCompletedObjectives,
+  handleCompleteObjective,
 }: ChatAreaProps) {
+  const handleSendMessage = (inputValue: string) => {
+    onSendMessage(inputValue);
+  };
+
   console.log(promptStarters);
   console.log("showPromptStarters:", showPromptStarters);
   return (
     <div className="w-full h-full overflow-hidden flex flex-row bg-white backdrop-blur-sm  shadow-lg rounded-none">
       <div
-        className={`transition-all duration-300 ${
-          focusedPanel && focusedPanel !== "sidebar"
-            ? "opacity-50"
-            : "opacity-100"
-        }`}
+        className={`transition-all duration-300 ${focusedPanel && focusedPanel !== "sidebar"
+          ? "opacity-50"
+          : "opacity-100"
+          }`}
         onClick={(e) => {
           e.stopPropagation();
           onPanelFocus("sidebar");
@@ -65,16 +67,16 @@ export default function ChatArea({
       >
         <ProjectSidebar
           project={project}
-          completedObjectives={completedObjectives}
-          onCompleteObjective={handleCompleteObjective}
           focusedPanel={focusedPanel}
           onPanelFocus={onPanelFocus}
+          completedObjective={completedObjective}
+          totalCompletedObjectives={totalCompletedObjectives}
+          handleCompleteObjective={handleCompleteObjective}
         />
       </div>
       <div
-        className={`flex flex-col h-full flex-1 transition-all duration-300 relative ${
-          focusedPanel && focusedPanel !== "chat" ? "opacity-50" : "opacity-100"
-        }`}
+        className={`flex flex-col h-full flex-1 transition-all duration-300 relative ${focusedPanel && focusedPanel !== "chat" ? "opacity-50" : "opacity-100"
+          }`}
         onClick={(e) => {
           e.stopPropagation();
           onPanelFocus("chat");
@@ -116,35 +118,11 @@ export default function ChatArea({
         <div className="flex-1 min-h-0">
           <Chats messages={messages} isLoading={isLoading} />
         </div>
-        {showPromptStarters && (
-          <div className="absolute w-full h-fit flex flex-col items-start  bottom-20 left-0 bg-white border-t border-gray-200 rounded-md mt-2 z-50">
-            <p className="text-sm tracking-tight text-gray-400 px-4 pt-2">
-              Đang gặp khó khăn? Thử bắt đầu với các prompt mẫu:
-            </p>
-            <div className="px-4 py-2 w-full h-fit flex flex-wrap gap-2">
-              {promptStarters.map((starter, index) => (
-                <Button
-                  variant={"outline"}
-                  key={index}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => {
-                    setInputValue(starter.prompt);
-                    // hidePromptStarters();
-                  }}
-                >
-                  {starter.prompt}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Fixed Chat Input */}
         <div className="shrink-0 px-6 pb-1">
           <ChatInput
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            onSendMessage={onSendMessage}
+            onSendMessage={handleSendMessage}
             isLoading={isLoading}
             showPromptStarters={showPromptStarters}
             promptStarters={promptStarters}

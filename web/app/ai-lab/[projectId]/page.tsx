@@ -37,16 +37,16 @@ export default function AILabPage(props: PageProps) {
     showPromptStarters,
     hidePromptStarters,
     promptStarters,
+    completedObjective,
   } = useWebSocket();
 
-  const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [completedObjectives, setCompletedObjectives] = useState<number[]>([]);
-  const [startTime] = useState(new Date());
+  // const [startTime] = useState(new Date());
   const [focusedPanel, setFocusedPanel] = useState<
     "sidebar" | "chat" | "note" | null
   >("chat");
   const [isNotePanelCollapsed, setIsNotePanelCollapsed] = useState(true);
+  const [totalCompletedObjectives, setTotalCompletedObjectives] = useState<string[]>([]);
 
   const [
     showSubmissionForm,
@@ -85,11 +85,12 @@ export default function AILabPage(props: PageProps) {
     }
   }, [analysis, showAnalysis, toggleShowAnalysis]);
 
+
   if (!currentMissionDetail) {
     return <AiLabSkeleton />;
   }
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (inputValue: string) => {
     if (!inputValue.trim()) return;
 
     if (!isConnected) {
@@ -99,9 +100,8 @@ export default function AILabPage(props: PageProps) {
 
     setIsLoading(true);
     try {
-      // Send message through WebSocket
+      // Send message through WebSocket 
       sendMessage(inputValue);
-      setInputValue("");
       clearError(); // Clear any previous WebSocket errors
     } catch (error) {
       console.error("Error sending message:", error);
@@ -110,11 +110,6 @@ export default function AILabPage(props: PageProps) {
     }
   };
 
-  const handleCompleteObjective = (index: number) => {
-    if (!completedObjectives.includes(index)) {
-      setCompletedObjectives([...completedObjectives, index]);
-    }
-  };
 
   const handlePanelFocus = (panel: "sidebar" | "chat" | "note" | null) => {
     setFocusedPanel(panel);
@@ -128,8 +123,12 @@ export default function AILabPage(props: PageProps) {
     setIsNotePanelCollapsed(!isNotePanelCollapsed);
   };
 
+  const handleCompleteObjective = (objective: string) => {
+    setTotalCompletedObjectives([...totalCompletedObjectives, objective]);
+  };
+
   const progress =
-    (completedObjectives.length /
+    (totalCompletedObjectives.length /
       currentMissionDetail.learning_objectives.length) *
     100;
 
@@ -159,12 +158,8 @@ export default function AILabPage(props: PageProps) {
             <ChatArea
               messages={messages}
               isLoading={isLoading}
-              inputValue={inputValue}
-              setInputValue={setInputValue}
               onSendMessage={handleSendMessage}
               project={currentMissionDetail}
-              completedObjectives={completedObjectives}
-              handleCompleteObjective={handleCompleteObjective}
               focusedPanel={focusedPanel}
               onPanelFocus={handlePanelFocus}
               isNotePanelCollapsed={isNotePanelCollapsed}
@@ -172,6 +167,9 @@ export default function AILabPage(props: PageProps) {
               showPromptStarters={showPromptStarters}
               promptStarters={promptStarters}
               hidePromptStarters={hidePromptStarters}
+              completedObjective={completedObjective}
+              totalCompletedObjectives={totalCompletedObjectives}
+              handleCompleteObjective={handleCompleteObjective}
             />
           </ResizablePanel>
           {!isNotePanelCollapsed && (

@@ -21,6 +21,7 @@ import {
 import { DetailedProject } from "@/interfaces/project.interface";
 import { getProjectByName } from "@/services/projects.service";
 import { Filter, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { toast } from "sonner";
 
@@ -42,6 +43,7 @@ interface DialogProps {
 
 const DialogSearch = (props: DialogProps) => {
   const { isOpen, toggle } = props;
+  const router = useRouter();
 
   // Consolidated state for better race condition management
   const [searchState, setSearchState] = useState<SearchState>({
@@ -257,7 +259,8 @@ const DialogSearch = (props: DialogProps) => {
         {searchState.results.map((mission) => (
           <div
             key={mission.id}
-            className="bg-white/80 backdrop-blur-sm border-white/20 p-2 rounded-md"
+            className="bg-white/80 backdrop-blur-sm border-white/20 p-2 rounded-md cursor-pointer"
+            onClick={() => router.push(`/project-hub/${mission.id}`)}
           >
             <div className="flex flex-col items-start gap-2">
               <h3 className="font-semibold text-md tracking-tight">

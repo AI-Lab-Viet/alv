@@ -9,9 +9,17 @@ import React, {
   useMemo,
 } from "react";
 import axios from "axios";
-import { DetailedProject, IAnalysisResponse, IFinishSessionResponse } from "@/interfaces/project.interface";
+import {
+  DetailedProject,
+  IAnalysisResponse,
+  IFinishSessionResponse,
+} from "@/interfaces/project.interface";
 import { IStartSessionResponse } from "@/interfaces/session.interface";
-import { finishSession, getChatHistory, startSession } from "@/services/chat.service";
+import {
+  finishSession,
+  getChatHistory,
+  startSession,
+} from "@/services/chat.service";
 import { useAxiosInterceptor } from "@/hooks/useAxiosInterceptor";
 import { Message } from "@/interfaces/chat.interface";
 
@@ -28,7 +36,13 @@ interface ChatSessionContextType {
     sessionId: string,
     setMessages: (msg: Message[]) => void
   ) => Promise<void>;
-  finishCurrentSession: () => Promise<void>;
+  finishCurrentSession: ({
+    finalSubmission,
+    reflection,
+  }: {
+    finalSubmission: string;
+    reflection: string;
+  }) => Promise<void>;
   analysis: IFinishSessionResponse | undefined;
 }
 
@@ -105,7 +119,9 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     } catch (error: unknown) {
       // If the session is new, the backend might legitimately respond with 404 (no history yet).
       if (axios.isAxiosError(error) && error.response?.status === 404) {
-        console.info("No chat history found yet – this is expected for a new session.");
+        console.info(
+          "No chat history found yet – this is expected for a new session."
+        );
         // Simply keep mission detail undefined and return without setting an error.
         return;
       }
@@ -122,7 +138,13 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     }
   }
 
-  async function finishCurrentSession() {
+  async function finishCurrentSession({
+    finalSubmission,
+    reflection,
+  }: {
+    finalSubmission: string;
+    reflection: string;
+  }) {
     setIsLoading(true);
     setError(null);
     if (!sessionId) {
@@ -131,7 +153,11 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     }
     try {
       console.log("Finishing session:", sessionId);
-      const response = await finishSession(sessionId);
+      const response = await finishSession(
+        sessionId,
+        finalSubmission,
+        reflection
+      );
       console.log("Session finished:", response);
       setAnalysis(response);
       // Don't clear session immediately - let the analysis modal handle navigation
@@ -139,25 +165,30 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
       setIsLoading(false);
     } catch (error) {
       console.error("Failed to finish session:", error);
-      setError(error instanceof Error ? error.message : "Failed to finish session");
+      setError(
+        error instanceof Error ? error.message : "Failed to finish session"
+      );
     } finally {
       setIsLoading(false);
     }
   }
 
-  const value: ChatSessionContextType = useMemo(() => ({
-    sessionId,
-    missionId: currentMissionDetail?.id,
-    currentMissionDetail,
-    isLoading,
-    error,
-    startNewSession,
-    clearError,
-    clearSession,
-    fetchSessionDetails,
-    finishCurrentSession,
-    analysis,
-  }), [sessionId, currentMissionDetail, isLoading, error, analysis]);
+  const value: ChatSessionContextType = useMemo(
+    () => ({
+      sessionId,
+      missionId: currentMissionDetail?.id,
+      currentMissionDetail,
+      isLoading,
+      error,
+      startNewSession,
+      clearError,
+      clearSession,
+      fetchSessionDetails,
+      finishCurrentSession,
+      analysis,
+    }),
+    [sessionId, currentMissionDetail, isLoading, error, analysis]
+  );
 
   return (
     <ChatSessionContext.Provider value={value}>

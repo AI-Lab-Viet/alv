@@ -15,7 +15,7 @@ export default function AllProjectCard({
       key={project.id}
       className="group shadow-none hover:-translate-y-0.5 transition-all duration-300 bg-white/40 backdrop-blur-sm border border-zinc-200 p-2"
     >
-      <CardContent className="p-6 border border-zinc-100">
+      <CardContent className="p-6 border border-zinc-100 h-full">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -32,7 +32,7 @@ export default function AllProjectCard({
             <h3 className="font-semibold text-lg mb-2 group-hover:text-blue-600 transition-colors">
               {project.title}
             </h3>
-            <p className="text-gray-600 text-sm mb-3 leading-relaxed">
+            <p className="text-gray-600 text-sm mb-3 leading-relaxed h-16">
               {project.description}
             </p>
           </div>

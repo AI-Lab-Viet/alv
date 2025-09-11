@@ -4,4 +4,5 @@ export interface IGetPortfolioResponse {
   status: string;
   total_projects: number;
   projects: PortfolioProject[];
+  message: string;
 }

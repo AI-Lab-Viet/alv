@@ -1,7 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Share2, ExternalLink, Target, Zap, Trophy, Brain } from "lucide-react";
+import {
+  Share2,
+  ExternalLink,
+  Target,
+  Zap,
+  Trophy,
+  Brain,
+  BrainIcon,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import NavBar from "@/components/nav-bar";
@@ -113,7 +121,9 @@ Góc nhìn độc đáo: Phân tích 3 kỹ năng leadership của Trần Hưng 
 ];
 
 export default function ProfilePage() {
-  const [portfolioProjects, setPortfolioProjects] = useState<DisplayProject[]>([]);
+  const [portfolioProjects, setPortfolioProjects] = useState<DisplayProject[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -122,6 +132,7 @@ export default function ProfilePage() {
       try {
         setLoading(true);
         const portfolioData = await getPortfolioPage();
+        console.log("portfolioData:", portfolioData);
         setPortfolioProjects(portfolioData.projects);
         setError(null);
       } catch (err) {
@@ -138,7 +149,10 @@ export default function ProfilePage() {
   }, []);
 
   // Combine API data with mock data structure for display
-  const displayProjects: DisplayProject[] = portfolioProjects.length > 0 ? portfolioProjects : (mockCompletedProjects as DisplayProject[]);
+  const displayProjects: DisplayProject[] =
+    portfolioProjects.length > 0
+      ? portfolioProjects
+      : (mockCompletedProjects as DisplayProject[]);
 
   if (loading) {
     return (
@@ -208,10 +222,11 @@ export default function ProfilePage() {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-                  {project.title || `Project ${project.id}`}
+                  {project.mission_name || `Project ${project.id}`}
                 </h3>
                 <p className="text-gray-600 mb-8 leading-relaxed">
-                  {project.description || "Project description not available"}
+                  {project.mission_description ||
+                    "Project description not available"}
                 </p>
 
                 <div className="mb-8">
@@ -223,7 +238,14 @@ export default function ProfilePage() {
                     <div className="absolute top-[-10px] left-4 text-3xl text-blue-500 opacity-30 font-serif">
                       "
                     </div>
-                    <div dangerouslySetInnerHTML={{ __html: project.final_product || project.finalProduct || "No final product available" }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          project.final_product ||
+                          project.finalProduct ||
+                          "No final product available",
+                      }}
+                    />
                   </blockquote>
                 </div>
 
@@ -242,33 +264,48 @@ export default function ProfilePage() {
                       <span>AI Terminal</span>
                     </div>
 
-                    {(project.key_prompts || project.keyPrompts || []).map((prompt, idx) => (
-                      <div key={idx} className="mb-4">
-                        <div className="text-cyan-400 mb-2">
-                          user@creativity:~$ prompt_optimize
+                    {(project.key_prompts || project.keyPrompts || []).map(
+                      (prompt, idx) => (
+                        <div key={idx} className="mb-4">
+                          <div className="text-cyan-400 mb-2">
+                            user@creativity:~$ prompt_optimize
+                          </div>
+                          <div className="text-black bg-white bg-opacity-5 p-3 rounded border-l-2 border-cyan-400 ml-4">
+                            {prompt}
+                          </div>
                         </div>
-                        <div className="text-black bg-white bg-opacity-5 p-3 rounded border-l-2 border-cyan-400 ml-4">
-                          {prompt}
-                        </div>
-                      </div>
-                    ))}
+                      )
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-2">
+                    <BrainIcon className="w-5 h-5" />
+                    Phần 3: Bài học tự rút ra
+                  </div>
+                  <div className="flex flex-wrap gap-3 text-ellipsis mb-2">
+                    <p>
+                      "{project.reflection ? project.reflection : "Không có"}"
+                    </p>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-4">
                     <Trophy className="w-5 h-5" />
-                    Phần 3: Kỹ năng đã áp dụng
+                    Phần 4: Kỹ năng đã áp dụng
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    {(project.skills_applied || project.skills || []).map((skill) => (
-                      <span
-                        key={skill}
-                        className="bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium border border-blue-200 hover:from-blue-200 hover:to-cyan-200 hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                    {(project.skills_applied || project.skills || []).map(
+                      (skill) => (
+                        <span
+                          key={skill}
+                          className="bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium border border-blue-200 hover:from-blue-200 hover:to-cyan-200 hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer"
+                        >
+                          {skill}
+                        </span>
+                      )
+                    )}
                   </div>
                 </div>
               </article>

@@ -34,6 +34,7 @@ const useWebSocket = () => {
     useState<PromptStarterType[]>(mockPromptStarters);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [completedObjective, setCompletedObjective] = useState<string>("");
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { userId } = useAuth();
   const { sessionId, missionId } = useChatSession();
@@ -105,6 +106,14 @@ const useWebSocket = () => {
               sender: "ai",
             };
             setMessages((prev) => [...prev, newMessage]);
+
+            if (response.current_progress) {
+              console.log(
+                "response.current_progress",
+                response.current_progress
+              );
+              setCompletedObjective(response.current_progress);
+            }
           }
         } catch (error) {
           console.error("Error parsing WebSocket message:", error);
@@ -203,6 +212,7 @@ const useWebSocket = () => {
     showPromptStarters,
     hidePromptStarters,
     promptStarters,
+    completedObjective,
   };
 };
 

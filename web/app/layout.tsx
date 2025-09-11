@@ -1,13 +1,12 @@
 import NavBarWrapper from "@/components/nav-bar-wrapper";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ChatSessionProvider } from "@/contexts/chat-session-context";
 import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
-import { cookies } from "next/headers";
 import type React from "react";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
   title: "AI Skill Hub - Trung tâm Kỹ năng AI",
   description:
     "Nền tảng học tập toàn diện giúp bạn phát triển 4 kỹ năng cốt lõi: Đặt câu hỏi hiệu quả, Tư duy phản biện, Sáng tạo và Đạo đức AI.",
-  generator: "v0.app",
+  generator: "evergard3n",
 };
 
 export const dynamic = "force-dynamic";
@@ -49,7 +48,7 @@ export default async function RootLayout({
         <AuthProvider userId={user?.id ?? null}>
           <ChatSessionProvider>
             <NavBarWrapper>{children}</NavBarWrapper>
-            <Toaster position="top-right"/>
+            <Toaster position="top-right" />
           </ChatSessionProvider>
         </AuthProvider>
       </body>
