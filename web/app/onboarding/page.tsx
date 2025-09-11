@@ -106,8 +106,8 @@ export default function OnboardingPage() {
       })
       .eq("id", data.user?.id);
 
-    // Redirect to skill-hub after completing onboarding
-    router.push("/skill-hub");
+    // Redirect to verify-email page after completing onboarding
+    router.push("/auth/verify-email");
   };
 
   const nextStep = () => setStep(step + 1);
