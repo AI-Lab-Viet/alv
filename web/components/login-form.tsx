@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { signIn } from "@/lib/actions";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const [state, setState] = useState<{ error?: string } | null>(null);
@@ -27,10 +28,12 @@ export default function LoginForm() {
 
       const formData = new FormData(e.currentTarget);
       const result = await signIn(formData);
-
+      console.log("result:", result);
       if (result?.error) {
         setError(result.error);
+        toast.warning(result.error);
       } else {
+        toast.success("Đăng nhập thành công, đang chuyển hướng...");
         router.push("/skill-hub");
       }
 

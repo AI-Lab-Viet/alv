@@ -1,7 +1,6 @@
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import SignUpForm from "@/components/sign-up-form";
 import { supabase } from "@/lib/supabase/client";
+import { redirect } from "next/navigation";
 
 export default async function RegisterPage() {
   // If Supabase is not configured, show setup message directly
