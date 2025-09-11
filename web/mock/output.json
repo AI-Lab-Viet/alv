@@ -1,0 +1,450 @@
+[
+  {
+    "id": "f5502ca0-cb82-43d9-8c8d-a3f49b332bf6",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Phần I",
+    "display_order": 1
+  },
+  {
+    "id": "c72dcfe5-e614-4405-80da-81ed545fcd08",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Nền tảng Tư duy",
+    "display_order": 2
+  },
+  {
+    "id": "133aa996-0bda-4497-9a3d-d32b588ae2d4",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Chương 1",
+    "display_order": 3
+  },
+  {
+    "id": "f78c2167-f5b1-4b08-916f-88a6d265014a",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Nền tảng Tư duy cho Kỷ nguyên AI",
+    "display_order": 4
+  },
+  {
+    "id": "7a863090-866f-4ba0-86d9-178a950f5a96",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Lời nhắc nhở then chốt",
+    "display_order": 5
+  },
+  {
+    "id": "e329efcc-cf4a-4d8c-b402-8bd2d277a4fc",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hãy luôn nhớ, mục tiêu của một nhà công tác AI xuất sắc là đồng hành để dẫn lối sự sáng tạo một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.",
+    "display_order": 6
+  },
+  {
+    "id": "7b1625aa-20c2-4280-a84a-2ee379beb6fb",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Và chương này sẽ trang bị cho bạn một hệ thống tư duy nền tảng để bắt đầu hành trình đó.",
+    "display_order": 7
+  },
+  {
+    "id": "e83a4710-93e4-4839-9a4c-eb9741337e44",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Mục tiêu Bài học",
+    "display_order": 8
+  },
+  {
+    "id": "50ddc077-c923-459f-8b5c-cdec260188b3",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Sau chương này, bạn sẽ có thể:",
+    "display_order": 9
+  },
+  {
+    "id": "4a4101bd-930a-4ae7-baa1-a8d32497dc7b",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Hiểu được tâm quan trọng của việc học AI một cách có phương pháp.- Nắm được khái niệm cốt lõi về Năng lực AI (AI Fluency).- Phân biệt được 3 phương thức hợp tác chính với AI.- Nắm được tổng quan về Framework 4D+S - hệ thống 5 kỹ năng nền tảng.",
+    "display_order": 10
+  },
+  {
+    "id": "ead91f20-7cba-4081-9c9f-b833e7d523a9",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.1 Câu chuyện của Quý (và có thể là của bạn)",
+    "display_order": 11
+  },
+  {
+    "id": "43fac748-48cf-4cfd-8cb0-4c3e9f9a08c9",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trước khi xây dựng AI Lab Việt, tôi (Quy) cũng là một người dùng AI như bạn. Tôi bị choáng ngợp trước sức mạnh của nó, nhưng đồng thời, tôi luôn cảm thấy một sự bất an. Tôi dùng AI để tìm ý tưởng, nhưng lại cảm thấy mình chỉ đang sao chép một cách tinh vi. Tôi nhận được một câu trả lời nghe có vẻ hợp lý, nhưng lại không chắc chắn 100% về độ chính xác của nó.",
+    "display_order": 12
+  },
+  {
+    "id": "e8a0cbd0-7ecd-4786-bb43-6043da1cbe37",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Tôi nhận ra rằng, nếu không có một phương pháp luận, một hệ thống tư duy, chúng ta rất dễ bị lạc lối trong thể giới của AI. Chúng ta có nguy cơ trở thành người dùng thụ động thay vì người điều khiển công nghệ.",
+    "display_order": 13
+  },
+  {
+    "id": "30c426fd-7f37-4d88-810a-5024d6f373e7",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đó là lý do bộ giáo trình này ra đời. Nó không dạy bạn những mẹo nhất thời có thể lỗi thời vào ngày mai. Nó trang bị cho bạn một năng lực cốt lõi để bạn có thể tự tin hợp tác với bất kỳ công cụ AI nào. Chúng tôi gọi đó là Năng lực AI (AI Fluency).",
+    "display_order": 14
+  },
+  {
+    "id": "aa97a2de-44e8-47e4-912d-9b5a126e935c",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.2 Năng lực AI (AI Fluency) là gì?",
+    "display_order": 15
+  },
+  {
+    "id": "58f3b19e-0cd9-4f99-8b92-5542c9395a82",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Năng lực AI (AI Fluency) là khả năng hợp tác với các hệ thống AI một cách Hiệu quả (Effective), Hiệu suất (Efficient), Có Đạo đức (Ethical), và An toàn (Safe).",
+    "display_order": 16
+  },
+  {
+    "id": "295aae4c-0334-409b-a62c-53f23cbac98b",
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/fa3783f5c4466f45cefeb185d402f86052571e5f10a5d24d874c5badf53b3bde.jpg",
+    "display_order": 17
+  },
+  {
+    "id": "c2e29691-63ec-4825-8cc2-22917b4c9284",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Năng lực AI (AI Fluency) là khả năng hợp tác với các hệ thống AI một cách Hiệu quả (Effective), Hiệu suất (Efficient), Có Đạo đức (Ethical), và An toàn (Safe).",
+    "display_order": 18
+  },
+  {
+    "id": "f0d90123-42ea-46f9-bdb1-69609623a21b",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hình 1.1: Bốn trụ cột của Năng lực AI theo triết lý của AI Lab Việt.",
+    "display_order": 19
+  },
+  {
+    "id": "b44b0d23-9782-4907-a5ec-0c172c05b996",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Hiệu quả & Hiệu suất: Làm ra sản phẩm tốt nhất mà không làng phí thời gian và công sức. Thay vì hỏi lan man, bạn biết cách đặt vấn đề để đi thẳng vào trọng tâm.",
+    "display_order": 20
+  },
+  {
+    "id": "f892c7b7-6883-417a-a185-8fb949093037",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Có đạo đức & An toàn: Tương tác một cách trung thực, có trách nhiệm, bảo vệ được sự riêng tư và ý thức được về các vấn đề như thiên kiến (bias) hay thông tin sai lệch.",
+    "display_order": 21
+  },
+  {
+    "id": "f796fad1-b5c4-4725-be80-31f34d8bdf30",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để đạt được năng lực này, trước hết, chúng ta cần hiểu rằng mình không phải lúc nào cũng từng tác với AI theo cùng một cách.",
+    "display_order": 22
+  },
+  {
+    "id": "2bb861c7-a15a-4d97-9ae0-351f9ab8633c",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3 Ba phương thức hợp tác với AI",
+    "display_order": 23
+  },
+  {
+    "id": "2f3e24a0-77e5-4817-9166-6423e60e4a6c",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để đạt được Năng lực AI, trước hết, chúng ta cần hiểu rằng mình không phải lúc nào cũng từng tác với AI theo cùng một cách. Tùy vào bản chất của công việc, mối quan hệ hợp tác giữa bạn và AI sẽ thay đổi. Hãy hình dung đây là một hành trình tiến hóa, nói bạn sẽ đi từ một Người Ra lệnh, trở thành một Người Đồng đội, và cuối cùng là một Người Kiến tạo.",
+    "display_order": 24
+  },
+  {
+    "id": "e8acc3b7-8310-4314-b5e0-f1793aeef29c",
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/b551f371e36979f17495e822e7b3075822188a7fd5dbbf680e287cb4b01b0263.jpg",
+    "display_order": 25
+  },
+  {
+    "id": "18126956-fa2e-4df0-9f4c-04e45dab232c",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để đạt được Năng lực AI, trước hết, chúng ta cần hiểu rằng mình không phải lúc nào cũng từng tác với AI theo cùng một cách. Tùy vào bản chất của công việc, mối quan hệ hợp tác giữa bạn và AI sẽ thay đổi. Hãy hình dung đây là một hành trình tiến hóa, nói bạn sẽ đi từ một Người Ra lệnh, trở thành một Người Đồng đội, và cuối cùng là một Người Kiến tạo.",
+    "display_order": 26
+  },
+  {
+    "id": "2764cede-2532-49d6-a587-9246a66e6d78",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hình 1.2: Ba phương thức hợp tác với AI: từ Người Ra lệnh, đến Người Đồng đội, và cuối cùng là Người Kiến tạo.",
+    "display_order": 27
+  },
+  {
+    "id": "1270470f-27ca-4ab8-b456-6200e59eaaf6",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3.1 Tự động hóa (Automation): Bạn là Người Ra lệnh",
+    "display_order": 28
+  },
+  {
+    "id": "fa359ed0-d815-4e29-9514-e5844bdc7c3f",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đây là phương thức hợp tác cơ bản và phổ biến nhất. Bạn giao cho AI một công việc cụ thể, khép kín với những chỉ dẫn rõ ràng, và AI sẽ hoàn thành nó một cách nhanh chóng. Mối quan hệ ở đây là một chiều: bạn ra lệnh, AI thực thi.",
+    "display_order": 29
+  },
+  {
+    "id": "c02f30f7-e324-4a57-a307-2baf2a51f5d2",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Bối cảnh phù hợp: Khi bạn có những tác vụ lặp đi lặp lại, tốn thời gian nhưng không đòi hỏi sự sáng tạo phức tạp hay tư duy đa chiều.- Yêu cầu về kỹ năng: Bạn cần mô tả tác vụ thật rõ ràng và có tiêu chí cụ thể để kiểm tra chất lượng đầu ra.- Ví dụ thực tế: Tóm tắt một bài báo khoa học dài 20 trang thành 300 từ, dịch một email sang tiếng Anh, viết một đoạn mã Python đơn giản để sắp xếp dữ liệu, hay tạo một bài đăng mang xã hội theo văn phong cho trước.",
+    "display_order": 30
+  },
+  {
+    "id": "2d43382c-0be8-4071-8de4-2fe13bdce8f5",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong vai trò này, AI giống như một chuyên viên cần mẫn, giúp bạn giải quyết nhanh gọn các công việc đã được định hình rõ ràng, giải phóng thời gian của bạn cho những nhiệm vụ đòi hỏi tư duy cao hơn.",
+    "display_order": 31
+  },
+  {
+    "id": "daf5790b-4675-4261-9754-8a46d73e70cc",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3.2 Tăng cường (Augmentation): Bạn là Người Đồng đội",
+    "display_order": 32
+  },
+  {
+    "id": "85e200ee-16a9-4d89-8890-18a1f322dbfe",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Ở cấp độ này, mỗi quan hệ không còn là một chiều. Bạn và AI cùng nhau hợp tác, trao đổi qua lại nhiều lần để phát triển một ý tưởng hoặc sản phẩm. Đây là một quá trình \"đồng não\" (brainstorm) và tinh chỉnh liên tục.",
+    "display_order": 33
+  },
+  {
+    "id": "09e7dd46-c25a-481e-8ff6-3f76307123ce",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Bối cảnh phù hợp: Khi bạn cần giải quyết các vấn đề phức tạp, đòi hỏi sự sáng tạo, tư duy phản biện và khám phá nhiều phương án khác nhau.",
+    "display_order": 34
+  },
+  {
+    "id": "307f45aa-b6a8-4584-9e79-31d0fc571d54",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Yêu cầu về kỹ năng: Kỹ năng đối thoại nhiều bước, biết cách chia nhỏ nhiệm vụ và dùng phản hồi của AI để cải tiến ý tưởng của mình (và ngược lại).",
+    "display_order": 35
+  },
+  {
+    "id": "6d0b494d-8d82-4766-8232-071f18eb1a75",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Ví dụ thực tế: Lên dàn ý cho một bài luận phân tích văn học, brainstorm các ý tưởng cho một dự án khởi nghiệp, cùng AI sữa lỗi và tối ưu một đoạn code phức tạp.",
+    "display_order": 36
+  },
+  {
+    "id": "455dcf0d-9209-421c-a16d-550cc5ffaf23",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong vai trò này, AI là một bạn đồng hành sang tạo, một \"đối tác từ duy\" giúp bạn mở rộng tầm nhìn và khám phá những giải pháp mà có thể bạn chưa nghĩ tới.",
+    "display_order": 37
+  },
+  {
+    "id": "a1bb583c-0798-4de8-a758-b8c8cc84c157",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3.3 Ủy quyền (Agency): Bạn là Người Kiên tạo",
+    "display_order": 38
+  },
+  {
+    "id": "343b338a-72f3-4c98-a10d-06ad6fb9251c",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đây là phương thức nâng cao nhất, thể hiện sự làm chủ công nghệ ở mức độ sâu sắc. Bạn không chỉ giao một tác vụ, mà bạn thiết kế và cấu hình cho AI một hành vi để nó có thể tự vận hành trong tương lai nhằm phục vụ một mục đích nào đó.",
+    "display_order": 39
+  },
+  {
+    "id": "17a2fcdf-ac31-4b9a-bb02-c51efcf1d211",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Bối cảnh phù hợp: Khi bạn muốn tạo ra một hệ thống AI có thể tương tác tự động với người khác hoặc thực hiện các nhiệm vụ theo một quy tắc bạn đã định sẵn.",
+    "display_order": 40
+  },
+  {
+    "id": "e68d8781-7a80-49a6-b420-a123917da264",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Yêu cầu về kỹ năng: Hiểu sâu về năng lực và giới hạn của AI, đặc biệt phải đặt sự an toàn, giám sát và đạo đức lên hàng đầu.",
+    "display_order": 41
+  },
+  {
+    "id": "b9ae11bd-2320-4e04-b1f6-3d401da2c527",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Ví dụ thực tế: Tạo một chatbot \"trợ lý lớp học\" để trả lời các câu hỏi thường gặp về hạn nộp bài, cấu hình một nhân vật trong game (NPC) có thể trò chuyện tự nhiên với người chơi, thiết lập một agent tự động lọc và phân loại email cho một đội nhóm.",
+    "display_order": 42
+  },
+  {
+    "id": "d0650296-d3be-49b4-8394-381cbb8e4ce8",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong vai trò này, bạn không còn là người dùng, bạn đã trở thành một nhà kiến tạo, một kiến trúc sư thiết kế ra các trợ lý tự động.",
+    "display_order": 43
+  },
+  {
+    "id": "fe6e3499-2edd-4ae1-b873-edbd6822c3dd",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Một quy trình làm việc thực tế thường sẽ linh hoạt chuyển đổi giữa cả ba phương thức này. Việc hiểu rõ chúng giúp bạn lựa chọn cách hợp tác phù hợp nhất. Nhưng để thực sự làm chủ cả ba, bạn cần một bộ kỹ năng nên tảng.",
+    "display_order": 44
+  },
+  {
+    "id": "54cda772-f4f8-4fb6-b104-ed83fdfbbbab",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.4 Framework 4D+S: Từ Nên tảng Quốc tế đến Dấu ẩn Việt Nam",
+    "display_order": 45
+  },
+  {
+    "id": "3f3d5537-eca4-4301-96be-7c3c507bbeca",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để kiến tạo nên một phương pháp luận hiệu quả, chúng tôi không bắt đầu từ con số không. Chúng tôi đã học hỏi từ những người đi trước, và nền tảng của chúng tôi được truyền cảm hứng mạnh mẽ từ Framework 4D của Anthropic, một trong những công ty AI hàng đầu thế giới. Bên chữ D đó là một bộ khung cực kỳ vững chắc.",
+    "display_order": 46
+  },
+  {
+    "id": "eb22698a-318b-4387-a010-64a6fcd7779b",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Tuy nhiên, trong quá trình nghiên cứu và áp dụng vào bối cảnh Việt Nam, chúng tôi nhận ra rằng 4D là điều kiện cản, nhưng chưa phải là điều kiện đủ để thực sự sáng tạo. Nó giúp bạn tương tác hiệu quả, nhưng vẫn còn một bước cuối cùng để biến sản phẩm của AI thành sản phẩm của BAN.",
+    "display_order": 47
+  },
+  {
+    "id": "b2fba887-d332-475a-9b11-9c4780fa77b3",
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/171c621cf70097731dc6ab48528a302025606e0c8e01efaed0ad302bdcef2037.jpg",
+    "display_order": 48
+  },
+  {
+    "id": "1579fcc9-fb0f-4208-8b38-f7a05f526ba6",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hình 1.3: Framework 4D+S: Vòng lặp từ duy của một Nhà Cộng tác AI Sáng tạo.",
+    "display_order": 49
+  },
+  {
+    "id": "6081aca9-b529-41c9-a5e5-a1590e2610b8",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đó là lý do chúng tôi đã bổ sung một mảnh ghép cuối cùng, một kỹ năng thứ năm. Và từ đó, Framework 4D+S của AI Lab Việt ra đời.",
+    "display_order": 50
+  },
+  {
+    "id": "60b51e54-0b7d-4e71-b32d-1d1672f857a1",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Chữ \"+S\" đó không chỉ là một kỹ năng. Nó là linh hồn của triết lý chúng tôi muốn trao gửi.",
+    "display_order": 51
+  },
+  {
+    "id": "1706b924-b5ca-4355-a05c-4a7a8b30381c",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Phân công (Delegation): Bạn là trưởng nhóm. Bạn phải là người vạch ra kế hoạch, quyết định việc nào mình nên tự làm, việc nào AI có thể làm tốt hơn, và việc nào cả hai cần chung tay thực hiện.- Mô tả (Description): Bạn là người giao việc. Bạn phải trò chuyện với AI bằng những câu lệnh (prompt) chi tiết, cụ thể để AI hiểu đúng ý bạn.- Nhận định (Discernment): Bạn là người phản biện. Bạn không thể mặc định AI luôn đứng. Bạn phải kiểm tra lại thông tin, đánh giá lập luận và phát hiện các lỗi sai hoặc thiên kiến.- Trách nhiệm (Diligence): Bạn là người chịu trách nhiệm cuối cùng. Bạn là người chịu trách nhiệm về chất lượng, tính trung thực và các vấn đề đạo đức của sản phẩm cuối cùng.- Tổng hợp (Synthesis): Bạn là Nhà Kiên tạo. Đây chính là mảnh ghép \"+S\". Sau khi đã có các \"nguyên liệu\" chất lượng cao từ 4 bước trên, bạn phải là người",
+    "display_order": 52
+  },
+  {
+    "id": "fbdb788d-bc23-4731-bc26-595a7c60396c",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "tinh lọc, kết nói và thoải hòn vào chúng để tạo ra một sản phẩm cuối cùng mang đậm dấu ấn cá nhân.",
+    "display_order": 53
+  },
+  {
+    "id": "54d24484-9ffd-4874-9545-aa5328ac8214",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Và điều đặc biệt nhất, chữ \"S\" còn là một biểu tượng dày tự hào: nó là hình ảnh của dải đất Việt Nam.",
+    "display_order": 54
+  },
+  {
+    "id": "d00c233d-5507-4f51-aec9-251b53da02e4",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Framework 4D+S chính là lời cam kết của chúng tôi: trang bị cho thể hệ trẻ Việt Nam một phương pháp luận dũng cấp quốc tế, đồng thời trao cho các bạn năng lực để kiến tạo nên những sản phẩm mang đậm bản sắc và trí tuệ Việt.",
+    "display_order": 55
+  },
+  {
+    "id": "4becb9d8-b239-4f2b-bd99-e5db8b49944c",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Năm năng lực này không phải là năm bước riêng rẽ, mà là một vòng lặp tư duy liên tục. Với framework này, bạn không còn là một người dùng bị động như Quý ở đâu cao chuyện. Thay vào đó, bạn trở thành một người kiến tạo, một người dẫn dắt có tư duy phản biện.",
+    "display_order": 56
+  },
+  {
+    "id": "4eeea4a1-263e-4cf9-b7b5-b526c01d3fd6",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong các chương tiếp theo, chúng ta sẽ cùng nhau đi sau vào từng kỹ năng trong hành trình 4D+S, biến lý thuyết này thành những hành động cụ thể.",
+    "display_order": 57
+  },
+  {
+    "id": "2a9ace82-f699-453b-a1da-b8106f45c387",
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.5 Gặp gỡ Người bạn Đông hành của bạn: ALVA",
+    "display_order": 58
+  },
+  {
+    "id": "b6a64ac1-2e3b-408d-815c-92a55f389b63",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Lý thuyết là nền tảng, những thực hành mới là con đường dẫn đến sự thành thạo. Trong suốt hành trình rèn luyện Framework 4D+S, bạn sẽ không đơn độc. Chúng tôi muốn giới thiệu với bạn ALVA - Trợ lý AI của AI Lab Việt.",
+    "display_order": 59
+  },
+  {
+    "id": "3e45f0cd-facb-4cfd-a43f-6eea44b48051",
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/4dd0ff32ce69f351e4f4fe2b4e53d8929902089dcf20852785310227ce9dc0f8.jpg",
+    "display_order": 60
+  },
+  {
+    "id": "7b9b879a-a5b9-41b6-9082-7a7d5dfc2d95",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Lý thuyết là nền tảng, những thực hành mới là con đường dẫn đến sự thành thạo. Trong suốt hành trình rèn luyện Framework 4D+S, bạn sẽ không đơn độc. Chúng tôi muốn giới thiệu với bạn ALVA - Trợ lý AI của AI Lab Việt.",
+    "display_order": 61
+  },
+  {
+    "id": "4046bde3-3a92-48bd-8dbe-a2c28c4576c9",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "ALVA không phải là một chatbot thông thường. ALVA là một công cụ sư phạm. Nó được thiết kế để trở thành \"Nguồn Đồng đội\" và \"Đối tác tư duy\" của bạn. Chính trong môi trường tương tác với ALVA, bạn sẽ áp dụng, thực hành và làm chủ bổn kỹ năng Phân công, Mô tả, Nhận định và Trách nhiệm.",
+    "display_order": 62
+  },
+  {
+    "id": "291e1915-b379-40fa-99b3-cf2a49d59d22",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Cái tên ALVA (phát âm là An- Va) vừa là viết tắt của AI Lab Việt Assistant, vừa gọi lên cảm giác An toàn và Bình an - đúng với cam kết của chúng tôi về một môi trường học tập đáng tin cậy.",
+    "display_order": 63
+  },
+  {
+    "id": "a58b5127-72ec-4d86-9510-0d43b36d397e",
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Giờ bạn đã gặp gỡ người đồng đội của mình. Hãy cùng ALVA bắt đầu rèn luyện kỹ năng cốt lõi đầu tiên trong Phần II.",
+    "display_order": 64
+  }
+]

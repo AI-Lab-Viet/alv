@@ -28,12 +28,75 @@ import {
   Shield,
   ArrowLeft,
   Sparkles,
-  CheckCircle
+  CheckCircle,
+  Users,
+  Zap,
+  Crown
 } from 'lucide-react';
 import Link from 'next/link';
-import NavBar from '@/components/nav-bar';
 
 const knowledgeConcepts = [
+  // Chapter 1 concepts from output.json
+  {
+    id: 'nang-luc-ai',
+    title: 'Năng lực AI (AI Fluency)',
+    category: 'Nền tảng',
+    chapter: 'Chương 1',
+    status: 'unlocked',
+    definition:
+      'Khả năng hợp tác với các hệ thống AI một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.',
+    explanation:
+      'Năng lực AI bao gồm 4 trụ cột cốt lõi: Hiệu quả & Hiệu suất (làm ra sản phẩm tốt nhất mà không lãng phí thời gian), và Có đạo đức & An toàn (tương tác trung thực, có trách nhiệm, bảo vệ sự riêng tư).',
+    examples: [
+      'Hiệu quả: Đặt vấn đề thẳng vào trọng tâm thay vì hỏi lan man',
+      'Hiệu suất: Sử dụng đúng công cụ AI cho đúng mục đích',
+      'Đạo đức: Ý thức về thiên kiến và thông tin sai lệch',
+      'An toàn: Bảo vệ thông tin cá nhân và dữ liệu nhạy cảm'
+    ],
+    tags: ['nền tảng', 'hiệu quả', 'đạo đức', 'an toàn'],
+    icon: Brain,
+    color: 'from-blue-400 to-purple-600'
+  },
+  {
+    id: 'ba-phuong-thuc-hop-tac',
+    title: 'Ba phương thức hợp tác với AI',
+    category: 'Nền tảng',
+    chapter: 'Chương 1',
+    status: 'unlocked',
+    definition: 'Hành trình tiến hóa từ Người Ra lệnh → Người Đồng đội → Người Kiến tạo.',
+    explanation:
+      'Tùy vào bản chất công việc, mối quan hệ hợp tác thay đổi: Tự động hóa (Automation), Tăng cường (Augmentation), và Ủy quyền (Agency).',
+    examples: [
+      'Tự động hóa: Tóm tắt báo cáo, dịch email, viết code đơn giản',
+      'Tăng cường: Brainstorm ý tưởng, phân tích vấn đề phức tạp',
+      'Ủy quyền: Tạo chatbot, thiết kế agent tự động'
+    ],
+    tags: ['hợp tác', 'tự động hóa', 'tăng cường', 'ủy quyền'],
+    icon: Users,
+    color: 'from-green-400 to-blue-500'
+  },
+  {
+    id: 'framework-4d-s',
+    title: 'Framework 4D+S',
+    category: 'Nền tảng',
+    chapter: 'Chương 1',
+    status: 'unlocked',
+    definition:
+      'Hệ thống 5 kỹ năng nền tảng: Phân công, Mô tả, Nhận định, Trách nhiệm, và Tổng hợp.',
+    explanation:
+      'Framework được phát triển từ 4D của Anthropic, bổ sung thêm "+S" (Synthesis) - khả năng tổng hợp và tạo ra sản phẩm mang dấu ấn cá nhân.',
+    examples: [
+      'Phân công: Quyết định ai làm gì trong nhóm người-AI',
+      'Mô tả: Viết prompt chi tiết, cụ thể',
+      'Nhận định: Kiểm tra thông tin, phát hiện lỗi sai',
+      'Trách nhiệm: Chịu trách nhiệm về chất lượng và đạo đức',
+      'Tổng hợp: Tạo sản phẩm cuối mang dấu ấn cá nhân'
+    ],
+    tags: ['framework', 'phân công', 'mô tả', 'nhận định', 'trách nhiệm', 'tổng hợp'],
+    icon: Crown,
+    color: 'from-yellow-400 to-orange-500'
+  },
+  // Existing concepts
   {
     id: 'tu-duy-muc-tieu',
     title: 'Tư duy Mục tiêu',
@@ -90,22 +153,63 @@ const knowledgeConcepts = [
     color: 'from-purple-400 to-pink-500'
   },
   {
-    id: 'hallucination',
-    title: 'AI Hallucination (Ảo giác)',
+    id: 'bo-cau-hoi-vang',
+    title: 'Bộ câu hỏi Vàng',
     category: 'Nhận định',
     chapter: 'Chương 4',
-    status: 'locked', 
-    definition: 'Hiện tượng AI tạo ra thông tin không chính xác nhưng trình bày một cách tự tin.',
+    status: 'unlocked',
+    definition: 'Bộ công cụ đánh giá sản phẩm AI theo 5 tiêu chí cốt lõi.',
     explanation:
-      'AI có thể tạo ra các trích dẫn sách không tồn tại, thống kê giả mạo, hoặc sự kiện lịch sử không chính xác. Đây là hạn chế tự nhiên của công nghệ AI hiện tại.',
+      'Năm câu hỏi then chốt để kiểm tra chất lượng mọi sản phẩm từ AI: Tính Chính xác, Tính Phù hợp, Tính Mạch lạc, Tính Đầy đủ, và Tính An toàn.',
     examples: [
-      'AI có thể tạo ra tên sách và tác giả không tồn tại',
-      'Đưa ra số liệu thống kê không có nguồn gốc thực tế',
-      'Mô tả chi tiết những sự kiện lịch sử chưa từng xảy ra'
+      '1. Tính Chính xác: Thông tin có chính xác không?',
+      '2. Tính Phù hợp: Nội dung có phù hợp với mục tiêu không?',
+      '3. Tính Mạch lạc: Logic có rõ ràng, dễ hiểu không?',
+      '4. Tính Đầy đủ: Có thiếu thông tin quan trọng không?',
+      '5. Tính An toàn: Có rủi ro hay nội dung có hại không?'
     ],
-    tags: ['ảo giác', 'thông tin sai', 'kiểm chứng', 'phản biện'],
-    icon: Shield,
+    tags: ['đánh giá', 'chất lượng', 'phản biện', 'tiêu chí'],
+    icon: Search,
     color: 'from-orange-400 to-red-500'
+  },
+  {
+    id: 'co-do-tu-duy-ai',
+    title: 'Cờ đỏ trong Tư duy AI',
+    category: 'Nhận định',
+    chapter: 'Chương 4',
+    status: 'unlocked',
+    definition: 'Các dấu hiệu cảnh báo về sự bất thường trong lập luận của AI.',
+    explanation:
+      'Học cách nhận diện khi AI mắc lỗi logic, mâu thuẫn, hoặc đưa ra thông tin thiếu cơ sở.',
+    examples: [
+      'Mâu thuẫn logic trong cùng một câu trả lời',
+      'Thông tin quá tuyệt đối ("luôn luôn", "không bao giờ")',
+      'Thiếu nguồn gốc cho các số liệu cụ thể',
+      'Lập luận vòng vo, không có bằng chứng',
+      'Kết luận vội vàng từ dữ liệu hạn chế'
+    ],
+    tags: ['cảnh báo', 'lỗi logic', 'mâu thuẫn', 'kiểm tra'],
+    icon: Shield,
+    color: 'from-red-400 to-pink-500'
+  },
+  {
+    id: 'cong-thuc-phan-hoi',
+    title: 'Công thức Phản hồi',
+    category: 'Nhận định',
+    chapter: 'Chương 4',
+    status: 'unlocked',
+    definition: 'Quy trình 4 bước để đưa ra phản hồi xây dựng cho AI.',
+    explanation:
+      'Cách tiếp cận có hệ thống để cải thiện chất lượng sản phẩm từ AI thông qua phản hồi hiệu quả.',
+    examples: [
+      '1. Xác định Vấn đề: Chỉ ra cụ thể điều gì sai',
+      '2. Giải thích Lý do: Tại sao điều đó là vấn đề',
+      '3. Đưa ra Gợi ý: Hướng dẫn cách sửa',
+      '4. Yêu cầu Cập nhật: Đặt ra quy tắc cho lần sau'
+    ],
+    tags: ['phản hồi', 'cải thiện', 'hệ thống', 'tinh chỉnh'],
+    icon: Target,
+    color: 'from-green-400 to-teal-500'
   },
   {
     id: 'che-cui',
@@ -127,7 +231,7 @@ const knowledgeConcepts = [
   }
 ];
 
-const categories = ['Tất cả', 'Phân công', 'Mô tả', 'Nhận định', 'Trách nhiệm'];
+const categories = ['Tất cả', 'Nền tảng', 'Phân công', 'Mô tả', 'Nhận định', 'Trách nhiệm'];
 const chapters = ['Tất cả', 'Chương 1', 'Chương 2', 'Chương 3', 'Chương 4', 'Chương 5', 'Chương 6'];
 
 export default function KnowledgeVaultPage() {
@@ -208,7 +312,7 @@ export default function KnowledgeVaultPage() {
                 <div className='relative'>
                   <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
                   <Input
-                    placeholder='Tìm kiếm khái niệm, từ khóa... (VD: "R.C.T.C", "Tư duy Mục tiêu")'
+                    placeholder='Tìm kiếm khái niệm, từ khóa... (VD: "Framework 4D+S", "Năng lực AI")'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className='pl-10 bg-background'

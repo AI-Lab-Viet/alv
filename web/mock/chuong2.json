@@ -1,0 +1,174 @@
+{
+  "questions": [
+    {
+      "question": "Theo Chương 2, vai trò cốt lõi của bạn khi làm việc nhóm với AI là gì?",
+      "choices": [
+        "Thành viên thực thi mọi chỉ dẫn",
+        "Người kiểm tra lỗi chính tả",
+        "Trưởng nhóm, người vạch ra chiến lược",
+        "Người cung cấp dữ liệu thô"
+      ],
+      "correct_answer": 2
+    },
+    {
+      "question": "Bước đầu tiên và quan trọng nhất trong 'Nghệ thuật Phân công' là gì?",
+      "choices": [
+        "Viết một prompt thật chi tiết",
+        "Biết rõ Đích đến (xác định mục tiêu)",
+        "Chia nhỏ công việc",
+        "Đánh giá năng lực của AI"
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Điều gì có thể xảy ra nếu bạn bỏ qua bước 'Biết rõ Đích đến' trước khi bắt đầu dùng AI?",
+      "choices": [
+        "AI sẽ từ chối trả lời.",
+        "Bạn sẽ nhận được các câu trả lời sáng tạo hơn.",
+        "Quá trình làm việc sẽ hiệu quả hơn vì không tốn thời gian lập kế hoạch.",
+        "Bạn sẽ lãng phí thời gian và công sức vào những kết quả không phù hợp hoặc sai hướng."
+      ],
+      "correct_answer": 3
+    },
+    {
+      "question": "Khái niệm 'Biết mình, biết ta' (Năng lực Phân tích Kép) ám chỉ điều gì?",
+      "choices": [
+        "Hiểu rõ điểm mạnh, điểm yếu của bản thân và của AI để phân công hợp lý.",
+        "Biết mình muốn gì và biết AI có thể làm gì.",
+        "Biết cách ra lệnh cho AI và biết cách AI sẽ phản hồi.",
+        "Chỉ cần biết điểm mạnh của AI để giao hết việc cho nó."
+      ],
+      "correct_answer": 0
+    },
+    {
+      "question": "Theo giáo trình, việc nào sau đây thuộc về thế mạnh của 'Thành viên AI'?",
+      "choices": [
+        "Đặt ra Tầm nhìn và mục tiêu chiến lược cho dự án.",
+        "Chịu trách nhiệm cuối cùng về mặt đạo đức của sản phẩm.",
+        "Brainstorm ý tưởng, tổng hợp thông tin, soạn thảo bản nháp.",
+        "Ra quyết định cuối cùng dựa trên ngữ cảnh sâu sắc."
+      ],
+      "correct_answer": 2
+    },
+    {
+      "question": "Kỹ năng 'Chẻ củi' trong giáo trình tương ứng với hành động nào sau đây?",
+      "choices": [
+        "Đặt ra một mục tiêu lớn và đầy tham vọng.",
+        "Chia một vấn đề lớn, phức tạp thành các nhiệm vụ nhỏ, cụ thể.",
+        "Loại bỏ những thông tin không cần thiết do AI tạo ra.",
+        "Kiểm tra kỹ lưỡng sản phẩm cuối cùng."
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Một người dùng đưa ra prompt: 'Hãy viết cho tôi một cuốn tiểu thuyết'. Cách tiếp cận này đã bỏ qua kỹ năng quan trọng nào được nhấn mạnh trong chương 2?",
+      "choices": [
+        "Kỹ năng 'Chẻ củi' (Phân rã vấn đề)",
+        "Tư duy Mục tiêu",
+        "Năng lực Phân tích Kép",
+        "Tất cả các kỹ năng trên"
+      ],
+      "correct_answer": 3
+    },
+    {
+      "question": "Trong dự án 'lập kế hoạch cho chiến dịch môi trường', tại sao việc 'Lựa chọn Chủ đề' lại được giao cho con người?",
+      "choices": [
+        "Vì AI không thể đưa ra ý tưởng nào.",
+        "Vì con người có khả năng đánh giá ý tưởng dựa trên bối cảnh thực tế của trường học, điều mà AI có thể không nắm được.",
+        "Vì đây là công việc dễ nhất.",
+        "Vì AI đã làm hết các việc khác rồi."
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Giáo trình mô tả quá trình phân công hiệu quả là một 'điệu nhảy'. Điều này có nghĩa là gì?",
+      "choices": [
+        "Đây là một quá trình cứng nhắc, có quy tắc rõ ràng.",
+        "Đây là một sự phối hợp nhịp nhàng, linh hoạt và tương tác qua lại giữa người và AI.",
+        "Đây là một hoạt động mang tính giải trí.",
+        "Chỉ có một người dẫn dắt và người kia phải tuân theo tuyệt đối."
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Hành động 'rà soát và hoàn thiện' bản kế hoạch chi tiết do AI tạo ra thể hiện vai trò nào của 'Trưởng nhóm'?",
+      "choices": [
+        "Vai trò ra lệnh.",
+        "Vai trò kiểm soát chất lượng và tư duy phản biện.",
+        "Vai trò cung cấp dữ liệu.",
+        "Vai trò tự động hóa."
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Theo giáo trình, một 'trưởng nhóm' tồi khi làm việc với AI sẽ có hành vi nào sau đây?",
+      "choices": [
+        "Phân công các nhiệm vụ một cách chiến lược.",
+        "Giao hết mọi việc cho AI mà không cần suy nghĩ và tin tưởng tuyệt đối vào kết quả.",
+        "Giữ lại các nhiệm vụ đòi hỏi tư duy phản biện cho mình.",
+        "Chia nhỏ một vấn đề lớn thành các bước nhỏ."
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Trước khi lên kế hoạch cho chuyến du lịch bằng AI, một người dùng đã tự liệt kê: ngân sách tối đa, thời gian đi, và các loại hoạt động ưa thích. Hành động này trực tiếp thể hiện bước nào trong 'Nghệ thuật Phân công'?",
+      "choices": [
+        "Bước 1: Biết rõ Đích đến",
+        "Bước 2: 'Biết mình, biết ta'",
+        "Bước 3: Kỹ năng 'Chẻ củi'",
+        "Thực chiến trong Xưởng Dự án"
+      ],
+      "correct_answer": 0
+    },
+    {
+      "question": "Theo nguyên tắc 'Biết mình, biết ta', tác vụ nào sau đây phù hợp nhất để con người (trưởng nhóm) đảm nhận?",
+      "choices": [
+        "Tạo ra 50 tiêu đề blog khác nhau cho một bài viết.",
+        "Dịch một tài liệu kỹ thuật dài 10 trang.",
+        "Tóm tắt 20 bài đánh giá của khách hàng.",
+        "Xác định và quyết định Tầm nhìn chiến lược cho một thương hiệu."
+      ],
+      "correct_answer": 3
+    },
+    {
+      "question": "'Năng lực Phân tích Kép' (Biết mình, biết ta) hàm ý rằng kết quả tốt nhất đến từ đâu?",
+      "choices": [
+        "Việc để AI tự quyết định mọi thứ.",
+        "Việc con người tự làm mọi thứ và chỉ dùng AI để kiểm tra lỗi.",
+        "Việc tận dụng thế mạnh của cả con người và AI một cách bổ trợ cho nhau.",
+        "Việc chỉ chọn những công cụ AI mạnh nhất."
+      ],
+      "correct_answer": 2
+    },
+    {
+      "question": "Một người muốn tạo một kế hoạch kinh doanh. Thay vì hỏi 'Tạo cho tôi một kế hoạch kinh doanh', người đó thực hiện theo chuỗi: 1. 'Liệt kê các mục chính của một kế hoạch kinh doanh chuẩn'. 2. 'Với mục 'Phân tích thị trường', hãy tìm 3 đối thủ cạnh tranh chính cho một quán cà phê ở Hà Nội'. 3. 'Soạn thảo phần tóm tắt dự án dựa trên các ý chính sau...'. Người dùng này đang thể hiện xuất sắc kỹ năng nào?",
+      "choices": [
+        "Tư duy Mục tiêu",
+        "Kỹ năng 'Chẻ củi' (Phân rã vấn đề)",
+        "Năng lực Phân tích Kép",
+        "Tất cả các phương án trên"
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Trong ví dụ về chiến dịch môi trường, quá trình làm việc được mô tả là một 'điệu nhảy' phối hợp nhịp nhàng. Điều này có nghĩa là gì?",
+      "choices": [
+        "Con người và AI thay phiên nhau làm việc một cách độc lập.",
+        "Đây là một quá trình tương tác liên tục, trong đó đầu ra của người này là đầu vào của người kia, tạo thành một vòng lặp sáng tạo.",
+        "Quá trình này rất phức tạp và khó thực hiện.",
+        "AI là người dẫn dắt chính trong 'điệu nhảy' này."
+      ],
+      "correct_answer": 1
+    },
+    {
+      "question": "Một người dùng muốn viết một bài báo. Đầu tiên, họ xác định đối tượng độc giả và thông điệp chính (Biết đích đến). Tiếp theo, họ giao AI nghiên cứu số liệu trong khi họ tự phác thảo luận điểm chính (Biết mình, biết ta). Cuối cùng, họ yêu cầu AI soạn thảo từng phần nhỏ của bài báo (Chẻ củi). Quy trình này hiệu quả vì:",
+      "choices": [
+        "Người dùng đã để AI làm hết mọi việc khó.",
+        "Người dùng đã áp dụng một cách có hệ thống cả ba bước cốt lõi của 'Nghệ thuật Phân công'.",
+        "Người dùng đã sử dụng công cụ AI đắt tiền nhất.",
+        "Người dùng đã viết những prompt rất dài."
+      ],
+      "correct_answer": 1
+    }
+  ]
+}

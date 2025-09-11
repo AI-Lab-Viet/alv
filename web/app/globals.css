@@ -188,6 +188,14 @@
     transform: translateY(-10px);
   }
 }
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
 @layer utilities {
   .h-18 {
     height: 4.5rem;
