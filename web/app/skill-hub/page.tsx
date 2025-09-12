@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -139,6 +139,15 @@ export default function SkillHubPage() {
   const progressPercentage =
     (userProgress.completedStations / userProgress.totalStations) * 100;
   const nextStation = getNextStation();
+
+  const chapter4Completed =
+    typeof window !== "undefined" &&
+    localStorage.getItem("hasCompletedChapter4");
+  journeyStations.forEach((station) => {
+    if (station.id === 4) {
+      station.status = chapter4Completed ? "completed" : "current";
+    }
+  });
 
   return (
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 text-foreground transition-colors">
