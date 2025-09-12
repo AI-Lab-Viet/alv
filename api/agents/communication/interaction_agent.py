@@ -9,6 +9,7 @@ from typing import Dict, Any, List
 from dotenv import load_dotenv
 import google.generativeai as genai
 from agents.base import CommunicationAgent
+from models.schemas import LearningChatHistory
 
 # Load environment variables
 load_dotenv()
@@ -101,14 +102,19 @@ class InteractionAgent(CommunicationAgent):
         gemini_history = []
         
         for message in chat_history:
-            # Đảm bảo format đúng cho Gemini
-            if isinstance(message.get("parts"), list):
-                parts = message["parts"]
+            if isinstance(message, LearningChatHistory):
+                parts = [message.content]
+                role = message.role
             else:
-                parts = [str(message.get("parts", ""))]
+                # Đảm bảo format đúng cho Gemini
+                role = message.get("role", "user")
+                if isinstance(message.get("parts"), list):
+                    parts = message["parts"]
+                else:
+                    parts = [str(message.get("parts", ""))]
             
             gemini_history.append({
-                "role": message.get("role", "user"),
+                "role": role,
                 "parts": parts
             })
         

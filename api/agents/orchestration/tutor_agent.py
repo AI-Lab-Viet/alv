@@ -3,9 +3,18 @@
 TutorAgent - Agent điều phối cho quá trình học lý thuyết.
 Đây là "đạo diễn" cho luồng học tập, tạo ra trải nghiệm ALVA hoàn chỉnh.
 """
-
+import json, re
 from typing import Dict, Any, List
 from agents.base import OrchestrationAgent
+from agents.execution.practice_agent import PracticeAgent
+from agents.communication.interaction_agent import InteractionAgent
+from agents.execution.quiz_agent import QuizAgent
+from constants.constants import TimeConstants
+from database.redis import RedisComponent
+from database.db_supabase import DbSupabase
+from models.schemas import JobData, LearningChatHistory
+from tasks.task_consumer import generate_practice_activity, generate_quiz
+from constants.enum import CacheKeys, ChatRoleEnum, TutorAgentStateEnum
 from core.rag_engine import DualSourceRAGEngine
 
 
@@ -19,21 +28,25 @@ class TutorAgent(OrchestrationAgent):
     - Quản lý context và flow của phiên học
     - Đảm bảo consistency trong personality và teaching style
     """
-    
-    def __init__(self, interaction_agent=None):
+
+    def __init__(self):
         """
         Khởi tạo TutorAgent với dependency injection.
         
         Args:
             interaction_agent: InteractionAgent để giao tiếp với AI
         """
-        self.interaction_agent = interaction_agent
+        self.redis = RedisComponent()
+        self.interaction_agent = InteractionAgent()
+        self.practice_agent = PracticeAgent(self.interaction_agent)
+        self.quiz_agent = QuizAgent(self.interaction_agent)
         self.rag_engine = DualSourceRAGEngine()
+        self.db = DbSupabase()
         print(f"[{self.name}] Initialized with dependency injection")
-        print(f"[{self.name}] InteractionAgent: {'✓ Connected' if interaction_agent else '✗ Not provided'}")
+        print(f"[{self.name}] InteractionAgent: {'✓ Connected' if self.interaction_agent else '✗ Not provided'}")
         print(f"[{self.name}] RAG Engine: ✓ Dual-source strategy enabled")
     
-    def handle_request(self, user_input: str, session_context: Dict[str, Any]) -> Dict[str, Any]:
+    async def handle_request(self, user_input: str, session_context: Dict[str, Any]) -> Dict[str, Any]:
         """
         Xử lý yêu cầu học tập và tạo ra trải nghiệm ALVA.
         
@@ -60,9 +73,21 @@ class TutorAgent(OrchestrationAgent):
             # 1. Tạo System Prompt chi tiết cho vai "Gia sư ALVA"
             persona_prompt = self._create_alva_persona(session_context)
             
+            topic = session_context.get("topic", "Nền tảng tư duy AI Lab Việt")
+            chat_history = self.db.find_by(
+                'learning_chat_history', 
+                LearningChatHistory, 
+                filters={
+                    "chapter_id": session_context.get("chapter_id"),
+                    "user_id": session_context.get("user_id"),
+                    "session_id": session_context.get("session_id"),
+                },
+                sort_by="created_at",
+                sort_order="desc",
+            )
+            
             # 2. Thực hiện RAG search (Primary: Curriculum, Secondary: Chat History)
-            chat_history = session_context.get("chat_history", [])
-            rag_results = self.rag_engine.search_for_tutor(user_input, chat_history)
+            rag_results = self.rag_engine.search_for_tutor(user_input + topic, chat_history)
             
             # 3. Chuẩn bị context với RAG knowledge
             context = self._prepare_context_with_rag(user_input, session_context, rag_results)
@@ -71,9 +96,26 @@ class TutorAgent(OrchestrationAgent):
             print(f"[{self.name}] Calling InteractionAgent for AI response...")
             response_text = self.interaction_agent.communicate(persona_prompt, context, chat_history)
             
+            session_context["current_lesson"] = context.get("current_lesson", "N/A")
             # 4. Post-process response và chuẩn bị kết quả
             result = self._process_response(response_text, user_input, session_context)
-            
+            # print("Result:", result)
+            user_message: LearningChatHistory = LearningChatHistory(
+                chapter_id=session_context.get("chapter_id"),
+                user_id=session_context.get("user_id"),
+                role=ChatRoleEnum.USER,
+                content=user_input,
+                session_id=session_context.get("session_id")
+            )
+            alva_message: LearningChatHistory = LearningChatHistory(
+                chapter_id=session_context.get("chapter_id"),
+                user_id=session_context.get("user_id"),
+                role=ChatRoleEnum.ALVA,
+                content=result.get("response_text", ""),
+                session_id=session_context.get("session_id")
+            )
+            self.db.create("learning_chat_history", [user_message, alva_message])
+
             print(f"[{self.name}] Successfully orchestrated learning interaction")
             return result
             
@@ -96,9 +138,18 @@ class TutorAgent(OrchestrationAgent):
         Returns:
             System prompt hoàn chỉnh
         """
-        current_lesson = session_context.get("current_lesson", "Bài học chung")
+        topic = session_context.get("topic", "Nền tảng tư duy AI Lab Việt")
         user_level = session_context.get("user_level", "Trung bình")
         learning_style = session_context.get("learning_style", "Tương tác")
+        current_state = session_context.get("current_state", TutorAgentStateEnum.EXPLAINING_WHAT.value)
+        exercise_data = session_context.get("exercise_data", None)
+        if exercise_data is not None:
+            try:
+                exercise_data_str = json.dumps(exercise_data, ensure_ascii=False, indent=2)
+            except Exception:
+                exercise_data_str = str(exercise_data)
+        else:
+            exercise_data_str = ""
         
         persona_prompt = f"""
 Bạn là ALVA (AI Learning & Virtual Assistant), gia sư AI thông minh và thân thiện của AI Lab Việt.
@@ -109,40 +160,78 @@ Bạn là ALVA (AI Learning & Virtual Assistant), gia sư AI thông minh và th�
 - Giải thích từ đơn giản đến phức tạp, có ví dụ thực tế
 - Luôn kết nối kiến thức với ứng dụng trong công việc
 - Tạo không khí học tập tích cực và thú vị
+- KHÔNG lặp lại lời chào ở các bước sau khi đã vào bài học (chỉ chào ở bước Greeting)
 
 === BÀI HỌC HIỆN TẠI ===
-Chủ đề: {current_lesson}
+Chủ đề: {topic}
 Cấp độ học viên: {user_level}
 Phong cách học: {learning_style}
+Trạng thái hiện tại: {current_state}
+Dữ liệu bài tập: {exercise_data_str}
 
-=== NHIỆM VỤ CỦA BẠN ===
-1. Trả lời câu hỏi của học viên về bài học hiện tại
-2. Giải thích khái niệm bằng ngôn ngữ dễ hiểu
-3. Đưa ra ví dụ thực tế từ môi trường doanh nghiệp Việt Nam
-4. Khuyến khích học viên đặt thêm câu hỏi
-5. Kết nối kiến thức với các tình huống thực tế
+=== QUẢN LÝ TIẾN TRÌNH HỌC TẬP ===
+Bạn PHẢI quản lý trạng thái (state) theo flow sau:
+
+Các trạng thái chính:
+0. Greeting (chào mừng, khởi động)
+1. Explain "What" (giảng khái niệm, hiển thị nội dung giáo trình)
+2. Practice 1 (câu hỏi trắc nghiệm kiểm tra "CÁI GÌ")
+3. Feedback sau Practice 1
+4. Explain "Why" (giải thích nguyên nhân, hiển thị cờ đỏ)
+5. Practice 2 (câu hỏi trắc nghiệm kiểm tra "TẠI SAO")
+6. Feedback sau Practice 2
+7. Explain "How" (hướng dẫn công thức phản hồi)
+8. Quiz (câu hỏi mở để học viên áp dụng)
+9. Completion (kết thúc, trao huy hiệu, tổng kết)
+
+Nguyên tắc bắt buộc:
+- KHÔNG bao giờ quay ngược lại state trước đó (ví dụ: từ state 5 không được quay về state 2).  
+- KHÔNG bao giờ bỏ qua state (ví dụ: từ state 1 không được nhảy thẳng lên state 4).
+- Chỉ được giữ nguyên state hiện tại hoặc tiến tới state tiếp theo trong flow.  
+- Chỉ được phép chuyển sang Practice/Quiz khi học viên đã xác nhận "hiểu" hoặc "sẵn sàng thực hành".  
+- Khi học viên gửi đáp án và có dữ liệu bài tập, chuyển sang state Feedback ngay, câu trả lời của học viên hoàn toàn đúng rồi, hãy khen ngợi họ và giải thích thêm lựa chọn đó, sau đó dẫn dắt sang trạng thái Explain tiếp theo. 
+
+=== NHIỆM VỤ ===
+- Trả lời theo đúng mô tả của từng trạng thái:
+    - Ở state 0: Chào mừng học viên, giới thiệu ngắn gọn về chủ đề, hỏi học viên đã sẵn sàng chưa.
+    - Ở state 1 và 4: Giảng giải khái niệm, định nghĩa, nguyên tắc, ví dụ từ giáo trình. Kết thúc bằng câu hỏi để kiểm tra hiểu biết hoặc khuyến khích tương tác tiếp.
+    - Ở state 2 và 5: Dựa vào dữ liệu bài tập được cung cấp, tạo câu hỏi trắc nghiệm phù hợp để kiểm tra kiến thức "CÁI GÌ" hoặc "TẠI SAO". 
+    - Ở state 3 và 6: Dựa vào đáp án học viên gửi, đánh giá và phản hồi ngay lập tức, khen ngợi nếu đúng, động viên nếu sai và giải thích thêm. Dẫn dắt ngắn gọn để học phần kiến thức tiếp theo.
+    - Ở state 7: Hướng dẫn công thức phản hồi, cách áp dụng kiến thức vào tình huống thực tế.
+    - Ở state 8: Tạo câu hỏi mở để học viên áp dụng kiến thức đã học.
+    - Ở state 9: Khen ngợi học viên, tổng kết lại những điểm chính đã học, trao huy hiệu hoàn thành.
+- Bạn KHÔNG tự tạo bài tập, chỉ giảng dạy và phản hồi. 
+- Nếu học viên nói sẵn sàng hoặc bắt đầu làm bài tập hoặc đã hiểu nội dung bài mới được phép chuyển sang các trạng thái thực hành tương ứng sau phần lý thuyết trước đó và nói với học viên hãy thực hành.
+Ví dụ: 
+    - khi ở trạng thái Explain "What" (state = 1), nếu học viên nói "Tôi đã hiểu, tôi sẵn sàng làm bài tập" thì bạn mới chuyển sang trạng thái Practice 1 (state = 2) và nói với học viên hãy thực hành.
+    - Tương tự với Explain "Why" (state = 4), nếu học viên nói "Tôi đã hiểu, tôi sẵn sàng làm bài tập" thì bạn mới chuyển sang trạng thái Practice 2 (state = 5) và nói với học viên hãy thực hành.
+- Nếu học viên gửi câu trả lời của họ về các bài tập, hãy chuyển sang trạng thái **Feedback** và dựa vào các tiêu chí trong dữ liệu bài tập để đánh giá, phản hồi ngay lập tức và dẫn dắt ngắn gọn để học phần kiến thức tiếp theo (ví dụ: hãy cùng tìm hiểu tại sao phải học cách nhận định,...).
+- Nếu học viên trả lời đúng/sai trong Practice hoặc Quiz, hãy phản hồi tích cực/động viên và chuyển tiếp trạng thái tiếp theo kèm lời dẫn (ví dụ: hãy cùng tìm hiểu tại sao phải học cách nhận định,...).
+- Hãy trả về thêm trạng thái cuối câu trả lời của bạn theo ví dụ mẫu: (state: 2)
 
 === NGUYÊN TẮC ===
-- **ƯU TIÊN GIÁO TRÌNH**: Luôn dựa vào kiến thức từ giáo trình được cung cấp
+- **ƯU TIÊN GIÁO TRÌNH**: Trả lời của bạn phải luôn bám sát và dựa vào kiến thức từ giáo trình được cung cấp
 - **CHÍNH XÁC**: Không bịa đặt thông tin, chỉ sử dụng nguồn đáng tin cậy
 - **NGỮ CẢNH**: Tham khảo lịch sử chat để hiểu câu hỏi trong ngữ cảnh
+- **KHÔNG CHÀO LẠI**: Chỉ chào trong state 0, các bước sau đi thẳng vào nội dung. 
 - Nếu câu hỏi ngoài phạm vi, hãy định hướng về bài học
 - Luôn kết thúc bằng câu hỏi để duy trì tương tác
 - Sử dụng emoji phù hợp để tạo không khí thân thiện
 - Không trả lời các chủ đề nhạy cảm hoặc không phù hợp
+- Không bao giờ chuyển sang trạng thái trước trạng thái hiện tại, chỉ tiến tới trạng thái tiếp theo hoặc ở lại trạng thái hiện tại.
+- Không đề cập đến các trạng thái trong câu trả lời của bạn, chỉ sử dụng để quản lý luồng học tập.
 
 === KIẾN THỨC RAG ===
 Bạn được cung cấp kiến thức từ hai nguồn:
 1. **GIÁO TRÌNH** (Nguồn chính): Định nghĩa, nguyên tắc, ví dụ chính thức
 2. **LỊCH SỬ CHAT** (Ngữ cảnh): Để hiểu câu hỏi trong bối cảnh cuộc trò chuyện
 
-Hãy sử dụng kiến thức này để trả lời chính xác và phù hợp.
+Chỉ dùng các nguồn này để trả lời.
 
 === PHONG CÁCH TRẢ LỜI ===
-- Bắt đầu bằng lời chào thân thiện (nếu phù hợp)
 - Giải thích khái niệm một cách có cấu trúc
 - Đưa ra ví dụ cụ thể và dễ hiểu
-- Kết thúc bằng câu hỏi để kiểm tra hiểu biết hoặc khuyến khích tương tác tiếp
+- Kết thúc bằng câu hỏi để kiểm tra hiểu biết hoặc khuyến khích tương tác tiếp, đối với trạng thái Explain hãy hỏi học viên đã hiểu bài chưa"
 
 Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy trong hành trình học tập của học viên! 🎓✨
 """
@@ -187,7 +276,8 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         # Base context
         context = {
             "user_input": user_input,
-            "current_lesson": session_context.get("current_lesson", "N/A"),
+            "user_id": session_context.get("user_id", "unknown"),
+            "current_lesson": rag_results.get("curriculum_knowledge", [{}]),
             "user_level": session_context.get("user_level", "beginner"),
             "learning_style": session_context.get("learning_style", "interactive")
         }
@@ -228,18 +318,56 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
         # - Thêm metadata
         # - Cập nhật learning progress
         
+        session_id = session_context.get("session_id", "unknown")
+        santinized_response = parse_alva_response(response_text)
+        updated_state = santinized_response.get("state", TutorAgentStateEnum.GREETING.value)
+        current_agent_state = self.redis.get(f"{CacheKeys.AGENT_STATE.value}_{session_id}")
+        if current_agent_state is not None:
+            try:
+                current_agent_state_int = int(current_agent_state)
+            except (ValueError, TypeError):
+                current_agent_state_int = updated_state
+            self.redis.set(
+                f"{CacheKeys.AGENT_STATE.value}_{session_id}", 
+                updated_state if int(updated_state) > current_agent_state_int else current_agent_state_int,
+                TimeConstants.ONE_DAY * 7
+            )
+            updated_state = updated_state if int(updated_state) > current_agent_state_int else current_agent_state_int
+
+        else:
+            self.redis.set(f"{CacheKeys.AGENT_STATE.value}_{session_id}", updated_state)
+
+        print(f"[{self.name}] State updated to: {updated_state}")
+
+        job = JobData(
+            user_id=session_context.get("user_id", "unknown"),
+            state=int(updated_state),
+            context=session_context,
+        )
+        result = None
+        if int(updated_state) == TutorAgentStateEnum.PRACTICING_WHAT.value:
+            result = generate_practice_activity.delay({"job": job.model_dump()} )
+
+        elif int(updated_state) == TutorAgentStateEnum.PRACTICING_WHY.value:
+            result = generate_practice_activity.delay({"job": job.model_dump()} )
+            
+        elif int(updated_state) == TutorAgentStateEnum.QUIZ.value:
+            result = generate_quiz.delay({"job": job.model_dump()})
+        
         return {
             "response_from": self.interaction_agent.name,
-            "response_text": response_text,
+            "response_text": santinized_response.get("response_text", ""),
+            "task_id": result.id if result else None,
             "status": "success",
+            "state": updated_state,
             "metadata": {
                 "lesson": session_context.get("current_lesson"),
-                "user_input_length": len(user_input),
-                "response_length": len(response_text),
-                "interaction_type": "learning_session",
-                "agent_chain": f"{self.name} -> {self.interaction_agent.name}"
+                # "user_input_length": len(user_input),
+                # "response_length": len(santinized_response.get("response_text", "")),
+                # "interaction_type": "learning_session",
+                # "agent_chain": f"{self.name} -> {self.interaction_agent.name}"
             },
-            "suggestions": self._generate_follow_up_suggestions(user_input, session_context)
+            # "suggestions": self._generate_follow_up_suggestions(user_input, session_context)
         }
     
     def _generate_follow_up_suggestions(self, user_input: str, session_context: Dict[str, Any]) -> List[str]:
@@ -274,3 +402,32 @@ Hãy luôn nhớ: Bạn là ALVA, người bạn đồng hành đáng tin cậy 
                 "Làm thế nào để áp dụng trong công việc?",
                 "Những thách thức phổ biến là gì?"
             ]
+
+def parse_alva_response(raw_text: str):
+    """
+    Parse response từ ALVA, tách response_text và state.
+    
+    Args:
+        raw_text (str): Chuỗi text trả về từ model, VD:
+            "... Bạn hiểu chưa nào? 🤔\n\n(state: 1)\n"
+    
+    Returns:
+        dict: {
+            "response_text": "... Bạn hiểu chưa nào? 🤔",
+            "state": 1
+        }
+    """
+    # Regex tìm "(state: X)"
+    match = re.search(r"\(state:\s*(\d+)\)", raw_text)
+    state = None
+    if match:
+        state = int(match.group(1))
+        # Xóa phần state khỏi text
+        response_text = re.sub(r"\(state:\s*\d+\)", "", raw_text).strip()
+    else:
+        response_text = raw_text.strip()
+    
+    return {
+        "response_text": response_text,
+        "state": state
+    }
