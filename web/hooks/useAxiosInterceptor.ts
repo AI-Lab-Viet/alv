@@ -13,12 +13,6 @@ export function useAxiosInterceptor() {
   useLayoutEffect(() => {
     const interceptor = api.interceptors.request.use(
       async (config) => {
-        console.log("Interceptor called:", {
-          userId,
-          isLoading,
-          url: config.url,
-        });
-
         // // If auth is still loading, reject the request with a clear error
         // if (isLoading) {
         //   console.warn("Request blocked: Auth still loading");
@@ -30,7 +24,6 @@ export function useAxiosInterceptor() {
         // Auth is ready, attach userId if available
         if (userId) {
           config.headers["user-id"] = userId;
-          console.log("User-ID attached:", userId);
         } else {
           console.warn("No userId available for API request to:", config.url);
         }
@@ -38,7 +31,6 @@ export function useAxiosInterceptor() {
         return config;
       },
       (error) => {
-        console.error("Request interceptor error:", error);
         return Promise.reject(error);
       }
     );

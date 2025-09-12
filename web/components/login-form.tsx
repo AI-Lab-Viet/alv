@@ -28,7 +28,6 @@ export default function LoginForm() {
 
       const formData = new FormData(e.currentTarget);
       const result = await signIn(formData);
-      console.log("result:", result);
       if (result?.error) {
         setError(result.error);
         toast.warning(result.error);

@@ -19,7 +19,6 @@ export default async function LoginPage() {
     data: { session },
   } = await supabase.auth.getSession();
 
-  console.log("Session from Supabase:", session);
 
   // If user is logged in, redirect to home page
   if (session) {

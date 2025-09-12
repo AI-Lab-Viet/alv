@@ -22,7 +22,6 @@ export default function FeaturedProjects() {
   useEffect(() => {
     const fetchFeaturedProjects = async () => {
       const projects = await getFeaturedProject({});
-      console.log(projects);
       setFeaturedProjects(projects.missions);
     };
     fetchFeaturedProjects();

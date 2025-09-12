@@ -28,7 +28,6 @@ export default function ProjectSidebar({
   const [isOpen, setIsOpen] = useState(true);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  console.log({ completedObjective, totalCompletedObjectives })
 
   useEffect(() => {
     if (completedObjective.trim() !== "" && project.learning_objectives.includes(completedObjective)) {
@@ -43,8 +42,8 @@ export default function ProjectSidebar({
     >
       {/* Context */}
       <div className="flex items-center justify-between w-full h-12 pb-1 px-2 pt-2 sticky z-10 top-0 bg-zinc-50">
-        {(!isMobile || isOpen) && (
-          <h1 className="tracking-tighter text-md p-1 whitespace-nowrap">
+        {(isOpen) && (
+          <h1 className="tracking-tighter text-md p-1 whitespace-nowrap hidden md:block">
             Thông tin dự án
           </h1>
         )}

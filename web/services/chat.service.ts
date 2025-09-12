@@ -14,7 +14,6 @@ export async function getChatHistory({
         session_id: sessionId,
       },
     });
-    console.log("Chat history response:", response);
     return response.data as ISessionHistoryResponse;
   } catch (error: unknown) {
     // Gracefully handle "no history yet" case
@@ -40,7 +39,6 @@ export async function startSession(missionId: string) {
     const response = await api.post(`/api/start`, {
       mission_id: missionId,
     });
-    console.log("Start session response:", response);
     return response;
   } catch (error) {
     console.error("Failed to start session:", error);

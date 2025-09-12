@@ -5,8 +5,6 @@ export async function getPortfolioPage() {
   try {
     const response = await api.get("/portfolio");
 
-    console.log("Get project by ID response:", response);
-
     return response.data as IGetPortfolioResponse;
   } catch (error) {
     console.error(`Failed to get portfolio`, error);

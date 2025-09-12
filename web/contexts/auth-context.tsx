@@ -36,7 +36,6 @@ export function AuthProvider({
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       try {
-        console.log("User found in localStorage:", savedUser);
         setUser(JSON.parse(savedUser));
       } catch (error) {
         localStorage.removeItem("user");

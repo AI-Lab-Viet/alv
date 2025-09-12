@@ -14,7 +14,6 @@ export default function NavBarWrapper({ children }: NavBarWrapperProps) {
   const shouldShowNavBar = hideNavBarPaths.every(
     (path) => !pathname.startsWith(path)
   );
-  console.log("pathname", pathname, shouldShowNavBar);
 
   return (
     <div className="h-full flex flex-col">
