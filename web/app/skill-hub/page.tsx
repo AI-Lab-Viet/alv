@@ -75,7 +75,9 @@ const journeyStations = [
     chapter: "Chương 4",
     description: "Rèn luyện tư duy phản biện và đánh giá chất lượng",
     icon: Trophy,
-    status: "current",
+    status: localStorage.getItem("hasCompletedChapter4")
+      ? "completed"
+      : "current",
     color: "from-orange-400 to-red-500",
   },
   {

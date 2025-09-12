@@ -150,12 +150,14 @@ export default function JourneyPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chapter = chapterMetadata[chapterId as keyof typeof chapterMetadata];
 
+  localStorage.removeItem("hasCompletedChapter4");
+
   useEffect(() => {
     const init = async () => {
       if (chapterId === 4) {
-        // const { data } = await supabase.auth.getUser();
-        // setCurrentUserId(data?.user?.id || null);
-        loadLessonBlocks();
+        if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
+          loadLessonBlocks();
+        }
         initializeSession();
       }
     };
@@ -404,8 +406,8 @@ export default function JourneyPage() {
 
         setContentDisplay({
           type: "clickable_text",
-          title: "Tìm lỗi sai",
-          instruction: "Hãy click vào cụm từ sai trong đoạn văn dưới đây",
+          title: "Tư duy kiểm chứng",
+          instruction: "Theo bạn, thông tin này có đáng tin cậy không?",
           text: response.interactive_content?.text || "",
           correct_answer: response.interactive_content?.correct_answer || "",
           clickable_words: response.interactive_content?.clickable_words || [],
@@ -416,13 +418,13 @@ export default function JourneyPage() {
         if (currentUserId && !whiteListUserIds.includes(currentUserId)) {
           break;
         }
-        setContentDisplay({
-          type: "multiple_choice",
-          title: "Xác định tiêu chí vi phạm",
-          question: "Lỗi sai này vi phạm tiêu chí nào trong Bộ câu hỏi Vàng?",
-          options: response.interactive_content?.options || [],
-          correct_answer: response.interactive_content?.correct_answer,
-        });
+        // setContentDisplay({
+        //   type: "multiple_choice",
+        //   title: "Xác định tiêu chí vi phạm",
+        //   question: "Lỗi sai này vi phạm tiêu chí nào trong Bộ câu hỏi Vàng?",
+        //   options: response.interactive_content?.options || [],
+        //   correct_answer: response.interactive_content?.correct_answer,
+        // });
         break;
 
       case Chapter4States.FEEDBACK_TRANSITION:
@@ -434,20 +436,6 @@ export default function JourneyPage() {
           });
           break;
         }
-        setContentDisplay({
-          type: "transition",
-          title: "Tuyệt vời!",
-          message: response.response_text,
-        });
-        setTimeout(() => {
-          setCurrentState(Chapter4States.TEACHING_RED_FLAGS);
-          const nextResponse =
-            mockAgentResponses[Chapter4States.TEACHING_RED_FLAGS];
-          if (nextResponse) {
-            handleStateChange(Chapter4States.TEACHING_RED_FLAGS, nextResponse);
-            setProgress(nextResponse.progress || 0);
-          }
-        }, 2000);
         break;
 
       case Chapter4States.TEACHING_RED_FLAGS:
@@ -461,31 +449,30 @@ export default function JourneyPage() {
         }
         setFrameTitle("Khung Tri thức");
         setContentDisplay({
-          type: "red_flags",
-          title: 'Các "Cờ đỏ" trong tư duy AI',
-          red_flags: response.chapter_data?.red_flags || [],
-          lessonBlocks: whySectionBlocks,
-        });
-        break;
-
-      case Chapter4States.PRACTICE_RED_FLAGS:
-        setFrameTitle("Thử thách nhỏ");
-        setContentDisplay({
-          type: "text_analysis",
-          title: "Nhận diện Cờ đỏ",
-          instruction: 'Đoạn văn sau đang mắc phải "cờ đỏ" nào?',
-          content: response.interactive_content?.content,
-          expected_answer: response.interactive_content?.expected_answer,
-        });
-        break;
-
-      case Chapter4States.TEACHING_FEEDBACK_FORMULA:
-        setFrameTitle("Khung Tri thức");
-        setContentDisplay({
           type: "feedback_formula",
           title: "Công thức Phản hồi 4 bước",
           steps: response.chapter_data?.steps || [],
           lessonBlocks: howSectionBlocks,
+        });
+        break;
+
+      case Chapter4States.PRACTICE_RED_FLAGS:
+        setFrameTitle("Trận đấu tính điểm");
+        setContentDisplay({
+          type: "final_test",
+          title: "Trận đấu tính điểm",
+          scenario: response.interactive_content?.scenario,
+          prompt: response.interactive_content?.prompt,
+        });
+        break;
+
+      case Chapter4States.TEACHING_FEEDBACK_FORMULA:
+        setFrameTitle("Phần thưởng");
+        setContentDisplay({
+          type: "completion",
+          badge: response.chapter_data?.completion?.badge,
+          achievement: response.chapter_data?.completion?.achievement,
+          next_action: response.chapter_data?.completion?.next_action,
         });
         break;
 
@@ -879,6 +866,8 @@ export default function JourneyPage() {
                       </div>
                     </div>
                   )}
+
+                  <div ref={messagesEndRef} />
                 </div>
               </div>
 

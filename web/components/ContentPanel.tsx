@@ -11,7 +11,7 @@ import {
   MapPin,
   BookOpen,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 interface LessonBlock {
   id: string;
@@ -52,6 +52,11 @@ export default function ContentPanel({
   wrongClickedWord = "",
 }: ContentPanelProps) {
   if (!contentDisplay) return null;
+
+  const handleFinish = useCallback(() => {
+    onRouterPush("/skill-hub");
+    localStorage.setItem("hasCompletedChapter4", "true");
+  }, [onRouterPush]);
 
   const renderLessonBlock = (block: LessonBlock) => {
     switch (block.block_type) {
@@ -496,10 +501,7 @@ export default function ContentPanel({
             </h3>
           </div>
           <div className="space-y-3">
-            <Button
-              onClick={() => onRouterPush("/skill-hub")}
-              className="w-full"
-            >
+            <Button onClick={handleFinish} className="w-full">
               <MapPin className="w-4 h-4 mr-2" />
               {contentDisplay.next_action}
             </Button>
