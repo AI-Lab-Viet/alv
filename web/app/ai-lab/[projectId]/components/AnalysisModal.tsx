@@ -38,7 +38,6 @@ export default function AnalysisModal({
 }: AnalysisModalProps) {
   const router = useRouter();
   const { clearSession, clearAnalysis } = useChatSession();
-  console.log("analysis:", analysis);
   const handleCloseAndRedirect = () => {
     toggleAnalysis();
     clearAnalysis(); // Clear analysis data when modal is closed

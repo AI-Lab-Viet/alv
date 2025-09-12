@@ -39,7 +39,6 @@ export default function ProjectDetailPage() {
     try {
       setIsStartingSession(true);
       const sessionData = await startNewSession(missionId);
-      console.log("newSessionId:", sessionData.sessionId);
       setIsStartingSession(false);
       router.push(`/ai-lab/${sessionData.sessionId}`);
       // sessionId will be set in the context and useEffect will handle navigation
@@ -70,7 +69,6 @@ export default function ProjectDetailPage() {
       }
       try {
         const response = await getProjectById({ missionId });
-        console.log(response);
         setProject(response);
       } catch (error) {
         console.error("Failed to fetch project:", error);

@@ -29,7 +29,6 @@ export default function AllProjects() {
       } else {
         result = await getProjectByCategory({ category: tab, currentPage: page, pageSize });
       }
-      console.log("result", result);
       const totalPages = Math.ceil(result.total / pageSize);
       setPagination((prev) => ({
         ...prev,
@@ -58,13 +57,7 @@ export default function AllProjects() {
     const { currentPage = 1, totalPages = 0 } = pagination[activeTab] || {};
 
     // Debug logging
-    console.log('Pagination debug:', { activeTab, currentPage, totalPages, hasData: !!pagination[activeTab] });
 
-    if (totalPages <= 1) {
-      console.log('Pagination not rendering: totalPages <= 1');
-      // Temporarily force pagination to show for debugging
-      // return null;
-    }
 
     const pages = [];
     const delta = 2; // Number of pages to show around current page

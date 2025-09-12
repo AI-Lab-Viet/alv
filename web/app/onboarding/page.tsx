@@ -95,7 +95,6 @@ export default function OnboardingPage() {
   const handleSubmit = async () => {
     const { data } = await supabase.auth.getUser();
     // Here you would save the user profile data to Supabase
-    console.log("User profile data:", formData);
     const { error } = await supabase
       .from("users")
       .update({
@@ -197,11 +196,10 @@ export default function OnboardingPage() {
                     <div
                       key={option.id}
                       onClick={() => handlePersonalityChange(option.id)}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                        formData.characteristic.includes(option.id)
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-slate-200 hover:border-slate-300"
-                      }`}
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${formData.characteristic.includes(option.id)
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-slate-200 hover:border-slate-300"
+                        }`}
                     >
                       <h3 className="font-semibold text-slate-700">
                         {option.label}
@@ -231,11 +229,10 @@ export default function OnboardingPage() {
                       <div
                         key={topic.id}
                         onClick={() => handleTopicChange(topic.id)}
-                        className={`p-3 rounded-lg border-2 cursor-pointer transition-all text-center ${
-                          formData.hobby.includes(topic.id)
-                            ? "border-blue-500 bg-blue-50"
-                            : "border-slate-200 hover:border-slate-300"
-                        }`}
+                        className={`p-3 rounded-lg border-2 cursor-pointer transition-all text-center ${formData.hobby.includes(topic.id)
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-slate-200 hover:border-slate-300"
+                          }`}
                       >
                         <div className="text-2xl mb-1">{topic.icon}</div>
                         <div className="text-sm font-medium text-slate-700">

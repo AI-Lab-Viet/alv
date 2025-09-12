@@ -125,9 +125,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     setError(null);
 
     try {
-      console.log("Fetching session details for:", sessionId);
       const response = await getChatHistory({ sessionId });
-      console.log("Session details response:", response);
 
       // Always set the session ID
       setSessionId(sessionId);
@@ -172,7 +170,6 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     setError(null);
 
     try {
-      console.log("Fetching mission details for:", missionId);
       const missionDetail = await getProjectById({ missionId });
       setCurrentMissionDetail(missionDetail);
       // Ensure missionId is set (in case it wasn't set during session creation)
@@ -203,13 +200,11 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
       return;
     }
     try {
-      console.log("Finishing session:", sessionId);
       const response = await finishSession(
         sessionId,
         finalSubmission,
         reflection
       );
-      console.log("Session finished:", response);
       setAnalysis(response);
       // Don't clear session immediately - let the analysis modal handle navigation
       // clearSession();

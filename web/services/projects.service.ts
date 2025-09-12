@@ -31,8 +31,6 @@ export async function getAllProject({
       },
     });
 
-    console.log("Get all projects response:", response);
-
     return {
       missions: response.data.missions as DetailedProject[],
       total: response.data.total_missions || 0,
@@ -63,8 +61,6 @@ export async function getFeaturedProject({
         page_size: pageSize,
       },
     });
-
-    console.log("Get featured projects response:", response);
 
     return {
       missions: response.data.missions as DetailedProject[],
@@ -102,8 +98,6 @@ export async function getProjectByCategory({
       },
     });
 
-    console.log("Get projects by category response:", response);
-
     return {
       missions: response.data.missions as DetailedProject[],
       total: response.data.total_missions || 0,
@@ -124,8 +118,6 @@ export async function getProjectById({ missionId }: { missionId: string }) {
         mission_id: missionId,
       },
     });
-
-    console.log("Get project by ID response:", response);
 
     return response.data.mission as DetailedProject;
   } catch (error) {
@@ -154,8 +146,6 @@ export async function getProjectByName({
         page_size: pageSize,
       },
     });
-
-    console.log("Get project by ID response:", response);
 
     return response.data as IGetProjectByNameResponse;
   } catch (error) {

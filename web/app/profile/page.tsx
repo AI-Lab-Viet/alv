@@ -33,7 +33,6 @@ export default function ProfilePage() {
       try {
         setLoading(true);
         const portfolioData = await getPortfolioPage();
-        console.log('portfolioData:', portfolioData);
         setPortfolioProjects(portfolioData.projects);
         setError(null);
       } catch (err) {

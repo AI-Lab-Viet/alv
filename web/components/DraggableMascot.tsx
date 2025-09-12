@@ -43,7 +43,6 @@ export default function DraggableMascot({
 
         dragOffsetRef.current = { x, y };
         setIsDragging(true);
-        console.log('Mascot drag started');
         e.preventDefault();
 
         // Add global mouse event listeners
@@ -56,13 +55,11 @@ export default function DraggableMascot({
             const newY = Math.max(0, Math.min(e.clientY - rect.top - dragOffsetRef.current.y, rect.height - height));
 
             const newPosition = { x: newX, y: newY };
-            console.log('Mascot position:', newPosition);
             setPosition(newPosition);
             onPositionChange?.(newPosition);
         };
 
         const handleGlobalMouseUp = () => {
-            console.log('Mascot drag ended');
             setIsDragging(false);
             document.removeEventListener('mousemove', handleGlobalMouseMove);
             document.removeEventListener('mouseup', handleGlobalMouseUp);
@@ -84,7 +81,7 @@ export default function DraggableMascot({
                 height: `${height}px`,
             }}
             onMouseDown={handleMouseDown}
-            onClick={() => console.log('Mascot clicked')}
+            onClick={() => { }}
         >
             <Image
                 src={projectMainImage}

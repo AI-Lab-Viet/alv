@@ -37,7 +37,7 @@ export default function Hero() {
           <Image
             src={projectMainMascot}
             alt="Hero Mascot"
-            className="absolute top-0 right-0 "
+            className="absolute top-0 right-0 hidden lg:block "
             width={150}
             height={150}
           />
