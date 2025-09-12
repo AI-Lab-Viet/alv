@@ -248,20 +248,13 @@ async def websocket_interact(websocket: WebSocket):
                 "mission_id": mission_id,
                 "session_id": session_id,
                 "message": session_result["greeting_message"],
+                "prompts": session_result["prompt_starters"],
                 "status": "connected",
                 "chat_history": session_result["chat_history"],
                 "context_string": session_result["context_string"],
                 "current_progress": session_result["current_progress"]
             }))
             
-            # Send prompt starters for new sessions
-            if "prompt_starters" in session_result:
-                await websocket.send_text(json.dumps({
-                    "type": "prompt_starters",
-                    "prompts": session_result["prompt_starters"],
-                    "mission_id": mission_id,
-                    "session_id": session_id
-                }))
         
         websocket.script_index = 0
 
