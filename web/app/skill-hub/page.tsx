@@ -133,12 +133,13 @@ export default function SkillHubPage() {
   const [selectedStation, setSelectedStation] = useState<
     null | (typeof journeyStations)[0]
   >(null);
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
   const progressPercentage =
     (userProgress.completedStations / userProgress.totalStations) * 100;
   const nextStation = getNextStation();
 
   return (
-    <div className="bg-background text-foreground transition-colors">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 text-foreground transition-colors">
       <div className="max-w-7xl mx-auto px-4 py-8 lg:px-8">
         {/* Welcome Header */}
         <div className="mb-8">
@@ -443,25 +444,26 @@ export default function SkillHubPage() {
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full"
-                  onClick={async () => {
-                    const { data } = await supabase.storage
-                      .from("documents")
-                      .download("Giao_Trinh_AI_Lab_Viet_new.pdf");
-                    if (data) {
-                      const url = URL.createObjectURL(data);
-                      const link = document.createElement("a");
-                      link.href = url;
-                      link.download = "Giao_Trinh_AI_Lab_Viet_new.pdf";
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                      URL.revokeObjectURL(url);
-                    }
-                  }}
+                  className="w-full mb-4"
+                  onClick={() => setShowPdfViewer(true)}
                 >
-                  Tải về giáo trình
+                  Xem trực tiếp
                 </Button>
+                <Dialog open={showPdfViewer} onOpenChange={setShowPdfViewer}>
+                  <DialogContent className="w-[2000px] h-[90vh] flex flex-col">
+                    <DialogHeader>
+                      <DialogTitle>Giáo trình AI Lab Việt</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex-1 min-h-0">
+                      <embed
+                        src="https://wojvcxygxpxocmtsxjbk.supabase.co/storage/v1/object/public/documents/Giao_Trinh_AI_Lab_Viet_new.pdf"
+                        type="application/pdf"
+                        width="100%"
+                        height="100%"
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
           </div>
