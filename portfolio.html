@@ -1,480 +1,499 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hồ Sơ Năng Lực Số - Lê Minh Qúy</title>
-    
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            color: #333;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: #333;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
 
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      /* Header Section */
+      .header {
+        text-align: center;
+        background: white;
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #007bff, #00d4ff);
+      }
+
+      .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #007bff, #00d4ff);
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 8px 32px rgba(0, 123, 255, 0.3);
+      }
+
+      .student-name {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+
+      .bio {
+        font-size: 1.2rem;
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .platform-slogan {
+        font-size: 0.9rem;
+        color: #007bff;
+        font-weight: 500;
+        opacity: 0.8;
+      }
+
+      /* Projects Section */
+      .projects-section {
+        margin-bottom: 3rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+      }
+
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(90deg, #007bff, #00d4ff);
+        border-radius: 2px;
+      }
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Project Card */
+      .project-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 123, 255, 0.1);
+      }
+
+      .project-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        border-color: rgba(0, 123, 255, 0.3);
+      }
+
+      .project-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+
+      .project-description {
+        color: #6c757d;
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      /* Project Sections */
+      .project-section {
+        margin-bottom: 2rem;
+      }
+
+      .project-section:last-child {
+        margin-bottom: 0;
+      }
+
+      .section-header {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .section-icon {
+        font-size: 1.2rem;
+      }
+
+      /* Final Product Section */
+      .final-product {
+        background: #f8f9ff;
+        border-left: 4px solid #007bff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        font-style: italic;
+        color: #2c3e50;
+        line-height: 1.8;
+        position: relative;
+      }
+
+      .final-product::before {
+        content: '"';
+        position: absolute;
+        top: -10px;
+        left: 15px;
+        font-size: 3rem;
+        color: #007bff;
+        opacity: 0.3;
+        font-family: serif;
+      }
+
+      /* Process Section - Terminal Style */
+      .process-section .section-header {
+        color: #e74c3c;
+      }
+
+      .terminal-block {
+        background: #2d2d2d;
+        border-radius: 8px;
+        padding: 1.5rem;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        position: relative;
+        margin-top: 1rem;
+      }
+
+      .terminal-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        color: #a0a0a0;
+        font-size: 0.8rem;
+      }
+
+      .terminal-dots {
+        display: flex;
+        gap: 0.3rem;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .dot.red {
+        background: #ff5f56;
+      }
+      .dot.yellow {
+        background: #ffbd2e;
+      }
+      .dot.green {
+        background: #27ca3f;
+      }
+
+      .prompt-line {
+        color: #00d4ff;
+        margin-bottom: 0.8rem;
+      }
+
+      .prompt-text {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin-left: 1rem;
+        border-left: 2px solid #00d4ff;
+      }
+
+      /* Skills Section */
+      .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+
+      .skill-tag {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        color: #1976d2;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        border: 1px solid rgba(25, 118, 210, 0.2);
+        transition: all 0.2s ease;
+      }
+
+      .skill-tag:hover {
+        background: linear-gradient(135deg, #bbdefb, #90caf9);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Header Section */
-        .header {
-            text-align: center;
-            background: white;
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            margin-bottom: 3rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #007bff, #00d4ff);
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #007bff, #00d4ff);
-            margin: 0 auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 8px 32px rgba(0, 123, 255, 0.3);
-        }
-
-        .student-name {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .bio {
-            font-size: 1.2rem;
-            color: #6c757d;
-            margin-bottom: 1.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .platform-slogan {
-            font-size: 0.9rem;
-            color: #007bff;
-            font-weight: 500;
-            opacity: 0.8;
-        }
-
-        /* Projects Section */
-        .projects-section {
-            margin-bottom: 3rem;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, #007bff, #00d4ff);
-            border-radius: 2px;
+          padding: 1rem;
         }
 
         .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
         }
 
-        /* Project Card */
-        .project-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0, 123, 255, 0.1);
+        .student-name {
+          font-size: 2rem;
         }
 
-        .project-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            border-color: rgba(0, 123, 255, 0.3);
-        }
-
-        .project-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .project-description {
-            color: #6c757d;
-            margin-bottom: 2rem;
-            font-size: 1rem;
-            line-height: 1.7;
-        }
-
-        /* Project Sections */
-        .project-section {
-            margin-bottom: 2rem;
-        }
-
-        .project-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .section-header {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .section-icon {
-            font-size: 1.2rem;
-        }
-
-        /* Final Product Section */
-        .final-product {
-            background: #f8f9ff;
-            border-left: 4px solid #007bff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            font-style: italic;
-            color: #2c3e50;
-            line-height: 1.8;
-            position: relative;
-        }
-
-        .final-product::before {
-            content: '"';
-            position: absolute;
-            top: -10px;
-            left: 15px;
-            font-size: 3rem;
-            color: #007bff;
-            opacity: 0.3;
-            font-family: serif;
-        }
-
-        /* Process Section - Terminal Style */
-        .process-section .section-header {
-            color: #e74c3c;
-        }
-
-        .terminal-block {
-            background: #2d2d2d;
-            border-radius: 8px;
-            padding: 1.5rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            position: relative;
-            margin-top: 1rem;
-        }
-
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            color: #a0a0a0;
-            font-size: 0.8rem;
-        }
-
-        .terminal-dots {
-            display: flex;
-            gap: 0.3rem;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .dot.red { background: #ff5f56; }
-        .dot.yellow { background: #ffbd2e; }
-        .dot.green { background: #27ca3f; }
-
-        .prompt-line {
-            color: #00d4ff;
-            margin-bottom: 0.8rem;
-        }
-
-        .prompt-text {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0.5rem;
-            border-radius: 4px;
-            margin-left: 1rem;
-            border-left: 2px solid #00d4ff;
-        }
-
-        /* Skills Section */
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        .skill-tag {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            color: #1976d2;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid rgba(25, 118, 210, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .skill-tag:hover {
-            background: linear-gradient(135deg, #bbdefb, #90caf9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .student-name {
-                font-size: 2rem;
-            }
-
-            .bio {
-                font-size: 1.1rem;
-            }
-
-            .project-card {
-                padding: 1.5rem;
-            }
-
-            .avatar {
-                width: 100px;
-                height: 100px;
-                font-size: 2.5rem;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .bio {
+          font-size: 1.1rem;
         }
 
         .project-card {
-            animation: fadeInUp 0.6s ease;
+          padding: 1.5rem;
         }
 
-        .project-card:nth-child(2) {
-            animation-delay: 0.1s;
+        .avatar {
+          width: 100px;
+          height: 100px;
+          font-size: 2.5rem;
         }
+      }
 
-        .project-card:nth-child(3) {
-            animation-delay: 0.2s;
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .project-card {
+        animation: fadeInUp 0.6s ease;
+      }
+
+      .project-card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+
+      .project-card:nth-child(3) {
+        animation-delay: 0.2s;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <!-- Header / Profile Section -->
-        <header class="header">
-            <div class="avatar">
-                LMQ
+      <!-- Header / Profile Section -->
+      <header class="header">
+        <div class="avatar">Minh</div>
+        <h1 class="student-name">Minh</h1>
+        <p class="bio">Học sinh tiên phong trong kỷ nguyên AI, sẵn sàng kiến tạo tương lai.</p>
+        <p class="platform-slogan">
+          Xây dựng trên nền tảng "Đồng hành cùng AI - Dẫn lối sáng tạo Việt"
+        </p>
+      </header>
+
+      <!-- Projects Section -->
+      <section class="projects-section">
+        <h2 class="section-title">Dự Án Nổi Bật</h2>
+
+        <div class="projects-grid">
+          <!-- Project Card 1 -->
+          <article class="project-card">
+            <h3 class="project-title">Chiến dịch truyền thông cho CLB Sách</h3>
+            <p class="project-description">
+              Nhiệm vụ: Xây dựng một chiến dịch truyền thông toàn diện để thu hút học sinh tham gia
+              Câu lạc bộ Sách của trường, bao gồm slogan, poster và kế hoạch hoạt động cụ thể.
+            </p>
+
+            <!-- Final Product -->
+            <div class="project-section">
+              <div class="section-header">
+                <span class="section-icon">🎯</span>
+                Phần 1: Sản phẩm cuối cùng
+              </div>
+              <blockquote class="final-product">
+                <strong>Slogan:</strong> "Mở Sách - Mở Tâm Hồn, Đọc Sách - Đọc Tương Lai"<br /><br />
+                <strong>Kế hoạch 3 tháng:</strong> Tuần 1-2: Ra mắt slogan và poster tại các điểm
+                nóng. Tuần 3-4: Tổ chức "Ngày hội sách mini" với các hoạt động tương tác. Tháng 2-3:
+                Chương trình "Đại sứ sách" - học sinh chia sẻ sách yêu thích, xây dựng thư viện trao
+                đổi sách.
+              </blockquote>
             </div>
-            <h1 class="student-name">Lê Minh Qúy</h1>
-            <p class="bio">Học sinh tiên phong trong kỷ nguyên AI, sẵn sàng kiến tạo tương lai.</p>
-            <p class="platform-slogan">Xây dựng trên nền tảng "Đồng hành cùng AI - Dẫn lối sáng tạo Việt"</p>
-        </header>
 
-        <!-- Projects Section -->
-        <section class="projects-section">
-            <h2 class="section-title">Dự Án Nổi Bật</h2>
-            
-            <div class="projects-grid">
-                <!-- Project Card 1 -->
-                <article class="project-card">
-                    <h3 class="project-title">Chiến dịch truyền thông cho CLB Sách</h3>
-                    <p class="project-description">
-                        Nhiệm vụ: Xây dựng một chiến dịch truyền thông toàn diện để thu hút học sinh tham gia Câu lạc bộ Sách của trường, bao gồm slogan, poster và kế hoạch hoạt động cụ thể.
-                    </p>
+            <!-- Process -->
+            <div class="project-section">
+              <div class="section-header process-section">
+                <span class="section-icon">⚡</span>
+                Phần 2: Những câu lệnh nổi bật
+              </div>
+              <div class="terminal-block">
+                <div class="terminal-header">
+                  <div class="terminal-dots">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                  </div>
+                  <span>AI Terminal</span>
+                </div>
+                <div class="prompt-line">user@creativity:~$ prompt_optimize</div>
+                <div class="prompt-text">
+                  "Hãy tạo ra một slogan cho câu lạc bộ sách của trường THPT, yêu cầu: 1) Dễ nhớ, có
+                  vần điệu 2) Thể hiện tác dụng của việc đọc sách với tương lai 3) Phù hợp với lứa
+                  tuổi 16-18. Đưa ra 3 phương án và giải thích tại sao chọn."
+                </div>
 
-                    <!-- Final Product -->
-                    <div class="project-section">
-                        <div class="section-header">
-                            <span class="section-icon">🎯</span>
-                            Phần 1: Sản phẩm cuối cùng
-                        </div>
-                        <blockquote class="final-product">
-                            <strong>Slogan:</strong> "Mở Sách - Mở Tâm Hồn, Đọc Sách - Đọc Tương Lai"<br><br>
-                            <strong>Kế hoạch 3 tháng:</strong> Tuần 1-2: Ra mắt slogan và poster tại các điểm nóng. Tuần 3-4: Tổ chức "Ngày hội sách mini" với các hoạt động tương tác. Tháng 2-3: Chương trình "Đại sứ sách" - học sinh chia sẻ sách yêu thích, xây dựng thư viện trao đổi sách.
-                        </blockquote>
-                    </div>
-
-                    <!-- Process -->
-                    <div class="project-section">
-                        <div class="section-header process-section">
-                            <span class="section-icon">⚡</span>
-                            Phần 2: Những câu lệnh nổi bật
-                        </div>
-                        <div class="terminal-block">
-                            <div class="terminal-header">
-                                <div class="terminal-dots">
-                                    <div class="dot red"></div>
-                                    <div class="dot yellow"></div>
-                                    <div class="dot green"></div>
-                                </div>
-                                <span>AI Terminal</span>
-                            </div>
-                            <div class="prompt-line">user@creativity:~$ prompt_optimize</div>
-                            <div class="prompt-text">
-                                "Hãy tạo ra một slogan cho câu lạc bộ sách của trường THPT, yêu cầu: 1) Dễ nhớ, có vần điệu 2) Thể hiện tác dụng của việc đọc sách với tương lai 3) Phù hợp với lứa tuổi 16-18. Đưa ra 3 phương án và giải thích tại sao chọn."
-                            </div>
-                            
-                            <div class="prompt-line">user@strategy:~$ planning_mode</div>
-                            <div class="prompt-text">
-                                "Với slogan đã chọn, hãy xây dựng kế hoạch truyền thông 3 tháng. Chia thành các giai đoạn cụ thể, mỗi giai đoạn có mục tiêu rõ ràng và hoạt động khả thi với ngân sách hạn chế của học sinh."
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. Suy ngẫm & Bài học (The Growth) -->
-                    <div class="project-section">
-                        <div class="section-header">
-                            <span class="section-icon">🧠</span>
-                            Suy ngẫm & Bài học
-                        </div>
-                        <blockquote class="final-product" style="border-left-color: #28a745;">
-                            Qua dự án này, tôi học được rằng việc 'chẻ củi' (phân rã nhiệm vụ) ngay từ đầu là quan trọng nhất. Thay vì chỉ yêu cầu một slogan, việc yêu cầu AI xây dựng cả một concept chiến dịch đã cho ra kết quả có chiều sâu và gắn kết hơn rất nhiều. AI là một đối tác brainstorm tuyệt vời, nhưng quyết định cuối cùng để chọn ý tưởng phù hợp nhất với văn hóa của trường vẫn phải là của mình.
-                        </blockquote>
-                    </div>
-
-                    <!-- 4. Kỹ năng đã Thể hiện (The Summary) -->
-                    <div class="project-section">
-                        <div class="section-header">
-                            <span class="section-icon">🏆</span>
-                            Kỹ năng đã Thể hiện
-                        </div>
-                        <div class="skills-container">
-                            <span class="skill-tag">#Delegation</span>
-                            <span class="skill-tag">#Description</span>
-                            <span class="skill-tag">#Discernment</span>
-                            <span class="skill-tag">#Diligence</span>
-                            <span class="skill-tag">#Synthesis</span>
-                        </div>
-                    </div>
-                </article>
-
+                <div class="prompt-line">user@strategy:~$ planning_mode</div>
+                <div class="prompt-text">
+                  "Với slogan đã chọn, hãy xây dựng kế hoạch truyền thông 3 tháng. Chia thành các
+                  giai đoạn cụ thể, mỗi giai đoạn có mục tiêu rõ ràng và hoạt động khả thi với ngân
+                  sách hạn chế của học sinh."
+                </div>
+              </div>
             </div>
-        </section>
+
+            <!-- 3. Suy ngẫm & Bài học (The Growth) -->
+            <div class="project-section">
+              <div class="section-header">
+                <span class="section-icon">🧠</span>
+                Suy ngẫm & Bài học
+              </div>
+              <blockquote class="final-product" style="border-left-color: #28a745">
+                Qua dự án này, tôi học được rằng việc 'chẻ củi' (phân rã nhiệm vụ) ngay từ đầu là
+                quan trọng nhất. Thay vì chỉ yêu cầu một slogan, việc yêu cầu AI xây dựng cả một
+                concept chiến dịch đã cho ra kết quả có chiều sâu và gắn kết hơn rất nhiều. AI là
+                một đối tác brainstorm tuyệt vời, nhưng quyết định cuối cùng để chọn ý tưởng phù hợp
+                nhất với văn hóa của trường vẫn phải là của mình.
+              </blockquote>
+            </div>
+
+            <!-- 4. Kỹ năng đã Thể hiện (The Summary) -->
+            <div class="project-section">
+              <div class="section-header">
+                <span class="section-icon">🏆</span>
+                Kỹ năng đã Thể hiện
+              </div>
+              <div class="skills-container">
+                <span class="skill-tag">#Delegation</span>
+                <span class="skill-tag">#Description</span>
+                <span class="skill-tag">#Discernment</span>
+                <span class="skill-tag">#Diligence</span>
+                <span class="skill-tag">#Synthesis</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
     </div>
 
     <script>
-        // Add smooth scrolling and interaction effects
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add hover effects for project cards
-            const projectCards = document.querySelectorAll('.project-card');
-            
-            projectCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-8px) scale(1.02)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
-            });
+      // Add smooth scrolling and interaction effects
+      document.addEventListener('DOMContentLoaded', function () {
+        // Add hover effects for project cards
+        const projectCards = document.querySelectorAll('.project-card');
 
-            // Add click effects for skill tags
-            const skillTags = document.querySelectorAll('.skill-tag');
-            
-            skillTags.forEach(tag => {
-                tag.addEventListener('click', function() {
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        this.style.transform = 'translateY(-2px) scale(1)';
-                    }, 100);
-                });
-            });
+        projectCards.forEach((card) => {
+          card.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+          });
 
-            // Animate elements on scroll (simple version)
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            projectCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                observer.observe(card);
-            });
+          card.addEventListener('mouseleave', function () {
+            this.style.transform = 'translateY(0) scale(1)';
+          });
         });
+
+        // Add click effects for skill tags
+        const skillTags = document.querySelectorAll('.skill-tag');
+
+        skillTags.forEach((tag) => {
+          tag.addEventListener('click', function () {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              this.style.transform = 'translateY(-2px) scale(1)';
+            }, 100);
+          });
+        });
+
+        // Animate elements on scroll (simple version)
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, observerOptions);
+
+        projectCards.forEach((card) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(30px)';
+          observer.observe(card);
+        });
+      });
     </script>
-</body>
+  </body>
 </html>

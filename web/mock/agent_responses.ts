@@ -13,8 +13,8 @@ export const mockAgentResponses: Record<
   0: {
     state: 0,
     response_text:
-      "Chào mừng Phong đến với võ đường 'Nghệ thuật Nhận định'! Đây là nơi chúng ta rèn luyện kỹ năng biến bạn từ một người dùng AI thành một người dẫn dắt AI: tư duy phản biện. Sẵn sàng chưa?",
-    progress: 0,
+      "Chào mừng Minh đến với võ đường 'Nghệ thuật Nhận định'! Đây là nơi chúng ta rèn luyện kỹ năng biến bạn từ một người dùng AI thành một người dẫn dắt AI: tư duy phản biện. Sẵn sàng chưa?",
+    progress: 0
   },
 
   // Step 2: Teaching "Bộ câu hỏi Vàng"
@@ -24,26 +24,26 @@ export const mockAgentResponses: Record<
       "Tuyệt vời! Một nhà phản biện giỏi luôn có một bộ công cụ sắc bén. Để đánh giá sản phẩm của AI, chúng ta sẽ dùng 'Bộ câu hỏi Vàng'. Bạn hãy xem ở bên phải nhé.",
     progress: 15,
     chapter_data: {
-      title: "Bộ câu hỏi Vàng",
+      title: 'Bộ câu hỏi Vàng',
       questions: [
-        "1. Tính chính xác: Thông tin có đúng sự thật không?",
-        "2. Độ Phù hợp: Có phù hợp với đối tượng và mục đích không?",
-        "3. Độ Mạch lạc: Có logic và dễ hiểu không?",
-        "4. Tính Đáp ứng: Có đủ các yêu cầu đã nêu không?",
-        "5. Giá trị Gia tăng: Có mang lại điều bất ngờ tích cực không?",
-      ],
-    },
+        '1. Tính chính xác: Thông tin có đúng sự thật không?',
+        '2. Độ Phù hợp: Có phù hợp với đối tượng và mục đích không?',
+        '3. Độ Mạch lạc: Có logic và dễ hiểu không?',
+        '4. Tính Đáp ứng: Có đủ các yêu cầu đã nêu không?',
+        '5. Giá trị Gia tăng: Có mang lại điều bất ngờ tích cực không?'
+      ]
+    }
   },
 
   // Step 3: Practice 1 - Action 1 (Find error)
   2: {
     state: 2,
     response_text:
-      "Giờ hãy xem tình huống này nhé. Tôi sẽ đưa ra một thông tin ở phía bên phải. Theo bạn, thông tin này có đáng tin cậy không?",
+      'Giờ hãy xem tình huống này nhé. Tôi sẽ đưa ra một thông tin ở phía bên phải. Theo bạn, thông tin này có đáng tin cậy không?',
     progress: 30,
     interactive_content: {
-      type: "clickable_text",
-      text: "Vua Quang Trung, một trong những vị tướng vĩ đại nhất lịch sử, đã đại phá 29 vạn quân Thanh vào mùa hè rực lửa năm 1789",
+      type: 'clickable_text',
+      text: 'Vua Quang Trung, một trong những vị tướng vĩ đại nhất lịch sử, đã đại phá 29 vạn quân Thanh vào mùa hè rực lửa năm 1789'
       // correct_answer: "mùa hè rực lửa năm 1789",
       // clickable_words: [
       //   "Vua Quang Trung",
@@ -51,21 +51,21 @@ export const mockAgentResponses: Record<
       //   "29 vạn quân Thanh",
       //   "đại phá",
       // ],
-    },
+    }
   },
 
   3: {
     state: 3,
     response_text:
       "Đó là phản xạ ban đầu rất đúng của một nhà phản biện. Thế nhưng khi gặp số liệu cụ thể như 'mùa hè' và '1789', em sẽ làm gì để kiểm chứng?",
-    progress: 30,
+    progress: 30
   },
 
   4: {
     state: 4,
     response_text:
-      "Chính xác! Đó chính là kỹ năng Nhận định. Hãy thử yêu cầu tôi xác minh thông tin đó xem.",
-    progress: 30,
+      'Chính xác! Đó chính là kỹ năng Nhận định. Hãy thử yêu cầu tôi xác minh thông tin đó xem.',
+    progress: 30
   },
 
   // // Step 3: Practice 1 - Action 2 (Identify criteria violation)
@@ -132,14 +132,14 @@ export const mockAgentResponses: Record<
       "Một yêu cầu rất tốt. Sau khi kiểm tra, thông tin chính xác là 'mùa xuân năm Kỷ Dậu 1789'. Bạn đã làm rất tốt khi không tin ngay vào thông tin ban đầu! Giờ bạn đã biết cách tìm ra lỗi sai. Bước tiếp theo là học cách hướng dẫn AI sửa lỗi một cách hiệu quả. Hãy xem 'Công thức Phản hồi' 4 bước ở bên phải.",
     progress: 60,
     chapter_data: {
-      title: "Công thức Phản hồi 4 bước",
+      title: 'Công thức Phản hồi 4 bước',
       steps: [
-        "1. Chỉ rõ vấn đề: Xác định cụ thể lỗi sai",
-        "2. Giải thích tại sao nó là vấn đề: Nêu lý do",
-        "3. Đưa ra gợi ý cải thiện cụ thể: Hướng dẫn sửa",
-        "4. Cập nhật lại câu lệnh gốc (nếu cần): Điều chỉnh hướng dẫn",
-      ],
-    },
+        '1. Chỉ rõ vấn đề: Xác định cụ thể lỗi sai',
+        '2. Giải thích tại sao nó là vấn đề: Nêu lý do',
+        '3. Đưa ra gợi ý cải thiện cụ thể: Hướng dẫn sửa',
+        '4. Cập nhật lại câu lệnh gốc (nếu cần): Điều chỉnh hướng dẫn'
+      ]
+    }
   },
 
   // // Practice "Công thức Phản hồi"
@@ -162,25 +162,25 @@ export const mockAgentResponses: Record<
       "Giờ là lúc cho 'trận đấu tính điểm'! Hãy áp dụng 'Công thức Phản hồi' cho tình huống sau:",
     progress: 80,
     interactive_content: {
-      type: "final_test",
+      type: 'final_test',
       scenario:
         "ALVA đã viết: 'Nhà thơ Tố Hữu là một trong những gương mặt tiêu biểu của phong trào Thơ mới.' Hãy viết một yêu cầu hoàn chỉnh để hướng dẫn ALVA sửa lại.",
-      prompt: "Viết phản hồi theo Công thức 4 bước",
-    },
+      prompt: 'Viết phản hồi theo Công thức 4 bước'
+    }
   },
 
   // Step 8: Completion
   7: {
     state: 7,
     response_text:
-      "Một phản hồi hoàn hảo! Bạn đã hoàn toàn làm chủ Nghệ thuật Nhận định! Chúc mừng bạn đã hoàn thành chặng này!",
+      'Một phản hồi hoàn hảo! Bạn đã hoàn toàn làm chủ Nghệ thuật Nhận định! Chúc mừng bạn đã hoàn thành chặng này!',
     progress: 100,
     chapter_data: {
       completion: {
-        badge: "Discernment Shield",
-        achievement: "Nghệ thuật Nhận định - Hoàn thành",
-        next_action: "Quay về Bản đồ Hành trình",
-      },
-    },
-  },
+        badge: 'Discernment Shield',
+        achievement: 'Nghệ thuật Nhận định - Hoàn thành',
+        next_action: 'Quay về Bản đồ Hành trình'
+      }
+    }
+  }
 };
