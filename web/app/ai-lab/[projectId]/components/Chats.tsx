@@ -16,16 +16,38 @@ interface ChatsProps {
 export default function Chats({ messages, isLoading }: ChatsProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [waitingForResponse, setWaitingForResponse] = useState(false);
+
+  // Function to check if message contains "50,000"
+  const containsFiftyThousand = (text: string) => {
+    return text.includes("50,000");
+  };
+
+  // Function to check if message is a tip message
+  const isTipMessage = (text: string) => {
+    return text.startsWith("💡 **Mẹo từ ALVA:**");
+  };
+
+  // Create extended messages array with tips
+  const extendedMessages = messages.reduce((acc: Message[], message, index) => {
+    acc.push(message);
+    if (message.sender === "ai" && containsFiftyThousand(message.message)) {
+      acc.push({
+        sender: "ai",
+        message: "💡 **Mẹo từ ALVA:** Với các số liệu và nguồn trích dẫn cụ thể, hãy luôn thực hành kỹ năng **Nhận định** để kiểm chứng nhé!",
+      });
+    }
+    return acc;
+  }, []);
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (
-      messages.length > 0 &&
-      messages[messages.length - 1].sender === "user"
+      extendedMessages.length > 0 &&
+      extendedMessages[extendedMessages.length - 1].sender === "user"
     ) {
       setWaitingForResponse(true);
     } else if (
-      messages.length > 0 &&
-      messages[messages.length - 1].sender === "ai"
+      extendedMessages.length > 0 &&
+      extendedMessages[extendedMessages.length - 1].sender === "ai"
     ) {
       setWaitingForResponse(false);
     }
@@ -42,17 +64,16 @@ export default function Chats({ messages, isLoading }: ChatsProps) {
     const timeoutId = setTimeout(scrollToBottom, 100);
 
     return () => clearTimeout(timeoutId);
-  }, [messages]); // Trigger on messages change or loading state change
+  }, [extendedMessages]); // Trigger on messages change or loading state change
   return (
     <div className="h-full flex flex-col">
       <ScrollArea className="flex-1">
         <div className="space-y-4 p-4">
-          {messages.map((message) => (
+          {extendedMessages.map((message) => (
             <div
               key={Math.random().toString(36).substring(7)}
-              className={`flex gap-3 mb-4 ${
-                message.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+              className={`flex gap-3 mb-4 ${message.sender === "user" ? "justify-end" : "justify-start"
+                }`}
             >
               {message.sender === "ai" && (
                 <div className="w-8 h-8 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center flex-shrink-0 border border-slate-200">
@@ -68,39 +89,74 @@ export default function Chats({ messages, isLoading }: ChatsProps) {
                 </div>
               )}
 
-              <div
-                className={`max-w-[80%]  rounded-2xl ${
-                  message.sender === "user"
-                    ? "p-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-lg"
-                    : "bg-white/90 backdrop-blur-sm text-gray-900 border border-gray-200 p-4"
-                }`}
-              >
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    p: ({ node, ...props }) => (
-                      <p
-                        className="text-sm break-words whitespace-pre-wrap"
-                        {...props}
-                      />
-                    ),
-                    h1: ({ node, ...props }) => (
-                      <h1
-                        className="text-lg break-words whitespace-pre-wrap font-bold"
-                        {...props}
-                      />
-                    ),
-                    li: ({ node, ...props }) => (
-                      <li
-                        className="text-sm break-words whitespace-pre-wrap list-disc ml-4"
-                        {...props}
-                      />
-                    ),
-                  }}
+              {message.sender === "user" ? (
+                <div className="max-w-[80%] rounded-2xl p-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-lg">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      p: ({ node, ...props }) => (
+                        <p
+                          className="text-sm break-words whitespace-pre-wrap"
+                          {...props}
+                        />
+                      ),
+                      h1: ({ node, ...props }) => (
+                        <h1
+                          className="text-lg break-words whitespace-pre-wrap font-bold"
+                          {...props}
+                        />
+                      ),
+                      li: ({ node, ...props }) => (
+                        <li
+                          className="text-sm break-words whitespace-pre-wrap list-disc ml-4"
+                          {...props}
+                        />
+                      ),
+                    }}
+                  >
+                    {message.message}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <div
+                  className={
+                    isTipMessage(message.message)
+                      ? "relative max-w-[80%] p-4 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg shadow-yellow-400/30"
+                      : "max-w-[80%] p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-200"
+                  }
                 >
-                  {message.message}
-                </ReactMarkdown>
-              </div>
+                  {isTipMessage(message.message) && (
+                    <div className="absolute inset-0 rounded-2xl border-2 border-yellow-400 animate-pulse pointer-events-none"></div>
+                  )}
+                  <div className="relative text-gray-900">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({ node, ...props }) => (
+                          <p
+                            className="text-sm break-words whitespace-pre-wrap"
+                            {...props}
+                          />
+                        ),
+                        h1: ({ node, ...props }) => (
+                          <h1
+                            className="text-lg break-words whitespace-pre-wrap font-bold"
+                            {...props}
+                          />
+                        ),
+                        li: ({ node, ...props }) => (
+                          <li
+                            className="text-sm break-words whitespace-pre-wrap list-disc ml-4"
+                            {...props}
+                          />
+                        ),
+                      }}
+                    >
+                      {message.message}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              )}
 
               {message.sender === "user" && (
                 <div className="w-8 h-8 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center flex-shrink-0 border border-gray-300">

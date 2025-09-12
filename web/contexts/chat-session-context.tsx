@@ -12,9 +12,11 @@ import axios from "axios";
 import {
   DetailedProject,
   IAnalysisResponse,
-  IFinishSessionResponse,
 } from "@/interfaces/project.interface";
-import { IStartSessionResponse } from "@/interfaces/session.interface";
+import {
+  IFinishSessionResponse,
+  IStartSessionResponse,
+} from "@/interfaces/session.interface";
 import {
   finishSession,
   getChatHistory,
@@ -30,7 +32,9 @@ interface ChatSessionContextType {
   currentMissionDetail: DetailedProject | undefined;
   isLoading: boolean;
   error: string | null;
-  startNewSession: (missionId: string) => Promise<{ sessionId: string, missionId: string }>;
+  startNewSession: (
+    missionId: string
+  ) => Promise<{ sessionId: string; missionId: string }>;
   clearError: () => void;
   clearSession: () => void;
   clearAnalysis: () => void;
@@ -67,7 +71,9 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
   const [analysis, setAnalysis] = useState<IFinishSessionResponse>();
   useAxiosInterceptor();
 
-  async function startNewSession(missionId: string): Promise<{ sessionId: string, missionId: string }> {
+  async function startNewSession(
+    missionId: string
+  ): Promise<{ sessionId: string; missionId: string }> {
     setIsLoading(true);
     setError(null);
     clearAnalysis(); // Clear any existing analysis when starting new session
@@ -85,7 +91,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
       setIsLoading(false);
       return {
         sessionId: responseData.session_id,
-        missionId: responseData.mission.id
+        missionId: responseData.mission.id,
       };
     } catch (error) {
       const errorMessage =
@@ -173,7 +179,9 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
     } catch (error) {
       console.error("Failed to fetch mission details:", error);
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to fetch mission details";
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch mission details";
       setError(errorMessage);
     } finally {
       setIsLoading(false);

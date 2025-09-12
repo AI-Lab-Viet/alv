@@ -1,8 +1,7 @@
 import { ISessionHistoryResponse } from "@/interfaces/chat.interface";
 import api from "./axios.service";
 import axios, { AxiosError } from "axios";
-import { IFinishSessionResponse } from "@/interfaces/project.interface";
-import { getProjectById } from "./projects.service";
+import { IFinishSessionResponse } from "@/interfaces/session.interface";
 
 export async function getChatHistory({
   sessionId,
