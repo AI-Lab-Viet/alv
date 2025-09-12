@@ -85,7 +85,7 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <div className="min-h-screen h-[calc(100vh-6rem)] bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       {/* <header className="bg-white/80 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 py-4 lg:px-8">
