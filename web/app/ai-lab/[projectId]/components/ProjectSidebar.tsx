@@ -11,6 +11,8 @@ interface ProjectSidebarProps {
   completedObjective: string;
   handleCompleteObjective: (objective: string) => void;
   totalCompletedObjectives: string[];
+  isMobile?: boolean;
+  onClose?: () => void;
 }
 
 export default function ProjectSidebar({
@@ -20,6 +22,8 @@ export default function ProjectSidebar({
   completedObjective,
   handleCompleteObjective,
   totalCompletedObjectives,
+  isMobile = false,
+  onClose,
 }: ProjectSidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -35,25 +39,30 @@ export default function ProjectSidebar({
   return (
     <div
       ref={sidebarRef}
-      className={`lg:col-span-1 h-full overflow-y-auto bg-white rounded-none relative border-r border-gray-200 flex-shrink-0 transition-all duration-300 ease-in-out ${isOpen ? "w-64" : "w-12"
-        }`}
+      className={`h-full overflow-y-auto bg-white rounded-none relative ${isMobile ? 'border-r-0 w-full' : `border-r border-gray-200 flex-shrink-0 transition-all duration-300 ease-in-out ${isOpen ? "w-64" : "w-12"}`}`}
     >
       {/* Context */}
-      <div className="flex items-center justify-between w-full h-12  pb-1 px-2 pt-2 sticky z-10 top-0 bg-zinc-50">
-        {isOpen && (
+      <div className="flex items-center justify-between w-full h-12 pb-1 px-2 pt-2 sticky z-10 top-0 bg-zinc-50">
+        {(!isMobile || isOpen) && (
           <h1 className="tracking-tighter text-md p-1 whitespace-nowrap">
             Thông tin dự án
           </h1>
         )}
         <button
-          className={`text-sm p-0 mb-1 ${isOpen ? "mr-2" : "mx-auto"
+          className={`text-sm p-0 mb-1 ${(!isMobile && isOpen) || isMobile ? "mr-2" : "mx-auto"
             } cursor-pointer`}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            if (isMobile) {
+              onClose?.();
+            } else {
+              setIsOpen(!isOpen);
+            }
+          }}
         >
           <PanelLeft className="w-4 h-4 text-gray-600 inline-block" />
         </button>
       </div>
-      {isOpen && (
+      {(isMobile || isOpen) && (
         <div className="px-2 pb-4 relative">
           {/* <Image
             // src={"@/public/images/mascot/project_sidebar.png"}

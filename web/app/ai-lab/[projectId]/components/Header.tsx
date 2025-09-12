@@ -26,17 +26,16 @@ export default function Header({
   return (
     <header className="bg-white/80 backdrop-blur-sm border-b border-white/20 shrink-0">
       <div className="max-w-7xl mx-auto px-4 py-3 lg:px-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
               href={`/project-hub/${projectId}`}
               className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
-              Trở về
+              <p className="hidden md:block">Trở về</p>
             </Link>
-            <div className="h-6 w-px bg-gray-300"></div>
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center hidden md:block">
               <Image
                 src="/images/ai-lab-viet-logo.png"
                 alt="AI Lab Việt"
@@ -56,8 +55,8 @@ export default function Header({
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-right">
+          <div className="flex items-center mt-2 gap-3">
+            <div className="text-left md:text-right">
               <div className="text-sm font-medium">
                 {Math.round(progress)}% hoàn thành
               </div>
