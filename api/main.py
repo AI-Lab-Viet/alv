@@ -4,23 +4,34 @@ FastAPI application chính cho AI Lab Việt Multi-Agent System.
 Cung cấp RESTful API endpoints để tương tác với hệ thống đa tác tử.
 """
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from datetime import datetime
-import uvicorn
+import uvicorn, json
 from typing import Dict, Any
-
+from celery.result import AsyncResult
+from agents.orchestration.tutor_agent import TutorAgent
+from agents.orchestration.project_agent import ProjectAgent
+from tasks.celery_queue import celery_queue
+from database.redis import RedisComponent
+from constants.constants import TimeConstants
+from constants.enum import CacheKeys, JourneyEnum
+from database.db_supabase import DbSupabase
 from models.schemas import (
+    ContentBlock,
     InteractionRequest, 
-    InteractionResponse, 
+    InteractionResponse,
+    KnowledgeVault,
+    LearningChatHistory,
+    SkillProgress, 
     SystemHealth,
     ErrorResponse,
     LearningRequest,
     ProjectRequest,
-    SessionContext
+    UpdateJourneyDto,
+    UserJourney
 )
-from core.dispatcher import SmartDispatcher
 
 
 # Khởi tạo FastAPI app
@@ -50,8 +61,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Khởi tạo SmartDispatcher
-dispatcher = SmartDispatcher()
+tutorAgent = TutorAgent()
+projectAgent = ProjectAgent()
 
 # Biến global để theo dõi thống kê
 app_stats = {
@@ -61,6 +72,8 @@ app_stats = {
     "failed_requests": 0
 }
 
+db = DbSupabase()
+redis = RedisComponent()
 
 @app.middleware("http")
 async def add_process_time_header(request, call_next):
@@ -92,72 +105,6 @@ def read_root():
     }
 
 
-@app.post("/interact", 
-          response_model=InteractionResponse,
-          summary="Tương tác chính với hệ thống",
-          description="Endpoint chính để người dùng tương tác với hệ thống đa tác tử")
-async def interact(request: InteractionRequest):
-    """
-    Endpoint chính để người dùng tương tác với hệ thống.
-    
-    Hệ thống sẽ:
-    1. Phân tích request và session context
-    2. Định tuyến đến orchestration agent phù hợp
-    3. Thực thi action plan thông qua execution agents
-    4. Trả về response với kết quả xử lý
-    """
-    global app_stats
-    app_stats["total_requests"] += 1
-    
-    try:
-        print(f"\n{'='*50}")
-        print(f"[FastAPI] New interaction request received")
-        print(f"[FastAPI] User input: {request.user_input}")
-        print(f"[FastAPI] Session context: {request.session_context}")
-        
-        # Validate session context
-        if "mode" not in request.session_context:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Session context phải chứa 'mode' (learning hoặc project)"
-            )
-        
-        # Gọi SmartDispatcher để xử lý
-        result = dispatcher.dispatch(request.user_input, request.session_context)
-        
-        if result.get("status") == "error":
-            app_stats["failed_requests"] += 1
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=result.get("error_details", "Internal server error")
-            )
-        
-        app_stats["successful_requests"] += 1
-        
-        # Tạo response
-        response = InteractionResponse(
-            agent_name=result["agent_name"],
-            action=result["action"],
-            response_message=result["response_message"]
-        )
-        
-        print(f"[FastAPI] Successfully processed request")
-        print(f"[FastAPI] Response: {response.response_message}")
-        print(f"{'='*50}\n")
-        
-        return response
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        app_stats["failed_requests"] += 1
-        print(f"[FastAPI] Unexpected error: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Đã có lỗi không mong muốn xảy ra: {str(e)}"
-        )
-
-
 @app.post("/learning",
           summary="Endpoint đặc biệt cho learning mode",
           description="Endpoint tối ưu hóa cho các request học tập")
@@ -168,21 +115,28 @@ async def learning_interaction(request: LearningRequest):
     """
     # Tạo session context cho learning mode
     session_context = {
-        "mode": "learning",
         "topic": request.topic,
-        "difficulty_level": request.difficulty_level.value,
-        "learning_goals": request.learning_goals,
-        "time_budget_minutes": request.time_budget_minutes,
-        "user_id": "learning_user"  # Placeholder user ID
+        "chapter_id": request.chapter_id,
+        "user_id": request.user_id,
+        "current_state": request.current_state,
+        "session_id": request.session_id,
+        "exercise_data": request.exercise_data
     }
     
-    # Tạo InteractionRequest và gọi interact endpoint
-    interaction_request = InteractionRequest(
-        user_input=f"Tôi muốn học về {request.topic} ở mức {request.difficulty_level.value}",
-        session_context=session_context
-    )
-    
-    return await interact(interaction_request)
+    try:
+        return await tutorAgent.handle_request(
+            user_input=request.query,
+            session_context=session_context
+        )
+        
+    except Exception as e:
+        app_stats["failed_requests"] += 1
+        print(f"[FastAPI] Error in learning_interaction: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Lỗi khi xử lý learning interaction: {str(e)}"
+        )
+
 
 
 @app.post("/project",
@@ -210,8 +164,256 @@ async def project_interaction(request: ProjectRequest):
         session_context=session_context
     )
     
-    return await interact(interaction_request)
+    try:
+        return await projectAgent.handle_request(
+            interaction_request.user_input, 
+            interaction_request.session_context
+        )
+        
+    except Exception as e:
+        app_stats["failed_requests"] += 1
+        print(f"[FastAPI] Error in project_interaction: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Lỗi khi xử lý project interaction: {str(e)}"
+        )
 
+@app.get("/journey/{user_id}")
+async def get_journey(user_id: str):
+    """
+    Khởi tạo hành trình học tập cho người dùng.
+    """
+    user_journey: list[UserJourney] = db.find_by("user_journey", UserJourney, filters={"user_id": user_id})
+    if len(user_journey) > 0:
+        return user_journey
+    else:
+        journey: list[UserJourney] = [
+            UserJourney(
+                user_id=user_id,
+                world=3,
+                world_name="Đỉnh cao Sáng tạo",
+                name="Nghệ thuật Tổng hợp",
+                chapter=6,
+                description="Biến kết quả AI thành sản phẩm giá trị của riêng bạn",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Trách nhiệm",
+                chapter=5,
+                description="Rèn luyện ý thức đạo đức và trách nhiệm",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Nhận định",
+                chapter=4,
+                description="Rèn luyện tư duy phản biện và đánh giá chất lượng",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Mô tả",
+                chapter=3,
+                description="Rèn luyện kỹ năng giao tiếp chính xác với AI",
+                status=JourneyEnum.LOCKED
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=2,
+                world_name="Lãnh địa Kỹ năng",
+                name="Nghệ thuật Phân công",
+                chapter=2,
+                description="Rèn luyện tư duy chiến lược và lập kế hoạch",
+                status=JourneyEnum.CURRENT
+            ),
+            UserJourney(
+                user_id=user_id,
+                world=1,
+                world_name="Khởi nguồn Tư duy",
+                name="Nền tảng Tư duy",
+                chapter=1,
+                description="Hiểu tại sao cần học và những gì đang chờ đợi bạn",
+                status=JourneyEnum.COMPLETED
+            )
+        ]
+        return db.create("user_journey", journey)
+
+@app.patch("/update-journey/{user_id}")
+async def update_journey(user_id: str, update_journey_dto: UpdateJourneyDto):
+    """
+    Cập nhật thông tin hành trình học tập của người dùng.
+    """
+    return db.update("user_journey", update_journey_dto.id, update_journey_dto, UserJourney)
+
+@app.get("/skill-progress/{user_id}")
+async def get_skill_progress(user_id: str):
+    """
+    Lấy thông tin tiến độ học tập của người dùng.
+    """
+    skill_progress: list[SkillProgress] = db.find_by("skill_progress", SkillProgress, filters={"user_id": user_id})
+    
+    if len(skill_progress) > 0:
+        return skill_progress[0]
+    else:
+        progress: SkillProgress = SkillProgress(
+            user_id=user_id,
+        )
+        return db.create("skill_progress", [progress])
+
+@app.get("/knowledge-vault/{user_id}")
+async def get_knowledge_vault(
+    user_id: str, 
+    search: str = Query(None, description="Tìm kiếm theo từ khóa"),
+    skill: str = Query(None, description="Lọc theo kỹ năng"),
+    chapter: str = Query(None, description="Lọc theo chương")
+):
+    """
+    Lấy thông tin kho tri thức của người dùng.
+    """
+    filters = {"user_id": user_id}
+    if search is not None:
+        filters["search"] = {"title": search}
+    if skill is not None:
+        filters["skill"] = skill
+    if chapter is not None:
+        filters["chapter"] = chapter
+
+    knowledge_vault: list[KnowledgeVault] = db.find_by("knowledge_vault", KnowledgeVault, filters=filters)
+    if len(knowledge_vault) > 0:
+        return knowledge_vault
+    else:
+        vaults: list[KnowledgeVault] = [
+            KnowledgeVault(
+                user_id=user_id,
+                title='Tư duy Mục tiêu',
+                skill='Phân công',
+                chapter=2,
+                status='unlocked',
+                definition='Khả năng xác định rõ ràng điểm đến trước khi bắt đầu hành trình với AI.',
+                explanation='Đây là bước đầu tiên và quan trọng nhất trong "Nghệ thuật Phân công". Việc xác định mục tiêu cụ thể giúp bạn định hướng rõ ràng cho quá trình làm việc với AI.',
+                examples=[
+                    'Thay vì: "Viết về marketing" → Hãy: "Viết một bài blog 500 từ về chiến lược marketing số cho doanh nghiệp nhỏ"',
+                    'Thay vì: "Giúp tôi lập kế hoạch" → Hãy: "Lập kế hoạch 3 tháng để tăng 30% lượng khách hàng cho quán cà phê"'
+                ],
+                tags=['mục tiêu', 'lập kế hoạch', 'định hướng'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='Công thức R.C.T.C',
+                skill='Mô tả',
+                chapter=3,
+                status='unlocked',
+                definition='Framework để tạo ra những prompt hiệu quả: Role (Vai trò), Context (Ngữ cảnh), Task (Nhiệm vụ), Criteria (Tiêu chí).',
+                explanation='R.C.T.C là công thức "vàng" để viết prompt hiệu quả. Mỗi thành phần có vai trò riêng trong việc hướng dẫn AI hiểu đúng ý định của bạn.',
+                examples=[
+                    'Role: "Bạn là một chuyên gia marketing có 10 năm kinh nghiệm"',
+                    'Context: "Cho một công ty khởi nghiệp về công nghệ giáo dục"',
+                    'Task: "Viết một email marketing để giới thiệu sản phẩm mới"',
+                    'Criteria: "Tối đa 200 từ, tông giọng thân thiện, có call-to-action rõ ràng"'
+                ],
+                tags=['prompt', 'framework', 'cấu trúc', 'vai trò', 'ngữ cảnh'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='Biết mình, biết ta',
+                skill='Phân công',
+                chapter=2,
+                status='unlocked',
+                definition='Hiểu rõ điểm mạnh của con người và AI để phân công hiệu quả.',
+                explanation='Năng lực Phân tích Kép giúp bạn tận dụng thế mạnh của cả con người và AI. Con người giỏi sáng tạo, ra quyết định, cảm xúc. AI giỏi xử lý dữ liệu, tạo nội dung, phân tích.',
+                examples=[
+                    'Thế mạnh Con người: Đặt tầm nhìn chiến lược, quyết định cuối cùng, kiểm soát chất lượng',
+                    'Thế mạnh AI: Nghiên cứu dữ liệu, tạo nhiều phương án, phân tích thông tin',
+                    'Ví dụ phân công: Bạn đặt mục tiêu → AI nghiên cứu → Bạn lựa chọn → AI triển khai → Bạn kiểm tra'
+                ],
+                tags=['phân tích', 'thế mạnh', 'phân công', 'hợp tác'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='AI Hallucination (Ảo giác)',
+                skill='Nhận định',
+                chapter=4,
+                status='locked',
+                definition='Hiện tượng AI tạo ra thông tin không chính xác nhưng trình bày một cách tự tin.',
+                explanation='AI có thể tạo ra các trích dẫn sách không tồn tại, thống kê giả mạo, hoặc sự kiện lịch sử không chính xác. Đây là hạn chế tự nhiên của công nghệ AI hiện tại.',
+                examples=[
+                    'AI có thể tạo ra tên sách và tác giả không tồn tại',
+                    'Đưa ra số liệu thống kê không có nguồn gốc thực tế',
+                    'Mô tả chi tiết những sự kiện lịch sử chưa từng xảy ra'
+                ],
+                tags=['ảo giác', 'thông tin sai', 'kiểm chứng', 'phản biện'],
+            ),
+            KnowledgeVault(
+                user_id=user_id,
+                title='Kỹ năng "Chẻ củi"',
+                skill='Phân công',
+                chapter=2,
+                status='unlocked',
+                definition='Chia một vấn đề lớn, phức tạp thành các nhiệm vụ nhỏ, cụ thể.',
+                explanation='Thay vì giao cho AI một nhiệm vụ khổng lồ, hãy chia nhỏ thành các bước có thể quản lý được. Điều này giúp AI hiểu rõ hơn và cho kết quả chất lượng cao hơn.',
+                examples=[
+                    'Thay vì: "Viết cho tôi một cuốn tiểu thuyết"',
+                    'Hãy chia: "Tạo outline → Phát triển nhân vật → Viết chương 1 → Xem xét và chỉnh sửa"',
+                    'Ví dụ khác: "Lập kế hoạch kinh doanh" → "Phân tích thị trường → Xác định đối tượng → Chiến lược marketing → Dự báo tài chính"'
+                ],
+                tags=['chia nhỏ', 'quản lý', 'từng bước', 'hiệu quả'],
+            )
+        ]
+        return db.create("knowledge_vault", vaults)
+    
+@app.get("/lessons")
+def get_lesson(
+    chapter: str = Query(None, description="Lấy nội dung bài học theo chương")
+):
+    cached_lessons = redis.get_json(f"{CacheKeys.LESSON_DATA.value}_{chapter}")
+    if cached_lessons:
+        return cached_lessons
+    lessons = db.find_by("content_blocks", ContentBlock, filters={"chapter": chapter} if chapter else None)
+    redis.set_json(
+        f"{CacheKeys.LESSON_DATA.value}_{chapter}", 
+        [lesson.model_dump() for lesson in lessons],
+        TimeConstants.ONE_DAY
+    )
+    return lessons
+
+@app.get("/learning-chat-history/{user_id}")
+def get_learning_chat_history(
+    user_id: str,
+    from_time: datetime = Query(None, description="Thời gian bắt đầu"),
+    limit: int = Query(10, description="Số lượng kết quả tối đa")
+):
+    return db.find_by(
+        "learning_chat_history", 
+        LearningChatHistory, 
+        filters={
+            "user_id": user_id, 
+            "from_time": from_time
+        },
+        limit=limit
+    )
+
+@app.get("/tasks/{task_id}")
+def get_task_status(task_id: str):
+    """
+    Polling kết quả task
+    """
+    async_result = AsyncResult(task_id, app=celery_queue)
+    if async_result.ready():
+        result = async_result.result
+        try:
+            json.dumps(result)
+            return {"status": "SUCCESS", "result": result}
+        except Exception as e:
+            return {"status": "ERROR", "error": str(e), "raw_result": str(result)}
+    else:
+        return {"status": async_result.status}
 
 @app.get("/health",
          response_model=SystemHealth,
@@ -303,7 +505,6 @@ def get_system_status():
             "failed_requests": app_stats["failed_requests"],
             "success_rate": (app_stats["successful_requests"] / max(app_stats["total_requests"], 1)) * 100
         },
-        "agents": dispatcher.get_system_status()
     }
 
 
@@ -354,7 +555,7 @@ async def test_tutor_flow(request: Dict[str, str]):
         print(f"👨‍🎓 User level: {session_context['user_level']}")
         
         # Gọi SmartDispatcher để xử lý
-        result = dispatcher.dispatch(user_input, session_context)
+        result = await tutorAgent.handle_request(user_input, session_context)
         
         if result.get("status") == "error":
             app_stats["failed_requests"] += 1
@@ -435,7 +636,7 @@ async def test_project_flow():
             "mission_id": "mission_01"
         }
         
-        start_response = dispatcher.dispatch("Bắt đầu dự án nào!", start_context)
+        start_response = await projectAgent.handle_request("Bắt đầu dự án nào!", start_context)
         print(f"✅ Project started: {start_response.get('status', 'unknown')}")
         
         # === PHASE 2: MÔ PHỎNG QUÁ TRÌNH LÀM VIỆC ===
@@ -457,8 +658,8 @@ async def test_project_flow():
                 {"role": "model", "parts": ["Chắc chắn rồi! Kế hoạch 3 tháng cho slogan 'Mở Sách - Mở Tư Duy - Mở Tương Lai' sẽ bao gồm: THÁNG 1: Giai đoạn Nhận thức..."]}
             ]
         }
-        
-        work_response = dispatcher.dispatch(
+
+        work_response = await projectAgent.handle_request(
             "Bây giờ tôi cần tạo timeline cụ thể cho từng hoạt động", 
             work_context
         )
@@ -500,9 +701,9 @@ async def test_project_flow():
                 {"role": "model", "parts": ["Tuyệt vời! Để tạo timeline chi tiết, chúng ta sẽ chia thành 3 giai đoạn..."]}
             ]
         }
-        
-        complete_response = dispatcher.dispatch("Tôi đã hoàn thành kế hoạch!", complete_context)
-        
+
+        complete_response = await projectAgent.handle_request("Tôi đã hoàn thành kế hoạch!", complete_context)
+
         app_stats["successful_requests"] += 1
         
         print(f"✅ [PROJECT_FLOW] Complete flow test finished!")

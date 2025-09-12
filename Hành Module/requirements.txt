@@ -1,0 +1,24 @@
+# Core web framework và API
+fastapi
+uvicorn[standard]
+pydantic
+
+# HTTP client và async support
+httpx
+aiofiles
+
+# Development và debugging tools
+python-multipart
+python-dotenv
+
+# AI/ML integrations
+google-generativeai
+
+# Logging và monitoring
+loguru
+
+# Type checking và validation
+typing-extensions
+
+# Database và ORM
+supabase

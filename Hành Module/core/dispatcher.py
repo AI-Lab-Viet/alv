@@ -38,7 +38,13 @@ class SmartDispatcher:
             # 2. Khởi tạo Execution Agents với dependency injection
             print("⚡ Setting up execution agents...")
             self.mission_agent = MissionAgent()
-            self.analysis_agent = AnalysisAgent(self.interaction_agent)
+            # Truyền cả interaction_agent và llm_client cho AnalysisAgent
+            self.analysis_agent = AnalysisAgent(
+                interaction_agent=self.interaction_agent,
+                llm_client=self.interaction_agent.model  # Truyền Gemini model để LLM analysis
+            )
+            
+            # Portfolio agent cần Supabase client - sẽ được inject từ main.py
             self.portfolio_agent = PortfolioAgent()
             self.practice_agent = PracticeAgent(self.interaction_agent)  # DI for AI-powered exercises
             self.quiz_agent = QuizAgent(self.interaction_agent)          # DI for AI-powered quizzes
@@ -75,6 +81,12 @@ class SmartDispatcher:
         except Exception as e:
             print(f"❌ Error initializing SmartDispatcher: {str(e)}")
             raise e
+    
+    def set_supabase_client(self, supabase_client):
+        """Inject Supabase client vào các agents cần thiết."""
+        if hasattr(self.portfolio_agent, 'supabase'):
+            self.portfolio_agent.supabase = supabase_client
+            print("✅ Supabase client injected into PortfolioAgent")
     
     def _classify_user_intent(self, user_input: str, session_context: Dict[str, Any]) -> Dict[str, Any]:
         """

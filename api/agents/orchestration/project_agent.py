@@ -6,6 +6,10 @@ Chịu trách nhiệm điều phối MissionAgent, AnalysisAgent, và PortfolioA
 
 from typing import Dict, Any
 from agents.base import OrchestrationAgent
+from agents.communication.interaction_agent import InteractionAgent
+from agents.execution.analysis_agent import AnalysisAgent
+from agents.execution.mission_agent import MissionAgent
+from agents.execution.portfolio_agent import PortfolioAgent
 from core.rag_engine import DualSourceRAGEngine
 
 
@@ -20,7 +24,7 @@ class ProjectAgent(OrchestrationAgent):
     - Tạo experience liền mạch cho người dùng trong quá trình thực hiện dự án
     """
     
-    def __init__(self, interaction_agent=None, mission_agent=None, analysis_agent=None, portfolio_agent=None):
+    def __init__(self):
         """
         Khởi tạo ProjectAgent với dependency injection cho tất cả agents cần thiết.
         
@@ -30,20 +34,20 @@ class ProjectAgent(OrchestrationAgent):
             analysis_agent: AnalysisAgent để phân tích quá trình làm việc
             portfolio_agent: PortfolioAgent để tạo portfolio card
         """
-        self.interaction_agent = interaction_agent
-        self.mission_agent = mission_agent
-        self.analysis_agent = analysis_agent
-        self.portfolio_agent = portfolio_agent
+        self.interaction_agent = InteractionAgent()
+        self.mission_agent = MissionAgent()
+        self.analysis_agent = AnalysisAgent(self.interaction_agent)
+        self.portfolio_agent = PortfolioAgent()
         self.rag_engine = DualSourceRAGEngine()
         
         print(f"[{self.name}] Initialized as Project Orchestration Conductor")
-        print(f"[{self.name}] 🎵 InteractionAgent: {'✓' if interaction_agent else '✗'}")
-        print(f"[{self.name}] 🎯 MissionAgent: {'✓' if mission_agent else '✗'}")
-        print(f"[{self.name}] 📊 AnalysisAgent: {'✓' if analysis_agent else '✗'}")
-        print(f"[{self.name}] 📁 PortfolioAgent: {'✓' if portfolio_agent else '✗'}")
+        print(f"[{self.name}] 🎵 InteractionAgent: {'✓' if self.interaction_agent else '✗'}")
+        print(f"[{self.name}] 🎯 MissionAgent: {'✓' if self.mission_agent else '✗'}")
+        print(f"[{self.name}] 📊 AnalysisAgent: {'✓' if self.analysis_agent else '✗'}")
+        print(f"[{self.name}] 📁 PortfolioAgent: {'✓' if self.portfolio_agent else '✗'}")
         print(f"[{self.name}] 🧠 RAG Engine: ✓ Dual-source strategy enabled")
     
-    def handle_request(self, user_input: str, session_context: Dict[str, Any]) -> Dict[str, Any]:
+    async def handle_request(self, user_input: str, session_context: Dict[str, Any]) -> Dict[str, Any]:
         """
         Điều phối request dựa trên sub_task trong session_context.
         

@@ -2,6 +2,9 @@
 fastapi
 uvicorn[standard]
 pydantic
+redis
+celery[redis]
+flower
 
 # HTTP client và async support
 httpx
@@ -10,9 +13,12 @@ aiofiles
 # Development và debugging tools
 python-multipart
 python-dotenv
+supabase
+scikit-learn
 
 # AI/ML integrations
 google-generativeai
+google-genai
 
 # Logging và monitoring
 loguru

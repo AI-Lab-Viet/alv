@@ -10,9 +10,21 @@ Author: AI Lab Việt
 """
 
 from typing import Dict, Any, List, Optional, Tuple
-import re
+import re, os        
 from dataclasses import dataclass
 
+from openai import BaseModel
+from models.schemas import LearningChatHistory
+from constants.constants import TimeConstants
+from constants.enum import CacheKeys
+from database.redis import RedisComponent
+from database.db_supabase import DbSupabase
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+from google import genai
+from google.genai.types import EmbedContentConfig
+import ast
 
 @dataclass
 class RAGResult:
@@ -22,6 +34,10 @@ class RAGResult:
     relevance_score: float
     metadata: Dict[str, Any]
 
+class DocumentModel(BaseModel):
+    id: int
+    content: str # JSON structured content
+    embedding: str
 
 class CurriculumRAG:
     """
@@ -33,54 +49,28 @@ class CurriculumRAG:
     
     def __init__(self):
         """Khởi tạo với mock curriculum data."""
-        self.curriculum_data = self._load_mock_curriculum()
+        self.redis = RedisComponent()
+        self.curriculum_data: List[DocumentModel] = self._load_curriculum()
         print(f"[CurriculumRAG] Initialized with {len(self.curriculum_data)} curriculum entries")
     
-    def _load_mock_curriculum(self) -> Dict[str, Dict[str, Any]]:
+    def _load_curriculum(self) -> List[DocumentModel]:
         """
         Load mock curriculum data.
         Trong thực tế sẽ load từ vector database hoặc knowledge base.
         """
-        return {
-            "delegation": {
-                "title": "Delegation - Nghệ thuật Ủy thác",
-                "definition": "Delegation là quá trình giao phó trách nhiệm và quyền hạn cho người khác để hoàn thành một nhiệm vụ cụ thể, trong khi vẫn giữ trách nhiệm cuối cùng về kết quả.",
-                "key_principles": [
-                    "Chọn đúng người cho đúng việc",
-                    "Giao phó rõ ràng trách nhiệm và quyền hạn", 
-                    "Thiết lập mốc thời gian và tiêu chí đánh giá",
-                    "Theo dõi tiến độ nhưng không vi quản lý"
-                ],
-                "examples": [
-                    "CEO giao cho Marketing Manager phụ trách chiến dịch Q4",
-                    "Team Lead ủy thác cho Developer senior thiết kế architecture",
-                    "Giám đốc dự án giao cho BA phụ trách thu thập requirements"
-                ],
-                "common_mistakes": [
-                    "Giao việc nhưng không giao quyền",
-                    "Vi quản lý thay vì theo dõi",
-                    "Không thiết lập tiêu chí thành công rõ ràng"
-                ],
-                "keywords": ["delegation", "ủy thác", "giao phó", "phân công", "leadership"]
-            },
-            "rctc_framework": {
-                "title": "R.C.T.C Framework - Khung tư duy Giải quyết vấn đề",
-                "definition": "R.C.T.C là framework 4 bước để giải quyết vấn đề: Recognize (Nhận diện), Clarify (Làm rõ), Think (Suy nghĩ), Choose (Lựa chọn).",
-                "steps": {
-                    "R - Recognize": "Nhận diện và xác định vấn đề thực sự",
-                    "C - Clarify": "Làm rõ nguyên nhân gốc rễ và thu thập thông tin",
-                    "T - Think": "Suy nghĩ và đưa ra các phương án giải quyết",
-                    "C - Choose": "Lựa chọn phương án tối ưu và thực thi"
-                },
-                "examples": [
-                    "Giải quyết xung đột trong team",
-                    "Tối ưu hóa quy trình làm việc",
-                    "Xử lý khiếu nại khách hàng"
-                ],
-                "keywords": ["rctc", "problem solving", "giải quyết vấn đề", "framework", "tư duy"]
-            }
-        }
-    
+        cached_curriculum = self.redis.get_json(CacheKeys.CURRICULUM_DATA)
+        if cached_curriculum:
+            return [DocumentModel(**item) for item in cached_curriculum]
+        db = DbSupabase()
+        documents = db.find_all("documents", DocumentModel)
+
+        self.redis.set_json(
+            CacheKeys.CURRICULUM_DATA, 
+            [doc.model_dump() for doc in documents],
+            TimeConstants.ONE_DAY * 30
+        )
+        return documents
+
     def search(self, query: str, max_results: int = 3) -> List[RAGResult]:
         """
         Tìm kiếm trong curriculum dựa trên query.
@@ -93,60 +83,43 @@ class CurriculumRAG:
             List các RAGResult được sắp xếp theo relevance
         """
         query_lower = query.lower()
+        query_embedding = embed_text([query_lower])[0]
         results = []
-        
-        for concept_id, concept_data in self.curriculum_data.items():
-            relevance_score = self._calculate_relevance(query_lower, concept_data)
-            
-            if relevance_score > 0:
-                # Tạo content summary từ concept data
-                content = self._format_concept_content(concept_data)
-                
-                result = RAGResult(
-                    source_type="curriculum",
-                    content=content,
-                    relevance_score=relevance_score,
-                    metadata={
-                        "concept_id": concept_id,
-                        "title": concept_data["title"],
-                        "source": "curriculum_database"
-                    }
-                )
-                results.append(result)
+        for concept_data in self.curriculum_data:
+            doc_embedding = concept_data.embedding
+
+            if not doc_embedding or len(doc_embedding) == 0:
+                continue  
+
+            if isinstance(doc_embedding, str):
+                doc_embedding = ast.literal_eval(doc_embedding)
+            relevance_score = self._calculate_relevance(query_embedding, doc_embedding)
+            content = concept_data.content
+
+            result = RAGResult(
+                source_type="curriculum",
+                content=content,
+                relevance_score=relevance_score,
+                metadata={
+                    "concept_id": concept_data.id,
+                    "title": content,
+                    "source": "curriculum_database"
+                }
+            )
+            results.append(result)
         
         # Sắp xếp theo relevance score giảm dần
         results.sort(key=lambda x: x.relevance_score, reverse=True)
-        
         return results[:max_results]
     
-    def _calculate_relevance(self, query: str, concept_data: Dict[str, Any]) -> float:
-        """
-        Tính toán độ liên quan giữa query và concept.
-        Trong thực tế sẽ sử dụng embedding similarity.
-        """
-        score = 0.0
-        
-        # Check keywords
-        keywords = concept_data.get("keywords", [])
-        for keyword in keywords:
-            if keyword.lower() in query:
-                score += 1.0
-        
-        # Check title
-        title_words = concept_data.get("title", "").lower().split()
-        for word in title_words:
-            if word in query:
-                score += 0.8
-        
-        # Check definition
-        definition = concept_data.get("definition", "").lower()
-        query_words = query.split()
-        for word in query_words:
-            if len(word) > 3 and word in definition:
-                score += 0.5
-        
-        return score
-    
+    def _calculate_relevance(self, query_vec: List[float], doc_vec: List[float]) -> float:
+        """Cosine similarity"""
+        if not query_vec or not doc_vec:
+            return 0.0
+        query_vec = np.array(query_vec).reshape(1, -1)
+        doc_vec = np.array(doc_vec).reshape(1, -1)
+        return float(cosine_similarity(query_vec, doc_vec)[0][0])
+
     def _format_concept_content(self, concept_data: Dict[str, Any]) -> str:
         """Format concept data thành text để đưa vào prompt."""
         content_parts = []
@@ -163,8 +136,8 @@ class CurriculumRAG:
         
         if "steps" in concept_data:
             content_parts.append("Các bước thực hiện:")
-            for step, desc in concept_data["steps"].items():
-                content_parts.append(f"• {step}: {desc}")
+            for step in concept_data["steps"]:
+                content_parts.append(f"• {step}")
         
         # Examples
         if "examples" in concept_data:
@@ -184,8 +157,8 @@ class ChatHistoryRAG:
     
     def __init__(self):
         print(f"[ChatHistoryRAG] Initialized for conversation context extraction")
-    
-    def search(self, chat_history: List[Dict[str, Any]], query: str, max_results: int = 5) -> List[RAGResult]:
+
+    def search(self, chat_history: List[LearningChatHistory | Dict[str, Any]], query: str, max_results: int = 5) -> List[RAGResult]:
         """
         Tìm kiếm trong chat history dựa trên query.
         
@@ -218,8 +191,8 @@ class ChatHistoryRAG:
                     relevance_score=relevance_score,
                     metadata={
                         "message_index": i,
-                        "role": message.get("role", "unknown"),
-                        "timestamp": message.get("timestamp", "unknown")
+                        "role": message.role if isinstance(message, LearningChatHistory) else message.get("role", "unknown"),
+                        "timestamp": message.created_at if isinstance(message, LearningChatHistory) else message.get("timestamp", "unknown"),
                     }
                 )
                 results.append(result)
@@ -229,7 +202,7 @@ class ChatHistoryRAG:
         
         return results[:max_results]
     
-    def _calculate_message_relevance(self, message: Dict[str, Any], query: str, position: int, total: int) -> float:
+    def _calculate_message_relevance(self, message: LearningChatHistory | Dict[str, Any], query: str, position: int, total: int) -> float:
         """Tính relevance của message với query hiện tại."""
         content = self._extract_message_text(message).lower()
         
@@ -245,20 +218,20 @@ class ChatHistoryRAG:
                 content_score += 0.3
         
         # Bonus cho user messages (thường chứa context quan trọng)
-        role_bonus = 0.2 if message.get("role") == "user" else 0.1
-        
+        role_bonus = 0.2 if (message.role if isinstance(message, LearningChatHistory) else message.get("role")) == "user" else 0.1
+
         return recency_score + content_score + role_bonus
-    
-    def _extract_message_text(self, message: Dict[str, Any]) -> str:
+
+    def _extract_message_text(self, message: LearningChatHistory | Dict[str, Any]) -> str:
         """Trích xuất text từ message."""
-        parts = message.get("parts", [])
+        parts = message.get("parts", []) if isinstance(message, dict) else [message.content]
         if isinstance(parts, list):
             return " ".join(str(part) for part in parts)
         return str(parts)
-    
-    def _format_message_content(self, message: Dict[str, Any]) -> str:
+
+    def _format_message_content(self, message: LearningChatHistory | Dict[str, Any]) -> str:
         """Format message để đưa vào context."""
-        role = message.get("role", "unknown")
+        role = message.role if isinstance(message, LearningChatHistory) else message.get("role", "unknown")
         content = self._extract_message_text(message)
         
         role_label = "Người dùng" if role == "user" else "ALVA"
@@ -279,7 +252,7 @@ class DualSourceRAGEngine:
         self.chat_rag = ChatHistoryRAG()
         print(f"[DualSourceRAGEngine] Initialized with dual-source strategy")
     
-    def search_for_tutor(self, query: str, chat_history: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def search_for_tutor(self, query: str, chat_history: List[LearningChatHistory]) -> Dict[str, Any]:
         """
         RAG search cho Tutor ALVA.
         Primary: Curriculum, Secondary: Chat History
@@ -366,3 +339,12 @@ class DualSourceRAGEngine:
                 summary_parts.append(result.content)
         
         return "\n".join(summary_parts) if summary_parts else "Ngữ cảnh dự án: Đang bắt đầu cuộc trò chuyện mới."
+
+def embed_text(chunks, dim=1536):
+    client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+    response = client.models.embed_content(
+        model="gemini-embedding-001",
+        contents=chunks,
+        config=EmbedContentConfig(output_dimensionality=dim)
+    )
+    return [e.values for e in response.embeddings]
