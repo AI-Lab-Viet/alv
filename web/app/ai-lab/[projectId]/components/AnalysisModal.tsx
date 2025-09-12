@@ -38,7 +38,7 @@ export default function AnalysisModal({
 }: AnalysisModalProps) {
   const router = useRouter();
   const { clearSession, clearAnalysis } = useChatSession();
-
+  console.log("analysis:", analysis);
   const handleCloseAndRedirect = () => {
     toggleAnalysis();
     clearAnalysis(); // Clear analysis data when modal is closed
@@ -72,7 +72,7 @@ export default function AnalysisModal({
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  {analysis?.analysis.summary}
+                  {analysis?.analysis.analysis_data.summary}
                 </p>
               </CardContent>
             </Card>
@@ -83,7 +83,7 @@ export default function AnalysisModal({
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {analysis?.analysis.skills.map((skill, idx) => (
+                  {analysis?.analysis.analysis_data.skills && analysis?.analysis.analysis_data.skills.map((skill, idx) => (
                     <Badge key={idx} variant="secondary">
                       {skill}
                     </Badge>
@@ -98,7 +98,7 @@ export default function AnalysisModal({
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {analysis?.analysis.featured_prompts.map((prompt, index) => (
+                  {analysis?.analysis.analysis_data.featured_prompts && analysis?.analysis.analysis_data.featured_prompts.map((prompt, index) => (
                     <Textarea
                       key={index}
                       value={truncateText(prompt)}

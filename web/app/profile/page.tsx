@@ -217,7 +217,7 @@ export default function ProfilePage() {
           <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2">
             {displayProjects.map((project, index) => (
               <article
-                key={project.id}
+                key={index}
                 className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-blue-100 animate-fade-in-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >

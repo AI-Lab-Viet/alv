@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PromptStarterType } from "@/interfaces/chat.interface";
-import { Send } from "lucide-react";
+import { Lightbulb, Send } from "lucide-react";
 import { useState } from "react";
 
 interface ChatInputProps {
@@ -55,6 +55,14 @@ export default function ChatInput({
               </Button>
             ))}
           </div>
+        </div>
+      )}
+      {inputValue.trim().toLowerCase() === "ok, hãy viết cho tôi về luận điểm 1" && (
+        <div className="absolute w-full h-fit flex flex-col items-start bottom-16 left-0 bg-white border-t border-gray-200 rounded-md mt-2 z-50">
+          <p className="text-sm tracking-tight text-gray-400 px-4 pt-2 flex flex-row items-center">
+            <Lightbulb className="w-4 h-4 mr-2" />
+            <span className="font-semibold">Mẹo từ ALVA:</span>Áp dụng công thức <span className="font-semibold">R.C.T.C.</span> (Vai trò, Bối cảnh...) để có kết quả sâu sắc hơn nhé!
+          </p>
         </div>
       )}
 

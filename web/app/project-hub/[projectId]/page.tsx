@@ -42,10 +42,10 @@ export default function ProjectDetailPage() {
     }
     try {
       setIsStartingSession(true);
-      const newSessionId = await startNewSession(missionId);
-      console.log("newSessionId:", newSessionId);
+      const sessionData = await startNewSession(missionId);
+      console.log("newSessionId:", sessionData.sessionId);
       setIsStartingSession(false);
-      router.push(`/ai-lab/${newSessionId}`);
+      router.push(`/ai-lab/${sessionData.sessionId}`);
       // sessionId will be set in the context and useEffect will handle navigation
     } catch (error) {
       console.error("Error starting new session:", error);

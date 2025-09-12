@@ -19,9 +19,11 @@ export interface DetailedProject {
 }
 
 export interface IAnalysisResponse {
-  featured_prompts: string[];
-  skills: string[];
-  summary: string;
+  analysis_data: {
+    featured_prompts: string[];
+    skills: string[];
+    summary: string;
+  };
 }
 
 export interface IFinishSessionResponse {
