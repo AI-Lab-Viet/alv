@@ -29,6 +29,7 @@ export default function AILabPage(props: PageProps) {
   const { currentMissionDetail, fetchSessionDetails, fetchMissionDetails, missionId, analysis } = useChatSession();
   const { userId } = useAuth();
   const {
+    connectWebSocket,
     sendMessage,
     messages,
     setMessages,
@@ -38,7 +39,7 @@ export default function AILabPage(props: PageProps) {
     hidePromptStarters,
     promptStarters,
     completedObjective,
-  } = useWebSocket();
+  } = useWebSocket(false);
 
   const [isLoading, setIsLoading] = useState(false);
   // const [startTime] = useState(new Date());
@@ -104,6 +105,14 @@ export default function AILabPage(props: PageProps) {
       toggleShowAnalysis();
     }
   }, [analysis, showAnalysis, toggleShowAnalysis, sessionId]);
+
+  // Establish WebSocket connection once we have the identifiers ready
+  useEffect(() => {
+    if (!sessionId || !missionId || !userId) return;
+    if (!isConnected) {
+      connectWebSocket();
+    }
+  }, [sessionId, missionId, userId, isConnected]);
 
 
   if (!currentMissionDetail) {

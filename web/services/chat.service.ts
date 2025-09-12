@@ -15,16 +15,15 @@ export async function getChatHistory({
       },
     });
     console.log("Chat history response:", response);
-    return {
-      mission_detail: response.data.mission_detail,
-      chat_history: response.data.chat_history,
-    };
+    return response.data as ISessionHistoryResponse;
   } catch (error: unknown) {
     // Gracefully handle "no history yet" case
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       console.info("No chat history yet for session", sessionId);
       // Return an empty history so the caller can treat it as a non-fatal state
       return {
+        mission_id: "",
+        session_id: sessionId,
         mission_detail:
           undefined as unknown as ISessionHistoryResponse["mission_detail"],
         chat_history: [],

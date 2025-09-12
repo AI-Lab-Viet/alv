@@ -26,7 +26,11 @@ const mockPromptStarters = [
   },
 ];
 
-const useWebSocket = () => {
+// autoConnect: if true, the hook will establish the WebSocket connection automatically
+// when sessionId & missionId are available (legacy behaviour). If false, the caller must
+// invoke `connectWebSocket` manually. This is useful to avoid multiple connections when
+// moving between pages/routes that mount/unmount frequently in development.
+const useWebSocket = (autoConnect: boolean = false) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [showPromptStarters, setShowPromptStarters] = useState<boolean>(false);
@@ -70,9 +74,19 @@ const useWebSocket = () => {
 
         // Auto-reconnect after 3 seconds unless it was a manual close
         if (event.code !== 1000) {
+          console.log("🔄 Scheduling WebSocket reconnection in 3 seconds...");
           reconnectTimeoutRef.current = setTimeout(() => {
-            console.log("🔄 Attempting to reconnect WebSocket...");
-            connectWebSocket();
+            // Only attempt reconnection if we still have valid session data
+            if (sessionId && missionId && userId) {
+              console.log("🔄 Attempting to reconnect WebSocket...");
+              connectWebSocket();
+            } else {
+              console.log("🔄 Skipping reconnection - missing session data", {
+                sessionId,
+                missionId,
+                userId,
+              });
+            }
           }, 3000);
         }
       };
@@ -90,7 +104,7 @@ const useWebSocket = () => {
           // if(response.type === "user_authenticated") {
           //   return;
           // }
-          if (response.type === MESSAGE_TYPE.STARTERS) {
+          if (response.prompts) {
             setShowPromptStarters(true);
             setPromptStarters(response.prompts);
           }
@@ -134,14 +148,41 @@ const useWebSocket = () => {
     }
   };
 
-  // (Re)connect whenever key identifiers change
+  // (Re)connect whenever key identifiers change **if** autoConnect is enabled
   useEffect(() => {
-    // If either identifier is missing, don't attempt connection
-    if (!sessionId || !missionId) return;
+    if (!autoConnect) return;
+    // Only attempt connection when BOTH sessionId and missionId are available
+    if (!sessionId || !missionId || !userId) {
+      console.log(
+        "WebSocket: Waiting for sessionId, missionId, and userId to be available",
+        {
+          sessionId,
+          missionId,
+          userId,
+        }
+      );
+      return;
+    }
+
+    console.log(
+      "WebSocket: Both sessionId and missionId available, attempting connection",
+      {
+        sessionId,
+        missionId,
+        userId,
+      }
+    );
 
     // Close any existing socket before creating a new one
     if (socket) {
+      console.log("WebSocket: Closing existing connection before reconnecting");
       socket.close(1000);
+    }
+
+    // Clear any pending reconnection timeout
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
     }
 
     connectWebSocket();
@@ -151,10 +192,13 @@ const useWebSocket = () => {
         clearTimeout(reconnectTimeoutRef.current);
       }
       if (socket) {
+        console.log(
+          "WebSocket: Cleaning up connection on unmount/effect cleanup"
+        );
         socket.close(1000); // Normal closure
       }
     };
-  }, [sessionId, missionId]);
+  }, [sessionId, missionId, autoConnect]);
 
   function sendMessage(message: string) {
     if (!message.trim()) {
@@ -198,6 +242,18 @@ const useWebSocket = () => {
   const clearError = () => setError(null);
 
   const reconnect = () => {
+    // Only attempt manual reconnection if we have valid session data
+    if (!sessionId || !missionId || !userId) {
+      console.warn("⚠️ Cannot reconnect - missing session data", {
+        sessionId,
+        missionId,
+        userId,
+      });
+      setError("Cannot reconnect - session data not available");
+      return;
+    }
+
+    console.log("🔄 Manual WebSocket reconnection requested");
     if (socket) {
       socket.close();
     }
@@ -208,6 +264,7 @@ const useWebSocket = () => {
   };
 
   return {
+    connectWebSocket,
     sendMessage,
     messages,
     setMessages,
