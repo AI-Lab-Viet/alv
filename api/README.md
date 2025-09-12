@@ -86,7 +86,7 @@ InteractionAgent → Gemini AI Gateway
 
 # AI-Powered Agents (Call LLM)
 AnalysisAgent(InteractionAgent)
-PracticeAgent(InteractionAgent) 
+PracticeAgent(InteractionAgent)
 QuizAgent(InteractionAgent)
 
 # Orchestration Agents
@@ -99,8 +99,9 @@ ProjectAgent(InteractionAgent, MissionAgent, AnalysisAgent, PortfolioAgent)
 ### 📋 Yêu cầu hệ thống
 
 - **Python 3.10+**
+- **Redis server**
+- **Supabase**
 - **Gemini API Key** (từ [Google AI Studio](https://makersuite.google.com/app/apikey))
-- **Git** (để clone repository)
 
 ### ⚡ Cài đặt trong 3 bước
 
@@ -119,11 +120,19 @@ echo "GEMINI_API_KEY=your_api_key_here" > .env
 ### 🔧 Cấu hình chi tiết
 
 1. **Tạo file `.env`**:
+
 ```env
 GEMINI_API_KEY=your_actual_gemini_api_key_here
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+REDIS_DB_CELERY=1
 ```
 
 2. **Kiểm tra cài đặt**:
+
 ```bash
 python -c "from core.dispatcher import SmartDispatcher; print('✅ Setup successful!')"
 ```
@@ -157,14 +166,14 @@ python demo_project_flow.py    # Luồng dự án
 import requests
 
 # Test tutor flow
-response = requests.post("http://127.0.0.1:8000/test_tutor_flow", 
+response = requests.post("http://127.0.0.1:8000/test_tutor_flow",
                         json={"user_input": "Giải thích về machine learning"})
 
-# Test project flow  
+# Test project flow
 response = requests.post("http://127.0.0.1:8000/test_project_flow")
 
 # Tương tác chung
-response = requests.post("http://127.0.0.1:8000/interact", 
+response = requests.post("http://127.0.0.1:8000/interact",
                         json={
                             "user_input": "Tôi muốn học AI",
                             "session_context": {
@@ -179,6 +188,7 @@ response = requests.post("http://127.0.0.1:8000/interact",
 ### 🎯 Orchestration Agents (Điều phối)
 
 #### 🎓 TutorAgent
+
 - **Vai trò**: Gia sư AI ALVA
 - **Chức năng**: Điều phối trải nghiệm học tập cá nhân hóa
 - **AI Integration**: ✅ (qua InteractionAgent)
@@ -193,7 +203,8 @@ context = {
 result = dispatcher.dispatch("Giải thích về supervised learning", context)
 ```
 
-#### 🚀 ProjectAgent  
+#### 🚀 ProjectAgent
+
 - **Vai trò**: Conductor cho luồng dự án
 - **Chức năng**: Điều phối HÀNH → CHỨNG MINH workflow
 - **Sub-flows**: `start_project`, `continue_session`, `complete_project`
@@ -207,6 +218,7 @@ result = dispatcher.dispatch("Bắt đầu dự án marketing", context)
 ### ⚡ Execution Agents (Thực thi)
 
 #### 📊 AnalysisAgent
+
 - **AI Integration**: ✅ Phân tích chat history với Gemini
 - **Output**: Featured prompts, skills, learning insights
 
@@ -217,6 +229,7 @@ result = analysis_agent.execute(params)
 ```
 
 #### 🎯 PracticeAgent
+
 - **AI Integration**: ✅ Tạo bài tập thực hành với Gemini
 - **Output**: Structured exercises với test cases
 
@@ -224,13 +237,14 @@ result = analysis_agent.execute(params)
 # Tạo bài tập
 params = {
     "topic": "Python Programming",
-    "difficulty_level": "intermediate", 
+    "difficulty_level": "intermediate",
     "exercise_type": "coding"
 }
 result = practice_agent.execute(params)
 ```
 
 #### 📝 QuizAgent
+
 - **AI Integration**: ✅ Tạo quiz đánh giá với Gemini
 - **Output**: Multi-format questions với explanations
 
@@ -245,21 +259,25 @@ result = quiz_agent.execute(params)
 ```
 
 #### 🎯 MissionAgent
+
 - **AI Integration**: ❌ Logic-based
 - **Chức năng**: Quản lý database missions và project templates
 
 #### 📁 PortfolioAgent
-- **AI Integration**: ❌ Logic-based  
+
+- **AI Integration**: ❌ Logic-based
 - **Chức năng**: Tạo và lưu trữ portfolio cards
 
 ## 🧠 RAG Engine - Dual-Source Strategy
 
 ### 📖 Tổng quan
+
 Hệ thống RAG (Retrieval Augmented Generation) với chiến lược dual-source khác nhau cho từng persona ALVA:
 
 ### 🎯 Chiến lược RAG
 
 #### 📚 Tutor ALVA (Module HỌC)
+
 - **Primary Source**: Curriculum (Giáo trình)
 - **Secondary Source**: Chat History (Ngữ cảnh)
 - **Mục tiêu**: Trả lời chính xác dựa trên kiến thức giáo trình
@@ -273,7 +291,8 @@ rag_results = rag_engine.search_for_tutor(
 # → Tìm trong curriculum trước, sau đó chat context
 ```
 
-#### 🚀 Project ALVA (Module HÀNH)  
+#### 🚀 Project ALVA (Module HÀNH)
+
 - **Primary Source**: Chat History (Ngữ cảnh dự án)
 - **Secondary Source**: Curriculum (Hỗ trợ kiến thức)
 - **Mục tiêu**: Duy trì consistency + áp dụng kiến thức đã học
@@ -282,17 +301,19 @@ rag_results = rag_engine.search_for_tutor(
 # RAG cho Project ALVA
 rag_results = rag_engine.search_for_project(
     query="Áp dụng Delegation trong team",
-    chat_history=project_context["chat_history"] 
+    chat_history=project_context["chat_history"]
 )
 # → Tìm trong chat history trước, curriculum hỗ trợ khi có keywords
 ```
 
 ### 🔄 Vòng lặp HỌC → HÀNH
+
 1. **Tutor ALVA** dạy concepts từ giáo trình
-2. **Project ALVA** áp dụng concepts vào dự án thực tế  
+2. **Project ALVA** áp dụng concepts vào dự án thực tế
 3. Tạo ra trải nghiệm học tập hoàn chỉnh và liền mạch
 
 ### 🗃️ Knowledge Sources
+
 - **Curriculum Database**: Delegation, R.C.T.C Framework, Machine Learning, etc.
 - **Chat History**: Project context, decisions, brainstorming sessions
 - **Smart Keyword Detection**: Tự động kích hoạt curriculum support
@@ -300,6 +321,7 @@ rag_results = rag_engine.search_for_project(
 ### 💬 Communication Agent
 
 #### 🤖 InteractionAgent
+
 - **Vai trò**: Gateway đến Gemini AI
 - **Chức năng**: Xử lý tất cả communication với LLM
 - **Features**: Persona system, context management, fallback handling
@@ -343,15 +365,15 @@ graph TD
 
 ### 🔍 Test Coverage
 
-| Component | Test Type | Status |
-|-----------|-----------|--------|
-| InteractionAgent | Unit + Integration | ✅ |
-| AnalysisAgent | Unit + Integration | ✅ |
-| PracticeAgent | Unit + Integration | ✅ |
-| QuizAgent | Unit + Integration | ✅ |
-| TutorAgent | Integration | ✅ |
-| ProjectAgent | Integration | ✅ |
-| Full System | End-to-End | ✅ |
+| Component        | Test Type          | Status |
+| ---------------- | ------------------ | ------ |
+| InteractionAgent | Unit + Integration | ✅     |
+| AnalysisAgent    | Unit + Integration | ✅     |
+| PracticeAgent    | Unit + Integration | ✅     |
+| QuizAgent        | Unit + Integration | ✅     |
+| TutorAgent       | Integration        | ✅     |
+| ProjectAgent     | Integration        | ✅     |
+| Full System      | End-to-End         | ✅     |
 
 ### 🎯 Chạy tests
 
@@ -383,18 +405,19 @@ print(result)
 
 ### 🔗 Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Health check |
-| `/interact` | POST | General interaction |
-| `/test_tutor_flow` | POST | Test learning flow |
-| `/test_project_flow` | POST | Test project flow |
-| `/test_ai_connection` | GET | Test AI connectivity |
-| `/docs` | GET | Interactive API docs |
+| Endpoint              | Method | Description          |
+| --------------------- | ------ | -------------------- |
+| `/`                   | GET    | Health check         |
+| `/interact`           | POST   | General interaction  |
+| `/test_tutor_flow`    | POST   | Test learning flow   |
+| `/test_project_flow`  | POST   | Test project flow    |
+| `/test_ai_connection` | GET    | Test AI connectivity |
+| `/docs`               | GET    | Interactive API docs |
 
 ### 📝 Request/Response Examples
 
 #### Interact Endpoint
+
 ```json
 // POST /interact
 {
@@ -423,7 +446,7 @@ ai_lab_viet/
 ├── agents/                 # Tất cả agents
 │   ├── base.py            # Abstract base classes
 │   ├── communication/     # InteractionAgent
-│   ├── orchestration/     # TutorAgent, ProjectAgent  
+│   ├── orchestration/     # TutorAgent, ProjectAgent
 │   └── execution/         # Analysis, Practice, Quiz, Mission, Portfolio
 ├── core/                  # Core system
 │   └── dispatcher.py      # SmartDispatcher
@@ -437,6 +460,7 @@ ai_lab_viet/
 ### 🔧 Thêm Agent mới
 
 1. **Tạo agent class**:
+
 ```python
 # agents/execution/new_agent.py
 from agents.base import ExecutionAgent
@@ -444,13 +468,14 @@ from agents.base import ExecutionAgent
 class NewAgent(ExecutionAgent):
     def __init__(self, interaction_agent=None):
         self.interaction_agent = interaction_agent
-    
+
     def execute(self, params):
         # Implementation
         pass
 ```
 
 2. **Đăng ký trong dispatcher**:
+
 ```python
 # core/dispatcher.py
 self.new_agent = NewAgent(self.interaction_agent)
@@ -458,6 +483,7 @@ self.execution_agents["new"] = self.new_agent
 ```
 
 3. **Test agent**:
+
 ```python
 # test_new_agent.py
 result = dispatcher.new_agent.execute({"test": "params"})
@@ -466,6 +492,7 @@ result = dispatcher.new_agent.execute({"test": "params"})
 ### 🎨 Customization
 
 #### Thay đổi AI Provider
+
 ```python
 # agents/communication/interaction_agent.py
 # Thay thế Gemini bằng OpenAI, Claude, etc.
@@ -476,6 +503,7 @@ class InteractionAgent(CommunicationAgent):
 ```
 
 #### Custom Personas
+
 ```python
 # Tạo persona mới trong TutorAgent
 persona_prompt = f"""

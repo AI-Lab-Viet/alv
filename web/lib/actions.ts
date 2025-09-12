@@ -21,6 +21,8 @@ export async function signIn(formData: FormData) {
     password: password.toString(),
   });
 
+  console.log("server: ", data);
+
   if (error) {
     return { error: error.message };
   }

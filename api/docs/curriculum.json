@@ -1,0 +1,2298 @@
+[
+  {
+    "id": 1,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Phần I",
+    "display_order": 1
+  },
+  {
+    "id": 2,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Nền tảng Tư duy",
+    "display_order": 2
+  },
+  {
+    "id": 3,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Chương 1",
+    "display_order": 1
+  },
+  {
+    "id": 4,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Nền tảng Tư duy cho Kỷ nguyên AI",
+    "display_order": 2
+  },
+  {
+    "id": 5,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Lời nhắc nhở then chốt",
+    "display_order": 3
+  },
+  {
+    "id": 6,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hãy luôn nhớ, mục tiêu của một nhà công tác AI xuất sắc là đồng hành để dẫn lối sự sáng tạo một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.",
+    "display_order": 4
+  },
+  {
+    "id": 7,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Và chương này sẽ trang bị cho bạn một hệ thống tư duy nền tảng để bắt đầu hành trình đó.",
+    "display_order": 5
+  },
+  {
+    "id": 8,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "Mục tiêu Bài học",
+    "display_order": 6
+  },
+  {
+    "id": 9,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Sau chương này, bạn sẽ có thể:",
+    "display_order": 7
+  },
+  {
+    "id": 10,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Hiểu được tâm quan trọng của việc học AI một cách có phương pháp.- Nắm được khái niệm cốt lõi về Năng lực AI (AI Fluency).- Phân biệt được 3 phương thức hợp tác chính với AI.- Nắm được tổng quan về Framework 4D+S - hệ thống 5 kỹ năng nền tảng.",
+    "display_order": 8
+  },
+  {
+    "id": 11,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.1 Câu chuyện của Quý (và có thể là của bạn)",
+    "display_order": 9
+  },
+  {
+    "id": 12,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trước khi xây dựng AI Lab Việt, tôi (Quy) cũng là một người dùng AI như bạn. Tôi bị choáng ngợp trước sức mạnh của nó, nhưng đồng thời, tôi luôn cảm thấy một sự bất an. Tôi dùng AI để tìm ý tưởng, nhưng lại cảm thấy mình chỉ đang sao chép một cách tinh vi. Tôi nhận được một câu trả lời nghe có vẻ hợp lý, nhưng lại không chắc chắn 100% về độ chính xác của nó.",
+    "display_order": 10
+  },
+  {
+    "id": 13,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Tôi nhận ra rằng, nếu không có một phương pháp luận, một hệ thống tư duy, chúng ta rất dễ bị lạc lối trong thể giới của AI. Chúng ta có nguy cơ trở thành người dùng thụ động thay vì người điều khiển công nghệ.",
+    "display_order": 11
+  },
+  {
+    "id": 14,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đó là lý do bộ giáo trình này ra đời. Nó không dạy bạn những mẹo nhất thời có thể lỗi thời vào ngày mai. Nó trang bị cho bạn một năng lực cốt lõi để bạn có thể tự tin hợp tác với bất kỳ công cụ AI nào. Chúng tôi gọi đó là Năng lực AI (AI Fluency).",
+    "display_order": 12
+  },
+  {
+    "id": 15,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.2 Năng lực AI (AI Fluency) là gì?",
+    "display_order": 1
+  },
+  {
+    "id": 16,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Năng lực AI (AI Fluency) là khả năng hợp tác với các hệ thống AI một cách Hiệu quả (Effective), Hiệu suất (Efficient), Có Đạo đức (Ethical), và An toàn (Safe).",
+    "display_order": 2
+  },
+  {
+    "id": 17,
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/fa3783f5c4466f45cefeb185d402f86052571e5f10a5d24d874c5badf53b3bde.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 16,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Năng lực AI (AI Fluency) là khả năng hợp tác với các hệ thống AI một cách Hiệu quả (Effective), Hiệu suất (Efficient), Có Đạo đức (Ethical), và An toàn (Safe).",
+    "display_order": 2
+  },
+  {
+    "id": 19,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hình 1.1: Bốn trụ cột của Năng lực AI theo triết lý của AI Lab Việt.",
+    "display_order": 4
+  },
+  {
+    "id": 20,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Hiệu quả & Hiệu suất: Làm ra sản phẩm tốt nhất mà không làng phí thời gian và công sức. Thay vì hỏi lan man, bạn biết cách đặt vấn đề để đi thẳng vào trọng tâm.",
+    "display_order": 5
+  },
+  {
+    "id": 21,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Có đạo đức & An toàn: Tương tác một cách trung thực, có trách nhiệm, bảo vệ được sự riêng tư và ý thức được về các vấn đề như thiên kiến (bias) hay thông tin sai lệch.",
+    "display_order": 6
+  },
+  {
+    "id": 22,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để đạt được năng lực này, trước hết, chúng ta cần hiểu rằng mình không phải lúc nào cũng từng tác với AI theo cùng một cách.",
+    "display_order": 7
+  },
+  {
+    "id": 23,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3 Ba phương thức hợp tác với AI",
+    "display_order": 8
+  },
+  {
+    "id": 24,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để đạt được Năng lực AI, trước hết, chúng ta cần hiểu rằng mình không phải lúc nào cũng từng tác với AI theo cùng một cách. Tùy vào bản chất của công việc, mối quan hệ hợp tác giữa bạn và AI sẽ thay đổi. Hãy hình dung đây là một hành trình tiến hóa, nói bạn sẽ đi từ một Người Ra lệnh, trở thành một Người Đồng đội, và cuối cùng là một Người Kiến tạo.",
+    "display_order": 9
+  },
+  {
+    "id": 25,
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/b551f371e36979f17495e822e7b3075822188a7fd5dbbf680e287cb4b01b0263.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 24,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để đạt được Năng lực AI, trước hết, chúng ta cần hiểu rằng mình không phải lúc nào cũng từng tác với AI theo cùng một cách. Tùy vào bản chất của công việc, mối quan hệ hợp tác giữa bạn và AI sẽ thay đổi. Hãy hình dung đây là một hành trình tiến hóa, nói bạn sẽ đi từ một Người Ra lệnh, trở thành một Người Đồng đội, và cuối cùng là một Người Kiến tạo.",
+    "display_order": 9
+  },
+  {
+    "id": 27,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hình 1.2: Ba phương thức hợp tác với AI: từ Người Ra lệnh, đến Người Đồng đội, và cuối cùng là Người Kiến tạo.",
+    "display_order": 2
+  },
+  {
+    "id": 28,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3.1 Tự động hóa (Automation): Bạn là Người Ra lệnh",
+    "display_order": 3
+  },
+  {
+    "id": 29,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đây là phương thức hợp tác cơ bản và phổ biến nhất. Bạn giao cho AI một công việc cụ thể, khép kín với những chỉ dẫn rõ ràng, và AI sẽ hoàn thành nó một cách nhanh chóng. Mối quan hệ ở đây là một chiều: bạn ra lệnh, AI thực thi.",
+    "display_order": 4
+  },
+  {
+    "id": 30,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Bối cảnh phù hợp: Khi bạn có những tác vụ lặp đi lặp lại, tốn thời gian nhưng không đòi hỏi sự sáng tạo phức tạp hay tư duy đa chiều.- Yêu cầu về kỹ năng: Bạn cần mô tả tác vụ thật rõ ràng và có tiêu chí cụ thể để kiểm tra chất lượng đầu ra.- Ví dụ thực tế: Tóm tắt một bài báo khoa học dài 20 trang thành 300 từ, dịch một email sang tiếng Anh, viết một đoạn mã Python đơn giản để sắp xếp dữ liệu, hay tạo một bài đăng mang xã hội theo văn phong cho trước.",
+    "display_order": 5
+  },
+  {
+    "id": 31,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong vai trò này, AI giống như một chuyên viên cần mẫn, giúp bạn giải quyết nhanh gọn các công việc đã được định hình rõ ràng, giải phóng thời gian của bạn cho những nhiệm vụ đòi hỏi tư duy cao hơn.",
+    "display_order": 6
+  },
+  {
+    "id": 32,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3.2 Tăng cường (Augmentation): Bạn là Người Đồng đội",
+    "display_order": 7
+  },
+  {
+    "id": 33,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Ở cấp độ này, mỗi quan hệ không còn là một chiều. Bạn và AI cùng nhau hợp tác, trao đổi qua lại nhiều lần để phát triển một ý tưởng hoặc sản phẩm. Đây là một quá trình \"đồng não\" (brainstorm) và tinh chỉnh liên tục.",
+    "display_order": 8
+  },
+  {
+    "id": 34,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Bối cảnh phù hợp: Khi bạn cần giải quyết các vấn đề phức tạp, đòi hỏi sự sáng tạo, tư duy phản biện và khám phá nhiều phương án khác nhau.",
+    "display_order": 1
+  },
+  {
+    "id": 35,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Yêu cầu về kỹ năng: Kỹ năng đối thoại nhiều bước, biết cách chia nhỏ nhiệm vụ và dùng phản hồi của AI để cải tiến ý tưởng của mình (và ngược lại).",
+    "display_order": 2
+  },
+  {
+    "id": 36,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Ví dụ thực tế: Lên dàn ý cho một bài luận phân tích văn học, brainstorm các ý tưởng cho một dự án khởi nghiệp, cùng AI sữa lỗi và tối ưu một đoạn code phức tạp.",
+    "display_order": 3
+  },
+  {
+    "id": 37,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong vai trò này, AI là một bạn đồng hành sang tạo, một \"đối tác từ duy\" giúp bạn mở rộng tầm nhìn và khám phá những giải pháp mà có thể bạn chưa nghĩ tới.",
+    "display_order": 4
+  },
+  {
+    "id": 38,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.3.3 Ủy quyền (Agency): Bạn là Người Kiên tạo",
+    "display_order": 5
+  },
+  {
+    "id": 39,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đây là phương thức nâng cao nhất, thể hiện sự làm chủ công nghệ ở mức độ sâu sắc. Bạn không chỉ giao một tác vụ, mà bạn thiết kế và cấu hình cho AI một hành vi để nó có thể tự vận hành trong tương lai nhằm phục vụ một mục đích nào đó.",
+    "display_order": 6
+  },
+  {
+    "id": 40,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Bối cảnh phù hợp: Khi bạn muốn tạo ra một hệ thống AI có thể tương tác tự động với người khác hoặc thực hiện các nhiệm vụ theo một quy tắc bạn đã định sẵn.",
+    "display_order": 7
+  },
+  {
+    "id": 41,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Yêu cầu về kỹ năng: Hiểu sâu về năng lực và giới hạn của AI, đặc biệt phải đặt sự an toàn, giám sát và đạo đức lên hàng đầu.",
+    "display_order": 8
+  },
+  {
+    "id": 42,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Ví dụ thực tế: Tạo một chatbot \"trợ lý lớp học\" để trả lời các câu hỏi thường gặp về hạn nộp bài, cấu hình một nhân vật trong game (NPC) có thể trò chuyện tự nhiên với người chơi, thiết lập một agent tự động lọc và phân loại email cho một đội nhóm.",
+    "display_order": 9
+  },
+  {
+    "id": 43,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong vai trò này, bạn không còn là người dùng, bạn đã trở thành một nhà kiến tạo, một kiến trúc sư thiết kế ra các trợ lý tự động.",
+    "display_order": 10
+  },
+  {
+    "id": 44,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Một quy trình làm việc thực tế thường sẽ linh hoạt chuyển đổi giữa cả ba phương thức này. Việc hiểu rõ chúng giúp bạn lựa chọn cách hợp tác phù hợp nhất. Nhưng để thực sự làm chủ cả ba, bạn cần một bộ kỹ năng nên tảng.",
+    "display_order": 11
+  },
+  {
+    "id": 45,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.4 Framework 4D+S: Từ Nên tảng Quốc tế đến Dấu ẩn Việt Nam",
+    "display_order": 12
+  },
+  {
+    "id": 46,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Để kiến tạo nên một phương pháp luận hiệu quả, chúng tôi không bắt đầu từ con số không. Chúng tôi đã học hỏi từ những người đi trước, và nền tảng của chúng tôi được truyền cảm hứng mạnh mẽ từ Framework 4D của Anthropic, một trong những công ty AI hàng đầu thế giới. Bên chữ D đó là một bộ khung cực kỳ vững chắc.",
+    "display_order": 13
+  },
+  {
+    "id": 47,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Tuy nhiên, trong quá trình nghiên cứu và áp dụng vào bối cảnh Việt Nam, chúng tôi nhận ra rằng 4D là điều kiện cản, nhưng chưa phải là điều kiện đủ để thực sự sáng tạo. Nó giúp bạn tương tác hiệu quả, nhưng vẫn còn một bước cuối cùng để biến sản phẩm của AI thành sản phẩm của BAN.",
+    "display_order": 14
+  },
+  {
+    "id": 48,
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/171c621cf70097731dc6ab48528a302025606e0c8e01efaed0ad302bdcef2037.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 50,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Hình 1.3: Framework 4D+S: Vòng lặp từ duy của một Nhà Cộng tác AI Sáng tạo.",
+    "display_order": 2
+  },
+  {
+    "id": 51,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Đó là lý do chúng tôi đã bổ sung một mảnh ghép cuối cùng, một kỹ năng thứ năm. Và từ đó, Framework 4D+S của AI Lab Việt ra đời.",
+    "display_order": 3
+  },
+  {
+    "id": 52,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Chữ \"+S\" đó không chỉ là một kỹ năng. Nó là linh hồn của triết lý chúng tôi muốn trao gửi.",
+    "display_order": 4
+  },
+  {
+    "id": 53,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "- Phân công (Delegation): Bạn là trưởng nhóm. Bạn phải là người vạch ra kế hoạch, quyết định việc nào mình nên tự làm, việc nào AI có thể làm tốt hơn, và việc nào cả hai cần chung tay thực hiện.- Mô tả (Description): Bạn là người giao việc. Bạn phải trò chuyện với AI bằng những câu lệnh (prompt) chi tiết, cụ thể để AI hiểu đúng ý bạn.- Nhận định (Discernment): Bạn là người phản biện. Bạn không thể mặc định AI luôn đứng. Bạn phải kiểm tra lại thông tin, đánh giá lập luận và phát hiện các lỗi sai hoặc thiên kiến.- Trách nhiệm (Diligence): Bạn là người chịu trách nhiệm cuối cùng. Bạn là người chịu trách nhiệm về chất lượng, tính trung thực và các vấn đề đạo đức của sản phẩm cuối cùng.- Tổng hợp (Synthesis): Bạn là Nhà Kiên tạo. Đây chính là mảnh ghép \"+S\". Sau khi đã có các \"nguyên liệu\" chất lượng cao từ 4 bước trên, bạn phải là người",
+    "display_order": 5
+  },
+  {
+    "id": 54,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "tinh lọc, kết nói và thoải hòn vào chúng để tạo ra một sản phẩm cuối cùng mang đậm dấu ấn cá nhân.",
+    "display_order": 1
+  },
+  {
+    "id": 55,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Và điều đặc biệt nhất, chữ \"S\" còn là một biểu tượng dày tự hào: nó là hình ảnh của dải đất Việt Nam.",
+    "display_order": 2
+  },
+  {
+    "id": 56,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Framework 4D+S chính là lời cam kết của chúng tôi: trang bị cho thể hệ trẻ Việt Nam một phương pháp luận dũng cấp quốc tế, đồng thời trao cho các bạn năng lực để kiến tạo nên những sản phẩm mang đậm bản sắc và trí tuệ Việt.",
+    "display_order": 3
+  },
+  {
+    "id": 57,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Năm năng lực này không phải là năm bước riêng rẽ, mà là một vòng lặp tư duy liên tục. Với framework này, bạn không còn là một người dùng bị động như Quý ở đâu cao chuyện. Thay vào đó, bạn trở thành một người kiến tạo, một người dẫn dắt có tư duy phản biện.",
+    "display_order": 4
+  },
+  {
+    "id": 58,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Trong các chương tiếp theo, chúng ta sẽ cùng nhau đi sau vào từng kỹ năng trong hành trình 4D+S, biến lý thuyết này thành những hành động cụ thể.",
+    "display_order": 5
+  },
+  {
+    "id": 59,
+    "chapter": 1,
+    "block_type": "title",
+    "content": "1.5 Gặp gỡ Người bạn Đông hành của bạn: ALVA",
+    "display_order": 6
+  },
+  {
+    "id": 60,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Lý thuyết là nền tảng, những thực hành mới là con đường dẫn đến sự thành thạo. Trong suốt hành trình rèn luyện Framework 4D+S, bạn sẽ không đơn độc. Chúng tôi muốn giới thiệu với bạn ALVA - Trợ lý AI của AI Lab Việt.",
+    "display_order": 7
+  },
+  {
+    "id": 61,
+    "chapter": 1,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/4dd0ff32ce69f351e4f4fe2b4e53d8929902089dcf20852785310227ce9dc0f8.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 60,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Lý thuyết là nền tảng, những thực hành mới là con đường dẫn đến sự thành thạo. Trong suốt hành trình rèn luyện Framework 4D+S, bạn sẽ không đơn độc. Chúng tôi muốn giới thiệu với bạn ALVA - Trợ lý AI của AI Lab Việt.",
+    "display_order": 7
+  },
+  {
+    "id": 63,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "ALVA không phải là một chatbot thông thường. ALVA là một công cụ sư phạm. Nó được thiết kế để trở thành \"Nguồn Đồng đội\" và \"Đối tác tư duy\" của bạn. Chính trong môi trường tương tác với ALVA, bạn sẽ áp dụng, thực hành và làm chủ bổn kỹ năng Phân công, Mô tả, Nhận định và Trách nhiệm.",
+    "display_order": 9
+  },
+  {
+    "id": 64,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Cái tên ALVA (phát âm là An- Va) vừa là viết tắt của AI Lab Việt Assistant, vừa gọi lên cảm giác An toàn và Bình an - đúng với cam kết của chúng tôi về một môi trường học tập đáng tin cậy.",
+    "display_order": 10
+  },
+  {
+    "id": 65,
+    "chapter": 1,
+    "block_type": "text",
+    "content": "Giờ bạn đã gặp gỡ người đồng đội của mình. Hãy cùng ALVA bắt đầu rèn luyện kỹ năng cốt lõi đầu tiên trong Phần II.",
+    "display_order": 11
+  },
+  {
+    "id": 66,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Phần II",
+    "display_order": 1
+  },
+  {
+    "id": 67,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Rèn luyện Kỹ năng Cốt lõi",
+    "display_order": 2
+  },
+  {
+    "id": 68,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Chương 2",
+    "display_order": 1
+  },
+  {
+    "id": 69,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Delegation - Nghệ thuật Phân công",
+    "display_order": 2
+  },
+  {
+    "id": 70,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Lời nhắc nhở then chốt",
+    "display_order": 3
+  },
+  {
+    "id": 71,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Hãy luôn nhớ, mục tiêu của một nhà công tác AI xuất sắc là đồng hành để dẫn lối sự sáng tạo một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.",
+    "display_order": 4
+  },
+  {
+    "id": 72,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Và Nghệ thuật Phân công chính là bước đầu tiên giúp bạn đạt được sự Hiệu quả và Hiệu suất trong hành trình đó.",
+    "display_order": 5
+  },
+  {
+    "id": 73,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Mục tiêu Bài học",
+    "display_order": 6
+  },
+  {
+    "id": 74,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Sau chương này, bạn sẽ có thể:",
+    "display_order": 7
+  },
+  {
+    "id": 75,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "- Hiểu rõ tư duy nên tăng để hợp tác hiệu quả với AI.- Phân tích một vấn đề lớn và chia nhỏ thành các nhiệm vụ cụ thể.- Ra quyết định một cách chiến lược về việc nên Phân công nhiệm vụ nào cho AI để tối ưu hiệu quả.",
+    "display_order": 8
+  },
+  {
+    "id": 76,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "2.1 Bạn là trưởng nhóm",
+    "display_order": 9
+  },
+  {
+    "id": 77,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Chương trước, chúng ta đã hình dung về việc làm việc nhóm với AI. Bây giờ, hãy đi sâu hơn vào vai trò của bạn trong nhóm đó: Bạn chính là trưởng nhóm.",
+    "display_order": 10
+  },
+  {
+    "id": 78,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Một người trưởng nhóm giỏi không phải là người làm tất cả mọi việc, cũng không phải là người giao hết mọi việc cho thành viên. Một người trưởng nhóm giỏi là người biết cách Phân công một cách thông minh: giao đúng việc cho đúng công cụ vào đúng thời điểm.",
+    "display_order": 11
+  },
+  {
+    "id": 79,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Nghệ thuật Phân công hiệu quả không phải là một hành động cảm tính. Nó được xây dựng trên một nền tảng tư duy gồm ba bước cốt lõi mà chúng ta sẽ cùng nhau khám phá.",
+    "display_order": 12
+  },
+  {
+    "id": 80,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Case Study",
+    "display_order": 1
+  },
+  {
+    "id": 81,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Case Study Xuyên suốt: Dự án \"CLB Sách\"",
+    "display_order": 2
+  },
+  {
+    "id": 82,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Để làm cho các khái niệm trong chương này trở nên sống động, chúng ta sẽ cùng theo chân Qúy, một sinh viên năng động, được giao nhiệm vụ \"Tổ chức sự kiện ra mắt Cầu lạc bộ Sách của Shoa\".",
+    "display_order": 3
+  },
+  {
+    "id": 83,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Qúy có một người đồng đội đắc lực là ALVA. Hãy xem Qúy, với vai trò là trưởng nhóm, sẽ áp dụng nghệ thuật Phân công như thế nào để hoàn thành xuất sắc nhiệm vụ này.",
+    "display_order": 4
+  },
+  {
+    "id": 84,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "2.2 Bước 1: Biết rõ Đích đến",
+    "display_order": 5
+  },
+  {
+    "id": 85,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Trước khi ra lệnh cho bất kỳ ai, người trưởng nhóm phải trả lời được câu hỏi quan trọng nhất: \"Chúng ta đang đi đâu?\". Nếu bạn không biết rõ mục tiêu, ngay cả công cụ mạnh mẽ nhất cũng trở nên vô dụng.",
+    "display_order": 6
+  },
+  {
+    "id": 86,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 7
+  },
+  {
+    "id": 87,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Tư duy Mục tiêu là khả năng xác định rõ ràng kết quả mong muốn và hiểu được các bước cần thiết để đạt được nó trước khi bắt đầu sử dụng AI.",
+    "display_order": 8
+  },
+  {
+    "id": 88,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Đây là bước nền tảng. Năng lực AI của bạn không bắt đầu từ AI, nó bắt đầu từ chính chuyên môn và sự hiểu biết của bạn về vấn đề. Với An, mục tiêu không chỉ là \"tổ chức một sự kiện\". Mục tiêu thực sự có thể là \"thu hút ít nhất 50 thành viên mới\" hoặc \"tạo ra một không gian thảo luận văn học sôi nổi\". Việc xác định rõ đích đến này sẽ định hình toàn bộ các quyết định sau đó.",
+    "display_order": 9
+  },
+  {
+    "id": 89,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "2.3 Bước 2: \"Biết mình, biết ta\"",
+    "display_order": 10
+  },
+  {
+    "id": 90,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Khi đã có mục tiêu, một người trưởng nhóm giỏi cần hiểu rõ năng lực của từng thành viên trong đội. Trong trường hợp này, đội của bạn có hai thành viên: bạn và AI.",
+    "display_order": 11
+  },
+  {
+    "id": 91,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 12
+  },
+  {
+    "id": 92,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Năng lực Phân tích Kép là khả năng hiểu rõ cả điểm mạnh, điểm yếu của bản thân và của các công cụ AI hiện có để đưa ra quyết định hợp tác tối ưu.",
+    "display_order": 13
+  },
+  {
+    "id": 93,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "- AI làm tốt việc gì? (Thế mạnh của \"Thành viên AI\")  - Brainstorm ý tưởng, Tổng hợp thông tin, Soạn thảo bản nháp, Dịch thuật...",
+    "display_order": 14
+  },
+  {
+    "id": 94,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "- Con người làm tốt việc gì? (Vai trò của \"Trưởng nhóm\")",
+    "display_order": 15
+  },
+  {
+    "id": 95,
+    "chapter": 2,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/8cc1bd002e580998aa9487efb42ab959dc9c95cf8e3b7b94b2ac4a0dadd1e651.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 94,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "- Con người làm tốt việc gì? (Vai trò của \"Trưởng nhóm\")",
+    "display_order": 15
+  },
+  {
+    "id": 97,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Hình 2.1: Bạn phải biết rõ đích đến của mình trước khi bắt đầu hành trình.",
+    "display_order": 2
+  },
+  {
+    "id": 98,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "- Đặt mục tiêu và Tầm nhìn, Hiểu ngữ cảnh sâu sắc, Tư duy Phản biện & Ra quyết định cuối cùng, Chịu trách nhiệm...",
+    "display_order": 3
+  },
+  {
+    "id": 99,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "An cần tự hỏi: \"Trong việc tổ chức sự kiện này, ALVA có thể giúp brainstorm các chủ đề thảo luận, soạn thảo email thông báo. Nhưng việc lựa chọn diễn giả phù hợp với văn hóa của khoa, hay quyết định ngân sách cuối cùng, phải do mình đảm nhiệm.\"",
+    "display_order": 4
+  },
+  {
+    "id": 100,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "2.4 Bước 3: Kỹ năng \"Chẻ củi\"",
+    "display_order": 5
+  },
+  {
+    "id": 101,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Khi đã biết rõ đích đến và hiểu rõ năng lực của từng thành viên, đây là lúc bạn bắt đầu giao việc. Hãy tưởng tượng bạn được giao một khúc củi khổng lồ. Bạn không thể đốt cả khúc củi đó ngay lập tức. Bạn phải dùng rìu để chẻ nó thành những thanh củi nhỏ hơn.",
+    "display_order": 6
+  },
+  {
+    "id": 102,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 7
+  },
+  {
+    "id": 103,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Nghệ thuật Phân rã & Phân công là kỹ năng chia nhỏ một vấn đề lớn, phức tạp thành các nhiệm vụ cụ thể và quyết định chiến lược xem \"ai làm gì\".",
+    "display_order": 8
+  },
+  {
+    "id": 104,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Ví dụ Thực tế",
+    "display_order": 9
+  },
+  {
+    "id": 105,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Vấn đề lớn (Khúc củi): \"Tổ chức sự kiện ra mắt Câu lạc bộ Sách của khoa.\" Phân rã thành các nhiệm vụ nhỏ (Thanh củi):",
+    "display_order": 10
+  },
+  {
+    "id": 106,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "1. Brainstorm Ý tưởng Sự kiện (Phân công cho AI): Yêu cầu ALVA đề",
+    "display_order": 11
+  },
+  {
+    "id": 107,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "xuất 10 ý tưởng chủ đề và format cho sự kiện ra mắt CLB Sách.",
+    "display_order": 1
+  },
+  {
+    "id": 108,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "2. Lựa chọn Chủ đề & Format (An quyết định): Dựa trên đề xuất của ALVA và sự thấu hiểu về sinh viên trong khoa, An chọn format \"Book Talk với Tác giả trẻ\".",
+    "display_order": 2
+  },
+  {
+    "id": 109,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "3. Lập Kế hoạch Chi tiết (Hợp tác Người-AI): An yêu cầu ALVA tạo một checklist công việc chi tiết cho sự kiện. Sau đó, An sẽ ra soát, bổ sung các đầu việc liên quan đến thủ tục với nhà trường và phân công nhân sự.",
+    "display_order": 3
+  },
+  {
+    "id": 110,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "4. Soạn thảo Thứ mời & Bài đăng (Phân công cho AI): Yêu cầu ALVA viết bản nháp thư mời cho diễn giả và bài đăng thông báo sự kiện trên trang Facebook của khoa.",
+    "display_order": 4
+  },
+  {
+    "id": 111,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "5. Phê duyệt và Gửi (An quyết định): An đọc lại, chính sửa văn phong cho phù hợp và là người nhắn nút \"gửi\" cuối cùng.",
+    "display_order": 5
+  },
+  {
+    "id": 112,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Quá trình này không phải là \"AI làm hết\" hay \"người làm hết\". Nó là một điệu nhảy, một sự phối hợp nhịp nhàng giữa hai bên.",
+    "display_order": 6
+  },
+  {
+    "id": 113,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "2.5 Cạm bẫy cần tránh trong Phân công",
+    "display_order": 7
+  },
+  {
+    "id": 114,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Cảnh báo",
+    "display_order": 8
+  },
+  {
+    "id": 115,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Nghệ thuật Phân công rất mạnh mẽ, nhưng cũng tiềm ẩn những cạm bẫy mà một trưởng nhóm cần nhận biết:",
+    "display_order": 9
+  },
+  {
+    "id": 116,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "- Phân công Mù quáng (Blind Delegation): Giao cho AI một nhiệm vụ quá lớn và mơ hồ (VD: \"Hãy lên kế hoạch marketing cho tôi\") và mong đợi một kết quả hoàn hảo. Đây là cách nhanh nhất dẫn đến sự thất vọng. Giải pháp: Luôn \"chẻ củi\" trước khi giao việc.",
+    "display_order": 10
+  },
+  {
+    "id": 117,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "- Hội chứng \"Để tôi tự làm cho nhanh\"(Micromanagement): Chỉ giao cho AI những việc quá vun vặt vì thiếu tin tưởng, trong khi tự mình làm những việc mà AI có thể hỗ trợ tốt hơn (như soạn thảo bản nháp). Điều này làm lãng phí tiềm năng của cả hai. Giải pháp: Luôn thực hành \"Phân tích Kép\" một cách trung thực.",
+    "display_order": 11
+  },
+  {
+    "id": 118,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Thực chiến trong Xưởng Dự án",
+    "display_order": 12
+  },
+  {
+    "id": 119,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Bạn đã nắm vững 3 bước và nhận diện được các cam bấy của Nghệ thuật Phân công. Bây giờ là lúc để thực hành! Hãy truy cập Xưởng Dự án và tìm nhiệm vụ có tên \"Tổ chức sự kiện ra mắt CLB Sách\". Trong dự án này, bạn sẽ vào vai Qúy, áp dụng cả 3 kỹ năng: xác định rõ mục tiêu sự kiện, sử dụng AI để brainstorm ý tưởng, và phân chia các công việc lập kế hoạch.",
+    "display_order": 13
+  },
+  {
+    "id": 120,
+    "chapter": 2,
+    "block_type": "title",
+    "content": "Nâng cấp Hồ sơ Năng lực",
+    "display_order": 1
+  },
+  {
+    "id": 121,
+    "chapter": 2,
+    "block_type": "text",
+    "content": "Sau khi hoàn thành dự án trên, Hồ sơ Năng lực Số của ban sẽ được tự động cập nhật một \"Thẻ dự án\" mới, trở thành một bảng chứng xác thực cho kỹ năng Delegation toàn diện của bạn.",
+    "display_order": 2
+  },
+  {
+    "id": 122,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Chương 3",
+    "display_order": 1
+  },
+  {
+    "id": 123,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Description - Nghệ thuật Mô tả",
+    "display_order": 2
+  },
+  {
+    "id": 124,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Lời nhắc nhở then chốt",
+    "display_order": 3
+  },
+  {
+    "id": 125,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Hãy luôn nhớ, mục tiêu của một nhà công tác AI xuất sắc là đồng hành để dẫn lối sự sáng tạo một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.",
+    "display_order": 4
+  },
+  {
+    "id": 126,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Và Nghệ thuật Mô tả chính là chiếc chìa khóa để đảm bảo sự hợp tác này diễn ra Hiệu quả nhất có thể.",
+    "display_order": 5
+  },
+  {
+    "id": 127,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Mục tiêu Bài học",
+    "display_order": 6
+  },
+  {
+    "id": 128,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Sau chương này, bạn sẽ có thể:",
+    "display_order": 7
+  },
+  {
+    "id": 129,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "- Hiểu rằng \"prompting\" không chỉ là viết câu lệnh, mà là xây dựng một môi trường tư duy chung.- Nắm vững công thức giao tiếp toàn diện: Mô tả Sản phẩm (WHAT), Quy trình (HOW), và \"Nhân cách\" (WHO).- Áp dụng công thức R.C.T.C để tạo ra những câu lệnh có độ chính xác và hiệu quả cao.",
+    "display_order": 8
+  },
+  {
+    "id": 130,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "3.1 Bạn là người giao việc",
+    "display_order": 9
+  },
+  {
+    "id": 131,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Ở chương trước, bạn đã học cách Phân công (Delegation) với vai trò là một trưởng nhóm. Bây giờ, hãy bước vào một vai trò quan trọng không kém: Bạn là người giao việc.",
+    "display_order": 10
+  },
+  {
+    "id": 132,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Hãy tưởng tượng AI là một đồng nghiệp mới, rất thông minh và sẵn lòng giúp đỡ, nhưng lại hoàn toàn không biết gì về bối cảnh hay kỳ vọng của bạn. Nếu bạn chỉ nói \"Câu làm phản này đi\", kết quả nhận lại sẽ rất mơ hồ.",
+    "display_order": 11
+  },
+  {
+    "id": 133,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Nghệ thuật Mô tả không chỉ là \"viết prompt\". Nó là nghệ thuật giao tiếp, giải thích, cung cấp ngữ cảnh và dẫn dắt để người đồng nghiệp AI của bạn có thể hiểu chính xác những gì bạn muốn và cũng bạn tạo ra sản phẩm tốt nhất.",
+    "display_order": 12
+  },
+  {
+    "id": 134,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Case Study",
+    "display_order": 1
+  },
+  {
+    "id": 135,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Case Study: Quý giao việc cho ALVA",
+    "display_order": 2
+  },
+  {
+    "id": 136,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Quay trở lại với dự án \"CLB Sách\". Sau khi đã Phân công nhiệm vụ \"Soạn thảo Thư mời & Bài đăng\" cho ALVA, Quý không thể chỉ nói: \"Viết một bài đăng đi\". Để ALVA có thể hoàn thành tốt, Quý cần phải trở thành một người giao việc xuất sắc. Anh ấy cần phải Mô tả thật chi tiết yêu cầu của mình. Hãy xem Quý làm điều đó như thế nào.",
+    "display_order": 3
+  },
+  {
+    "id": 137,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "3.2 Công thức Giao tiếp Toàn diện: WHAT - HOW - WHO",
+    "display_order": 4
+  },
+  {
+    "id": 138,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Một yêu cầu hiệu quả không chỉ nói về kết quả cuối cùng. Nó bao gồm ba tảng thông tin rõ ràng: bạn muốn sản phẩm là gì (WHAT), bạn muốn nó được thực hiện như thể nào (HOW), và bạn muốn AI hành xử như ai (WHO) trong quá trình đó.",
+    "display_order": 5
+  },
+  {
+    "id": 139,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Công thức Giao tiếp Toàn diện",
+    "display_order": 6
+  },
+  {
+    "id": 140,
+    "chapter": 3,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/ef65beb729e9a0672ae721eb7752b12741a7a4062ff4fb46d6db3d0159492f2f.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 142,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Hình 3.1: Ba tảng thông tin của một yêu cầu hiệu quả.",
+    "display_order": 8
+  },
+  {
+    "id": 143,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "3.2.1 WHAT: Mô tả Sản phẩm bạn mong muốn",
+    "display_order": 1
+  },
+  {
+    "id": 144,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Đây là nền tảng của mọi yêu cầu: mô tả rõ ràng các đặc tính của sản phẩm đầu ra. ột trong những sai lầm lớn nhất khi giao việc cho AI là đưa ra một yêu cầu mơ hồ.",
+    "display_order": 2
+  },
+  {
+    "id": 145,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Để giải quyết triệt để vấn đề này, tại AI Lab Việt, chúng tôi đã phát triển một công thức đơn giản nhưng cực kỳ mạnh mẽ, giúp bạn cấu trúc mọi yêu cầu của mình. Chúng tôi gọi đó là Công thức R.C.T.C.",
+    "display_order": 3
+  },
+  {
+    "id": 146,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 4
+  },
+  {
+    "id": 147,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Công thức R.C.T.C là một bộ khung gồm 4 thành phần cốt lõi để xây dựng một cái lệnh (prompt) hoàn chỉnh:",
+    "display_order": 5
+  },
+  {
+    "id": 148,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "R - Role (Vai trò): Gán cho AI một vai trò cụ thể để kích hoạt kiến thức chuyên môn của nó. C - Context (Bối cảnh): Cung cấp thông tin nền tảng cần thiết để AI hiểu được \"bức tranh lớn\". T - Task (Nhiệm vụ): Làm rõ hành động chính mà bạn muốn AI thực hiện. C - Constraints (Ràng buộc): Đặt ra các giới hạn về định dạng, văn phong, độ dài, đối tượng... để định hình sản phẩm đầu ra.",
+    "display_order": 6
+  },
+  {
+    "id": 149,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Ví dụ Thực tế",
+    "display_order": 7
+  },
+  {
+    "id": 150,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Yêu cầu Mơ hồ của Quý: \"Viết bài đăng Facebook cho sự kiện CLB Sách.\"",
+    "display_order": 8
+  },
+  {
+    "id": 151,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Yêu cầu Cụ thể của Quý (Áp dụng R.C.T.C): \"Hãy đóng vai một chuyên viên truyền thông sinh viên năng động (Role). Chúng ta đang chuẩn bị cho sự kiện ra mắt CLB Sách của khoa, với format là Book Talk cùng Tác giả trẻ X^{\\prime} (Context). Hãy viết một bài đăng Facebook để thông báo và kêu gọi sinh viên tham gia sự kiện (Task). Bài viết cần có giọng văn trẻ trung, nhiệt huyết, độ dài dưới 200 từ, và kết thúc bằng một câu hỏi tổng tác để khuyến khích bình luận (Constraints).\"",
+    "display_order": 9
+  },
+  {
+    "id": 152,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "3.2.2 HOW: Dẫn dắt Quy trình Tư duy của AI",
+    "display_order": 10
+  },
+  {
+    "id": 153,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Đôi khi, việc chỉ dẫn AI cách suy nghĩ còn quan trọng hơn cả việc chỉ nó cần làm gì. Đây là cách bạn biến AI từ một cỗ máy trả lời thành một đối tác tư duy.",
+    "display_order": 11
+  },
+  {
+    "id": 154,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Kỹ thuật \"Chẻ củi\" (Break down tasks): Thay vì đặt một yêu cầu lớn, hãy chia nó thành các bước nhỏ hơn để AI xử lý tuần tự. Điều này giúp tăng độ chính xác và logic của kết quả.",
+    "display_order": 12
+  },
+  {
+    "id": 155,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Kỹ thuật \"Cho AI không gian suy nghĩ\" (Ask to think first): Thêm vào đầu câu lệnh một yêu cầu như: \"Trước khi trả lời, hãy suy nghĩ một chút về vấn đề này...\" Kỹ thuật này buộc AI phải kích hoạt \"tư duy chuỗi\" (chain-of-thought), giúp nó đưa ra những câu trả lời sâu sắc và có lập luận tốt hơn.",
+    "display_order": 13
+  },
+  {
+    "id": 156,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "3.2.3 WHO: Định hình \"Nhân cách\" của AI",
+    "display_order": 1
+  },
+  {
+    "id": 157,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "AI là một hệ thống tương tác, và bạn có thể định hình cách nó hành xử để phục vụ tốt nhất cho mục đích của mình. Đây chính là việc gắn vai trò (Role) trong công thức R.C.T.C.",
+    "display_order": 2
+  },
+  {
+    "id": 158,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Ví dụ Thực tế",
+    "display_order": 3
+  },
+  {
+    "id": 159,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Qúy yêu cầu vai trò để Sáng tạo: \"Hãy đóng vai một chuyên viên truyền thông sinh viên năng động...\"(Như Ví dụ trên)  Qúy yêu cầu vai trò để Soạn thảo Thư mời: \"Hãy đóng vai một thư ký chuyên nghiệp, soạn một email trang trọng để mời tác giả X tham gia sự kiện Book Talk của chúng tôi.\"",
+    "display_order": 4
+  },
+  {
+    "id": 160,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "3.3 Mô tả là một Vòng lặp",
+    "display_order": 5
+  },
+  {
+    "id": 161,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Viết một câu lệnh hoàn hảo ngay từ lần đầu tiên là rất khó. Hãy xem việc tương tác với AI là một quá trình lập đi lập lại: bạn đưa ra một yêu cầu ban đầu, nhận phản hồi, sau đó tinh chỉnh lại yêu cầu của mình dựa trên kết quả đó. Đừng ngần ngại thử nghiệm và tinh chỉnh cho đến khi bạn đạt được sản phẩm ưng ý.",
+    "display_order": 6
+  },
+  {
+    "id": 162,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Cảnh báo",
+    "display_order": 7
+  },
+  {
+    "id": 163,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Cạm bẫy cần tránh trong Mô tả:",
+    "display_order": 8
+  },
+  {
+    "id": 164,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "- Yêu cầu Mơ hồ (Vague Prompting): Đây là lỗi phổ biến nhất, dẫn đến những kết quả chung chung và vô dụng. Giải pháp: Luôn tự hỏi: \"Mình đã áp dụng đủ 4 thành phần R.C.T.C chưa?\".",
+    "display_order": 9
+  },
+  {
+    "id": 165,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "- Ràng buộc Quá mức (Over-constraining): Cung cấp quá nhiều chi tiết vụn vặt và quy tắc cứng nhắc, không cho AI không gian để sáng tạo. Giải pháp: Hãy tập trung vào \"CÁI GÌ\"(kết quả) và để AI linh hoạt trong việc \"LÀM THẾ NÀO\"(quy trình).",
+    "display_order": 10
+  },
+  {
+    "id": 166,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Thực chiến trong Xưởng Dự án",
+    "display_order": 11
+  },
+  {
+    "id": 167,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Bạn đã nắm vững Nghệ thuật Mô tả. Bây giờ là lúc để thực hành! Hãy truy cập Xưởng Dự án và tìm nhiệm vụ có tên \"Phân tích nhân vật văn học: Lão Hạc\".",
+    "display_order": 12
+  },
+  {
+    "id": 168,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Trong dự án này, hãy áp dụng công thức WHAT- HOW- WHO để viết một câu lệnh hoàn chỉnh, yêu cầu ALVA phân tích sâu sắc bị kịch của nhân vật.",
+    "display_order": 13
+  },
+  {
+    "id": 169,
+    "chapter": 3,
+    "block_type": "title",
+    "content": "Nâng cấp Hồ sơ Năng lực",
+    "display_order": 1
+  },
+  {
+    "id": 170,
+    "chapter": 3,
+    "block_type": "text",
+    "content": "Sau khi hoàn thành dự án trên, Hồ sơ Năng lực của bạn sẽ được tự động cập nhật. Thể dự án sẽ trình bày bài phân tích bạn đã tạo ra và đặc biệt là câu lệnh mà mục mà bạn đã sử dụng, một bảng chứng thực cho kỹ năng Description của bạn.",
+    "display_order": 2
+  },
+  {
+    "id": 171,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Chương 4",
+    "display_order": 1
+  },
+  {
+    "id": 172,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Discernment - Nghệ thuật Nhân định",
+    "display_order": 2
+  },
+  {
+    "id": 173,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Lời nhắc nhỏ then chốt",
+    "display_order": 3
+  },
+  {
+    "id": 174,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Hãy luôn nhớ, mục tiêu của một nhà công tác AI xuất sắc là đồng hành để dẫn lối sự sáng tạo một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.",
+    "display_order": 4
+  },
+  {
+    "id": 175,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Và Nghệ thuật Nhân định chính là tâm khiến bảo vệ, giúp sự hợp tác của bạn luôn An toàn và Có Đạo đức.",
+    "display_order": 5
+  },
+  {
+    "id": 176,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Mục tiêu Bài học",
+    "display_order": 6
+  },
+  {
+    "id": 177,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Sau chương này, bạn sẽ có thể:",
+    "display_order": 7
+  },
+  {
+    "id": 178,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Hiểu rằng AI không phải lúc nào cũng đúng và tầm quan trọng của tư duy phản biện.- Nắm vững \"Bộ cầu hỏi Vàng\" để đánh giá chất lượng sản phẩm do AI tạo ra.- Áp dụng \"Công thức Phản hỏi\" để hướng dẫn AI sửa lỗi và cải thiện kết quả.",
+    "display_order": 8
+  },
+  {
+    "id": 179,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "4.1 Bạn là người phản biện",
+    "display_order": 9
+  },
+  {
+    "id": 180,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Trong các chương trước, bạn đã học cách Phân công như một trưởng nhóm và Mô tả như một người giao việc. Bây giờ, bạn sẽ đảm nhận một vai trò tối quan trọng: Bạn là người phản biện.",
+    "display_order": 10
+  },
+  {
+    "id": 181,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Hãy tưởng tượng người đồng nghiệp AI vừa nộp cho bạn một bản báo cáo. Một người quản lý thiếu kinh nghiệm sẽ chỉ lướt qua và chấp nhận nó. Nhưng một người quản lý giỏi sẽ đọc kỹ, đặt câu hỏi, kiểm tra lại các số liệu và đánh giá xem nó có thực sự đáp ứng được tiêu chuẩn hay không.",
+    "display_order": 11
+  },
+  {
+    "id": 182,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Đây chính là Nhận định - kỹ năng cốt lõi đảm bảo sự hợp tác Người- AI luôn được dẫn dắt bởi trí tuệ và sự phân đoán của con người.",
+    "display_order": 12
+  },
+  {
+    "id": 183,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 1
+  },
+  {
+    "id": 184,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Nhận định (Discernment) là năng lực đánh giá một cách có phản biện những gì AI tạo ra, cách nó tạo ra, và cách nó hành xử trong quá trình tương tác.",
+    "display_order": 2
+  },
+  {
+    "id": 185,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Case Study",
+    "display_order": 3
+  },
+  {
+    "id": 186,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Case Study: Quy phản biện sản phẩm của ALVA Trong dự án \"CLB ách\", Quy đã yêu cầu ALVA soạn một bài đăng Facebook. ALVA đã trả về một bản nháp rất nhanh chóng. Thay vì đăng ngay, Quy, với vai trò là người phản biện, cần phải đánh giá kỹ tổng sản phẩm này trước khi nó đến với công chúng.",
+    "display_order": 4
+  },
+  {
+    "id": 187,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "4.2 Kiểm tra \"CÁI GÌ\": Đánh giá Chất lượng Sản phẩm",
+    "display_order": 5
+  },
+  {
+    "id": 188,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Đây là bước đầu tiên và cơ bản nhất: đánh giá sản phẩm đầu ra mà AI đã tạo ra. Để làm điều này một cách có hệ thống, hãy luôn mang theo bên mình \"Bộ câu hỏi Vàng\" sau đây.",
+    "display_order": 6
+  },
+  {
+    "id": 189,
+    "chapter": 4,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/3ed4716c6c22a0932b32ecdb83faf26f55fcd460da8e52d46594ed2f44f2717a.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 191,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Hình 4.1: Nghệ thuật Nhận định là tấm khiên bảo vệ chất lượng và sự thật.",
+    "display_order": 8
+  },
+  {
+    "id": 192,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Ví dụ Thực tế",
+    "display_order": 9
+  },
+  {
+    "id": 193,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Quý áp dụng bộ câu hỏi kiểm tra cho bài đăng của ALVA:",
+    "display_order": 10
+  },
+  {
+    "id": 194,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Tính chính xác: \"ALVA có đề cập tên tác giả là Nguyễn Tuân'. Tác giả này có thực sự là một 'tác giả trẻ' không? (Quý kiểm tra và thấy không đúng).\" Độ Phù hợp: \"Giọng văn có trẻ trung, phù hợp với sinh viên không? (Có, rất tốt).\" Độ Mạch lạc: \"Cấu trúc bài đăng có logic không? (Có, rõ ràng).\"",
+    "display_order": 11
+  },
+  {
+    "id": 195,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Tính Đáp ứng: \"Bài viết có đủ các yêu cầu mình đã nêu không? (Có, đủ các yêu cầu).\"",
+    "display_order": 1
+  },
+  {
+    "id": 196,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Giá trị Gia tăng: \"Bài viết có một câu hỏi tương tác rất hay mà mình chưa nghĩ ra.\"",
+    "display_order": 2
+  },
+  {
+    "id": 197,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Năm cāu hỏi cốt lõi này chính là \"Bộ cāu hỏi Vàng\" của AI Lab Việt. Hãy luôn mang nó theo bên mình trong mọi dự án. Dựa trên bộ cāu hỏi này, Quý nhân ra rằng bài viết tốt về nhiều mặt, nhưng có một lỗi sai nghiêm trọng về thông tin. Anh ấy không thể chấp nhận sản phẩm này.",
+    "display_order": 3
+  },
+  {
+    "id": 198,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "4.3 Phân tích \"TẠI SAO\": Đánh giá Quy trình Tư duy",
+    "display_order": 4
+  },
+  {
+    "id": 199,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Một người phản biện giỏi không chỉ nhìn vào kết quả, họ còn phân tích cả quá trình. Đôi khi, AI có thể đưa ra một câu trả lời có vẻ đúng, nhưng lập luận để đi đến đó lại có lỗ hổng. Bạn cần có khả năng \"đọc vị\" được những lỗi tư duy tiềm ẩn của AI.",
+    "display_order": 5
+  },
+  {
+    "id": 200,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Một số \"cờ đỏ\" (red flags) trong quy trình tư duy của AI mà bạn cần chú ý:",
+    "display_order": 6
+  },
+  {
+    "id": 201,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Mâu thuẫn logic (Logical inconsistency): Lập luận ở đầu và cuối câu trả lời trái ngược nhau.",
+    "display_order": 7
+  },
+  {
+    "id": 202,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Lặp lại vòng tròn (Circular reasoning): Dùng chính kết luận để làm luận điểm.",
+    "display_order": 8
+  },
+  {
+    "id": 203,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Bỏ qua các bước quan trọng (Inappropriate steps): Đi thẳng đến kết luận mà không có các bước phân tích cần thiết.",
+    "display_order": 9
+  },
+  {
+    "id": 204,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "4.4 Tinh chỉnh \"NHƯ THẾ NÀO\": Vòng lặp Mô tả - Nhận định",
+    "display_order": 10
+  },
+  {
+    "id": 205,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Sau khi đã nhận định được vấn đề, bạn không thể chỉ nói \"Làm lại đi!\". Bạn cần đưa ra những phản hồi (feedback) cụ thể để hướng dẫn AI sửa lỗi. Đây chính là lúc vòng lặp Mô tả - > Nhận định phát huy sức mạnh.",
+    "display_order": 11
+  },
+  {
+    "id": 206,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 12
+  },
+  {
+    "id": 207,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Quý đã áp dụng một phương pháp phản hồi 4 bước hiệu quả với ALVA:",
+    "display_order": 13
+  },
+  {
+    "id": 208,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "1. Chỉ rõ vấn đề: \"Trong bài đăng, cậu đã đề cập đến tác giả Nguyễn Tuân.\"",
+    "display_order": 14
+  },
+  {
+    "id": 209,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "2. Giải thích tại sao nó là vấn đề: \"Thông tin này không chính xác, vì ông không phải là một tác giả trẻ và không phù hợp với format 'Book Talk cùng Tác giả trẻ' của sự kiện.\"",
+    "display_order": 15
+  },
+  {
+    "id": 210,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "3. Đưa ra gợi ý cải thiện cụ thể: \"Hãy thay thế bằng một tác giả trẻ đang có sách best-seller trong năm nay, ví dụ như Nguyễn Nhật Ánh hoặc một tác giả Gen Z nào đó.\"",
+    "display_order": 16
+  },
+  {
+    "id": 211,
+    "chapter": 4,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/41169420260372b5d514974b6371b86050f43c2f2498cbc3aa5e2a1bcfff6805.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 213,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Hình 4.2: Chất lượng dược tạo ra từ vòng lặp liên tục giữa việc Hướng dẫn (Mô tả) và Đánh giá (Nhận định).",
+    "display_order": 2
+  },
+  {
+    "id": 214,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "4. Cập nhật lại câu lệnh góc (nếu cần): \"Từ bây giờ, khi đề xuất tên tác giả cho các sự kiện sinh viên, hãy ưu tiên những người dưới 40 tuổi.\"",
+    "display_order": 3
+  },
+  {
+    "id": 215,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Bốn bước rõ ràng này chính là \"Công thức Phản hồi\" của AI Lab Việt. Bằng cách đưa ra phản hồi có cấu trúc, bạn đang \"huấn luyện\" ALVA ngay trong cuộc trò chuyện, giúp nó hiểu rõ hơn kỳ vọng của bạn và cho ra kết quả tốt hơn ở những lần sau.",
+    "display_order": 4
+  },
+  {
+    "id": 216,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Cảnh báo",
+    "display_order": 5
+  },
+  {
+    "id": 217,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Cạm bẫy cần tránh trong Nhận định:",
+    "display_order": 6
+  },
+  {
+    "id": 218,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Tin tưởng Mù quáng (Blind Trust): Chấp nhận kết quả của AI mà không kiểm chứng, đặc biệt là với các thông tin quan trọng như số liệu, tên riêng, sự kiện. Đây là lỗi nguy hiểm nhất. Giải pháp: Luôn gửi tâm thế của một nhà phản biện và luôn áp dụng \"Bộ câu hỏi Vàng\".",
+    "display_order": 7
+  },
+  {
+    "id": 219,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "- Phản hồi Chung chung (Vague Feedback): Chỉ nói \"Không tốt, làm lại đi\" mà không giải thích lý do. Điều này sẽ khiến AI bối rối và có thể lặp lại lỗi sai tương tự. Giải pháp: Luôn sử dụng \"Công thức Phản hồi\" 4 bước.",
+    "display_order": 8
+  },
+  {
+    "id": 220,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Thực chiến trong Xưởng Dự án",
+    "display_order": 9
+  },
+  {
+    "id": 221,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Bạn đã được trang bị tư duy của một nhà phản biện. Bây giờ là lúc để thực hành! Hãy truy cập Xưởng Dự án và tìm nhiệm vụ có tên \"Kiểm chứng thông tin cho một bài viết về Lịch sử\".",
+    "display_order": 10
+  },
+  {
+    "id": 222,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Trong dự án này, AI sẽ cung cấp cho bạn một bản nháp có chứa một vài lỗi sai ngầm. Nhiệm vụ của bạn là áp dụng \"Bộ câu hỏi Vàng\" và \"Công thức Phản hồi\" để tìm ra và hướng dẫn AI sửa lại cho đúng.",
+    "display_order": 11
+  },
+  {
+    "id": 223,
+    "chapter": 4,
+    "block_type": "title",
+    "content": "Nâng cấp Hồ sơ Năng lực",
+    "display_order": 1
+  },
+  {
+    "id": 224,
+    "chapter": 4,
+    "block_type": "text",
+    "content": "Sau khi hoàn thành dự án này, Hồ sơ Năng lực Số của bạn sẽ được cập nhật. Thế dự án sẽ trưng bày không chỉ sản phẩm cuối cùng đã được sửa đúng, mà còn cả những câu lệnh phản hồi thông minh của bạn, một bằng chứng xác thực cho kỹ năng Discernment sắc bén.",
+    "display_order": 2
+  },
+  {
+    "id": 225,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Chương 5",
+    "display_order": 1
+  },
+  {
+    "id": 226,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Diligence - Nghệ thuật Trách nhiệm",
+    "display_order": 2
+  },
+  {
+    "id": 227,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Lời nhắc nhở then chốt",
+    "display_order": 3
+  },
+  {
+    "id": 228,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Hãy luôn nhớ, mục tiêu của một nhà công tác AI xuất sắc là đồng hành để dẫn lỗi sự sáng tạo một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.",
+    "display_order": 4
+  },
+  {
+    "id": 229,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Và Nghệ thuật Trách nhiệm chính là la bàn đạo đức, đảm bảo mọi sản phẩm bạn tạo ra đều Có Đạo đức và đáng tin cậy.",
+    "display_order": 5
+  },
+  {
+    "id": 230,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Mục tiêu Bài học",
+    "display_order": 6
+  },
+  {
+    "id": 231,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Sau chương này, bạn sẽ có thể:",
+    "display_order": 7
+  },
+  {
+    "id": 232,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "- Hiểu rằng bạn là người chịu trách nhiệm cuối cùng cho sản phẩm được tạo ra với sự trợ giúp của AI.- Nắm vững 3 giai đoạn của trách nhiệm: trước, trong, và sau khi tương tác với AI.- Áp dụng \"Checklist Trách nhiệm\" để đảm bảo tính trung thực và minh bạch trong các dự án của mình.",
+    "display_order": 8
+  },
+  {
+    "id": 233,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "5.1 Bạn là người cảm lái",
+    "display_order": 9
+  },
+  {
+    "id": 234,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Trong các chương trước, chúng ta đã học cách làm việc với AI để đạt được hiệu quả và hiệu suất. Nhưng một hành trình thành công không chỉ là đắn đích nhanh nhất. Hãy tưởng tượng bạn đang lái một chiếc xe ô tô. Mục tiêu không chỉ là di từ điểm A đến điểm B, mà còn là phải đi một cách an toàn, tuân thủ luật lệ giao thông, và luôn ý thức được rằng việc lái xe của mình có ảnh hưởng đến những người khác trên đường.",
+    "display_order": 10
+  },
+  {
+    "id": 235,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Đây chính là tinh thần của Trách nhiệm — kỹ năng cuối cùng và bao trùm nhất trong framework 4D+S. Nó đảm bảo rằng sự hợp tác Người- AI của chúng ta không chỉ thông minh, mà còn an toàn và có đạo đức.",
+    "display_order": 11
+  },
+  {
+    "id": 236,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 1
+  },
+  {
+    "id": 237,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Trách nhiệm (Diligence) là năng lực và cam kết của bạn trong việc đảm bảo quá trình tương tác và sản phẩm cuối cùng được tạo ra với AI là trung thực, minh bạch và đáng tin cậy.",
+    "display_order": 2
+  },
+  {
+    "id": 238,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Trách nhiệm không phải là một hành động đơn lẻ, mà là một thái độ xuyên suốt 3 giai đoạn của một dự án.",
+    "display_order": 3
+  },
+  {
+    "id": 239,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Case Study",
+    "display_order": 4
+  },
+  {
+    "id": 240,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Case Study: Quý, Người Cảm lái của Dự án \"CLB Sách\"",
+    "display_order": 5
+  },
+  {
+    "id": 241,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Sau khi đã Phân công, Mô tả và Nhận định, Quý đã có trong tay bản nháp cuối cùng của bài đăng Facebook do ALVA soạn thảo. Công việc có vẻ đã hoàn thành, nhưng vai trò quan trọng nhất của anh ấy bây giờ mới thực sự bắt đầu: vai trò của người cảm lái, người chịu trách nhiệm cuối cùng trước khi \"chiếc xe\" thông tin này lăn bánh đến với cộng đồng.",
+    "display_order": 6
+  },
+  {
+    "id": 242,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "5.2 TRƯỚC khi làm: Trách nhiệm trong Lựa chọn",
+    "display_order": 7
+  },
+  {
+    "id": 243,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Trách nhiệm bắt đầu ngay cả trước khi Quý viết câu lệnh đầu tiên. Nó nằm ở việc anh ấy lựa chọn công cụ và cách tiếp cận một cách có chủ đích. Anh ấy đã ý thức được rằng việc thông báo một sự kiện cần sự chính xác, nên anh đã chọn ALVA, một công cụ mà anh hiểu rõ cơ chế hoạt động, thay vì một công cụ ngẫu nhiên trên mạng.",
+    "display_order": 8
+  },
+  {
+    "id": 244,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "5.3 TRONG khi làm: Trách nhiệm về Minh bạch",
+    "display_order": 9
+  },
+  {
+    "id": 245,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Trong quá trình làm việc, Quý cũng cân nhắc về sự minh bạch. Anh ấy tự đặt ra các câu hỏi:",
+    "display_order": 10
+  },
+  {
+    "id": 246,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Ví dụ Thực tế",
+    "display_order": 11
+  },
+  {
+    "id": 247,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Các câu hỏi về Minh bạch của Quý:",
+    "display_order": 12
+  },
+  {
+    "id": 248,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "- Ai cần biết? \"Giảng viên cố vấn của CLB có cần biết mình đã dùng ALVA để soạn bài đăng không?\"- Cần thông báo như thế nào? \"Mình có thể trao đổi nhanh với thầy trong buổi họp tới.\"- Cần chi tiết đến mức nào? \"Mình sẽ nói rõ rằng ALVA đã giúp soạn bản nháp đầu tiên, còn mình là người chính sửa và phê duyệt cuối cùng.\"",
+    "display_order": 13
+  },
+  {
+    "id": 249,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Sự minh bạch này xây dựng lòng tin và thể hiện sự chính trực của Quý.",
+    "display_order": 14
+  },
+  {
+    "id": 250,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "5.4 SAU khi làm: Trách nhiệm với Sản phẩm",
+    "display_order": 1
+  },
+  {
+    "id": 251,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Đây là giai đoạn quan trọng nhất. Trước khi nhấn nút \"Đăng\", Quý, với vai trò là người kiểm tra chất lượng cuối cùng, đã lấy ra \"Checklist Trách nhiệm\" của mình.",
+    "display_order": 2
+  },
+  {
+    "id": 252,
+    "chapter": 5,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/b7ab252957e2d8417a36a2280511c7c119afd9ef13248a7d1f3979ad62a81169.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 254,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Hình 5.1: Trước khi \"xuất xuống\" một sản phẩm, bạn là người kiểm tra chất lượng cuối cùng.",
+    "display_order": 4
+  },
+  {
+    "id": 255,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 5
+  },
+  {
+    "id": 256,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Quý áp dụng \"Checklist Trách nhiệm\" lên bài đăng:",
+    "display_order": 6
+  },
+  {
+    "id": 257,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "- Kiểm chứng lại sự thật: \"ALVA có nhắc đến một giải thưởng mà tác giả khách mời đã đạt được. Mình cần kiểm tra lại trên trang web chính thức của giải thưởng đó xem thông tin có chính xác không.\" (Quý kiểm tra và xác nhận thông tin đúng).- Kiểm tra lại thiên kiến: \"Bài viết có vô tình sử dụng ngôn ngữ nào có thể gây hiểu lầm hoặc loại trừ một nhóm sinh viên nào không?\" (Quý đọc lại và thấy ngôn ngữ rất hòa nhập).- Kiểm tra lại độ chính xác tổng thể: \"Toàn bộ thông tin về thời gian, địa điểm, tên tác giả đã khớp với kế hoạch chưa?\" (Quý rà soát và xác nhận khớp).- Kiểm tra lại quyền sử dụng: \"Hình ảnh bìa sách mình định dùng kèm bài đăng có được phép sử dụng không?\" (Quý quyết định dùng ảnh do nhà xuất bản cung cấp cho mục đích truyền thông để đảm bảo không vi phạm bản quyền).",
+    "display_order": 7
+  },
+  {
+    "id": 258,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Chỉ sau khi tích vào tất cả các mục trong checklist này, Quý mới tự tin \"xuất xưởng\" sản phẩm của mình.",
+    "display_order": 8
+  },
+  {
+    "id": 259,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "5.5 Cạm bẫy cần tránh trong Trách nhiệm",
+    "display_order": 1
+  },
+  {
+    "id": 260,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Cảnh báo",
+    "display_order": 2
+  },
+  {
+    "id": 261,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Là người cầm lái, bạn cần cảnh giác với hai cạm bẫy nguy hiểm trên hành trình của mình:",
+    "display_order": 3
+  },
+  {
+    "id": 262,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "- Tin tưởng Mù quáng (Blind Trust): Đây là trạng thái \"ngủ gật sau tay lái\", nơi bạn mặc định rằng AI luôn đúng và chấp nhận kết quả của nó mà không cần kiểm chứng. Giải pháp: Luôn giữ vững tâm thế của một nhà phản biện. Hãy nhớ rằng, bạn mới là người chịu trách nhiệm, không phải AI.",
+    "display_order": 4
+  },
+  {
+    "id": 263,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "- Thoái thác Trách nhiệm (Responsibility Deflection): Khi có sai sót xảy ra, bạn đổ lỗi cho công cụ: \"Đây là do AI viết sai\". Đây là hành động của một người đi xe tôi, không phải một người cầm lái giỏi. Giải pháp: Hãy thừa nhận rằng AI là công cụ bạn chọn, và sản phẩm cuối cùng là sản phẩm của bạn. Hãy chịu trách nhiệm, sửa lỗi và học hỏi từ nó.",
+    "display_order": 5
+  },
+  {
+    "id": 264,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Thực chiến trong Xưởng Dự án",
+    "display_order": 6
+  },
+  {
+    "id": 265,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Bạn đã hiểu rõ về vai trò của một người cầm lái có trách nhiệm. Bây giờ là lúc để thực hành!",
+    "display_order": 7
+  },
+  {
+    "id": 266,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Hãy truy cập Xưởng Dự án và tìm nhiệm vụ có tên \"Soạn thảo một bài đăng mạng xã hội về một chủ đề nhạy cảm\".",
+    "display_order": 8
+  },
+  {
+    "id": 267,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Trong dự án này, bạn sẽ phải vận dụng tối đa \"Checklist Trách nhiệm\" để đảm bảo sản phẩm cuối cùng vừa hấp dẫn, vừa chính xác, vừa có đạo đức.",
+    "display_order": 9
+  },
+  {
+    "id": 268,
+    "chapter": 5,
+    "block_type": "title",
+    "content": "Nâng cấp Hồ sơ Năng lực",
+    "display_order": 10
+  },
+  {
+    "id": 269,
+    "chapter": 5,
+    "block_type": "text",
+    "content": "Hoàn thành dự án này không chỉ giúp bạn có thêm một sản phẩm trong hồ sơ. Nó còn là một lời khẳng định mạnh mẽ về năng lực Trách nhiệm (Diligence) của bạn, một trong những phẩm chất được đánh giá cao nhất trong mọi môi trường học thuật và chuyên nghiệp.",
+    "display_order": 11
+  },
+  {
+    "id": 270,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Phần III",
+    "display_order": 1
+  },
+  {
+    "id": 271,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Vận dụng & Sáng tạo",
+    "display_order": 2
+  },
+  {
+    "id": 272,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Chương 6",
+    "display_order": 1
+  },
+  {
+    "id": 273,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Nghệ thuật Tổng hợp & Trình bày",
+    "display_order": 2
+  },
+  {
+    "id": 274,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Lời nhắc nhở then chốt",
+    "display_order": 3
+  },
+  {
+    "id": 275,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Hãy luôn nhớ, mục tiêu của một nhà công tác AI xuất sắc là đồng hành để dẫn lỗi sự sáng tạo một cách Hiệu quả, Hiệu suất, Có Đạo đức, và An toàn.",
+    "display_order": 4
+  },
+  {
+    "id": 276,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Và Nghệ thuật Tổng hợp chính là kỹ năng cuối cùng, giúp bạn biên các kết quả từ AI thành một sản phẩm hoàn chỉnh mang đậm dấu ấn của riêng bạn.",
+    "display_order": 5
+  },
+  {
+    "id": 277,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Mục tiêu Bài học",
+    "display_order": 6
+  },
+  {
+    "id": 278,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Sau chương này, bạn sẽ có thể:",
+    "display_order": 7
+  },
+  {
+    "id": 279,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "- Hiểu được vai trò không thể thay thế của con người trong việc tạo ra sản phẩm cuối cùng.- Áp dụng \"Công thức Tổng hợp 3 bước\" để biên các thông tin rời rạc thành một sản phẩm mạch lạc.- Tự tin trình bày và chịu trách nhiệm với sản phẩm do mình kiến tạo.",
+    "display_order": 8
+  },
+  {
+    "id": 280,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "6.1 Bạn là Nhà Kiến tạo",
+    "display_order": 9
+  },
+  {
+    "id": 281,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Trong suốt hành trình vừa qua, bạn đã học cách làm một người trưởng nhóm, một người giao việc, một nhà phản biện, và một người cầm lái có trách nhiệm. Bây giờ, đã đến lúc bạn đảm nhận vai trò cuối cùng và cao cả nhất: Bạn là Nhà Kiến tạo.",
+    "display_order": 10
+  },
+  {
+    "id": 282,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "AI rất giỏi trong việc tạo ra các \"viên gạch\", \"khung của sổ\", \"mái ngói\" — những mảnh ghép thông tin, những đoạn văn bản, những ý tưởng rời rạc. Nhưng chỉ có bạn, với tư duy, cảm xúc và sự thấu hiểu ngữ cảnh của mình, mới có thể kết hợp những mảnh ghép đó lại để xây nên một \"ngôi nhà\" hoàn chỉnh, có phong cách và có linh hồn.",
+    "display_order": 11
+  },
+  {
+    "id": 283,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Định nghĩa",
+    "display_order": 1
+  },
+  {
+    "id": 284,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Nghệ thuật Tổng hợp & Trình bày là năng lực tinh lọc, kết nối và thổi hồn vào các kết quả do AI tạo ra để kiến tạo nên một sản phẩm cuối cùng mạch lạc, độc đáo và mang đậm dấu ấn cá nhân.",
+    "display_order": 2
+  },
+  {
+    "id": 285,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Case Study",
+    "display_order": 3
+  },
+  {
+    "id": 287,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Case Study: Quý, Nhà Kiến tạo của Dự án \"CLB Sách\"Quy đã có trong tay tất cả các \"mảnh ghép\" do ALVA cung cấp: các ý tưởng sự kiện, bản nháp email, bản nháp bài đăng Facebook... Nếu chỉ sao chép và dán chúng lại với nhau, anh ấy sẽ chỉ có một sản phẩm rời rạc. Thay vào đó, Quy bất đầu vai trò của một Nhà Kiến tạo, sử dụng các mảnh ghép này làm nguyên liệu để xây dựng nên một \"công trình\" hoàn chỉnh.",
+    "display_order": 5
+  },
+  {
+    "id": 288,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "6.2 Từ mảnh ghép đến Bức tranh Hoàn chỉnh",
+    "display_order": 6
+  },
+  {
+    "id": 289,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Một sai lầm phổ biến của người mới bắt đầu là sao chép nguyên xi kết quả từ AI và xem đó là sản phẩm cuối cùng. Một nhà kiến tạo thực thụ hiểu rằng đó chỉ là bước đầu tiên. Công việc có giá trị nhất chính là giai đoạn tiếp theo: biến những mảnh ghép đó thành một bức tranh hoàn chỉnh.",
+    "display_order": 7
+  },
+  {
+    "id": 290,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Để làm được điều đó, hãy luôn ghi nhớ \"Công thức Tổng hợp 3 bước\" của AI Lab Việt.",
+    "display_order": 8
+  },
+  {
+    "id": 291,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "6.2.1 Bước 1: Tinh lọc (Refine)",
+    "display_order": 9
+  },
+  {
+    "id": 292,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Đây là lúc bạn vận dụng kỹ năng Nhận định (Discernment). Đừng lấy tất cả những gì AI đưa cho bạn. Hãy là một người biên tập viên khéo léo. Quý đã:",
+    "display_order": 10
+  },
+  {
+    "id": 293,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Chọn lọc ý tưởng: Giữ lại ý tưởng \"Book Talk cùng Tác giả trẻ\" vì nó sắc sảo nhất, loại bỏ các ý tưởng khác. Kiểm chứng thông tin: Dùng kỹ năng Trách nhiệm (Diligence) để xác thực lại mọi thông tin về tác giả khách mời. Chỉnh sửa câu chữ: Viết lại câu văn trong bài đăng Facebook của ALVA cho gần gũi hơn với \"teen code\" của sinh viên trong khoa.",
+    "display_order": 11
+  },
+  {
+    "id": 294,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "6.2.2 Bước 2: Kết nối (Connect)",
+    "display_order": 12
+  },
+  {
+    "id": 295,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Đây là lúc tư duy logic và cấu trúc của con người tỏa sáng. AI có thể tạo ra các đoạn văn hay, nhưng thông minh trong việc tạo ra một dòng chảy mạch lạc. Nhiệm vụ của bạn là:",
+    "display_order": 13
+  },
+  {
+    "id": 296,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Sắp xếp lại cấu trúc: Quý quyết định cấu trúc của chiến dịch truyền thông: Bài đăng \"nhà hàng\" > Bài đăng công bố chính thức > Email mời trực tiếp.",
+    "display_order": 14
+  },
+  {
+    "id": 297,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Viết các câu chuyện tiếp: Anh ấy thêm vào những câu nói để đảm bảo thông điệp nhất quán và có sức lan tỏa qua các kênh truyền thông.",
+    "display_order": 15
+  },
+  {
+    "id": 298,
+    "chapter": 6,
+    "block_type": "image_body",
+    "content": "https://cdn-mineru.openxlab.org.cn/result/2025-09-01/c356abd3-2ea7-4a9a-acf2-22ec872a9ead/be7c054323c16f045cd3170fb2dd86ba1b6613aee7c3c8a852940d7df8b447e6.jpg",
+    "display_order": 1
+  },
+  {
+    "id": 300,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Hình 6.1: Công thức 3 bước để biến các kết quả rời rạc từ AI thành một sản phẩm giá trị.",
+    "display_order": 2
+  },
+  {
+    "id": 301,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "6.2.3 Bước 3: Kể chuyện (Narrate)",
+    "display_order": 3
+  },
+  {
+    "id": 302,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Đây là bước cuối cùng và cũng là bước \"con người\" nhất. Đây là lúc bạn thổi hồn vào sản phẩm. Quý đã:",
+    "display_order": 4
+  },
+  {
+    "id": 303,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "- Thêm vào giọng văn cá nhân: Anh ấy viết một lời kêu gọi ở cuối bài đăng bằng chính giọng văn của mình, chia sẻ sự hào hứng cá nhân về sự kiện.- Thêm vào góc nhìn độc đáo: Quý thêm vào một đoạn phân tích ngắn về lý do tại sao tác phẩm của tác giả khách mời lại đặc biệt phù hợp với sinh viên trong khoa \n- một điều mà ALVA không thể tự biết.- Kiểm tra lại cảm xúc: Anh ấy đọc to toàn bộ bài đăng và cảm thấy nó thực sự tạo ra sự phản khách và tò mò mà anh ấy mong muốn.",
+    "display_order": 5
+  },
+  {
+    "id": 304,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Cảnh báo",
+    "display_order": 6
+  },
+  {
+    "id": 305,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Cạm bẫy cần tránh của Nhà Kiến tạo:",
+    "display_order": 7
+  },
+  {
+    "id": 306,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "- Hội chứng \"Người Sao chép\"(The Plagiarist Mindset): Coi kết quả của AI là sản phẩm cuối cùng và nộp nó mà không có sự chỉnh sửa, tổng hợp. Giải pháp: Luôn tâm niệm rằng AI chỉ cung cấp \"nguyên liệu thô\". Giá trị thực sự nằm ở 3 bước Tinh lọc, Kết nối và Kể chuyện của bạn.",
+    "display_order": 8
+  },
+  {
+    "id": 307,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "- Mất đi \"Dấu ấn Cá nhân\"(Loss of Personal Voice): Làm dụng AI đến mức sản phẩm cuối cùng không còn mang giọng văn, quan điểm hay cảm xúc của riêng bạn. Giải pháp: Đặc biệt chú trọng vào Bước 3 (Kể chuyện). Hãy",
+    "display_order": 9
+  },
+  {
+    "id": 308,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "luôn tự hỏi: \"Dấu ấn của riêng tôi trong sản phẩm này là gì?\".",
+    "display_order": 1
+  },
+  {
+    "id": 309,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Thực chiến trong Xưởng Dự án",
+    "display_order": 2
+  },
+  {
+    "id": 310,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Bạn đã có trong tay bộ công cụ hoàn chỉnh của một Nhà Kiến tạo. Bây giờ là lúc xây dựng một công trình thực sự.",
+    "display_order": 3
+  },
+  {
+    "id": 311,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Hãy truy cập Xưởng Dự án và tìm nhiệm vụ tổng hợp có tên \"Tạo một bài thuyết trình 5 phút về Tương lai của AI trong Giáo dục\".",
+    "display_order": 4
+  },
+  {
+    "id": 312,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Dự án này sẽ yêu cầu bạn vận dụng toàn bộ 4 kỹ năng 4D và \"Công thức Tổng hợp 3 bước\" để tạo ra một sản phẩm hoàn chỉnh từ đầu đến cuối.",
+    "display_order": 5
+  },
+  {
+    "id": 313,
+    "chapter": 6,
+    "block_type": "title",
+    "content": "Nâng cấp Hồ sơ Năng lực",
+    "display_order": 6
+  },
+  {
+    "id": 314,
+    "chapter": 6,
+    "block_type": "text",
+    "content": "Dự án tổng hợp này sẽ là \"viên ngọc quý\" trên Hồ sơ Năng lực Số của bạn. Nó không chỉ chứng minh bạn biết cách dùng AI, mà nó chứng minh bạn có khả năng dẫn dắt AI để kiến tạo nên những sản phẩm giá trị. Đây chính là năng lực mà bất kỳ trường đại học hay nhà tuyển dụng nào cũng đang tìm kiếm.",
+    "display_order": 7
+  },
+  {
+    "id": 315,
+    "chapter": 7,
+    "block_type": "title",
+    "content": "Bảng thuật ngữ Thường gặp",
+    "display_order": 1
+  },
+  {
+    "id": 316,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Chào mừng bạn đến với bảng thuật ngữ của AI Lab Việt. Dưới đây là phân giải thích cho một số khái niệm chuyên môn bạn sẽ gặp trong hành trình của mình, được trình bày theo cách dễ hiểu nhất.",
+    "display_order": 2
+  },
+  {
+    "id": 317,
+    "chapter": 7,
+    "block_type": "title",
+    "content": "Các Khái niệm Cốt lõi của AI Lab Việt",
+    "display_order": 3
+  },
+  {
+    "id": 318,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Năng lực AI (AI Fluency)",
+    "display_order": 4
+  },
+  {
+    "id": 319,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Đây là mục tiêu cao nhất của giáo trình này. Nó là khả năng hợp tác với các hệ thống AI một cách Hiệu quả (Effective), Hiệu suất (Efficient), Có Đạo đức (Ethical), và An toàn (Safe).",
+    "display_order": 5
+  },
+  {
+    "id": 320,
+    "chapter": 7,
+    "block_type": "title",
+    "content": "ALVA",
+    "display_order": 6
+  },
+  {
+    "id": 321,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Là Trợ lý AI và là người bạn đồng hành của bạn trong suốt hành trình học tập tại AI Lab Việt. ALVA không phải là một chatbot thông thường, mà là một công cụ sử phạm đức thiết kế để giúp bạn rèn luyện Năng lực AI. Tên gọi ALVA (An- Va) vừa là viết tắt của AI Lab Việt Assistant, vừa gọi lên cảm giác An toàn và Bình an.",
+    "display_order": 7
+  },
+  {
+    "id": 322,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Framework 4D+S",
+    "display_order": 8
+  },
+  {
+    "id": 323,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Đây là hệ thống tư duy, là \"bộ quy tắc làm việc nhóm\" Người- AI độc quyền của AI Lab Việt. Nó bao gồm 5 kỹ năng cốt lõi: Phân công (Delegation), Mô tả (Description), Nhận định (Discernment), Trách nhiệm (Diligence) và Tổng hợp (Synthesis).",
+    "display_order": 9
+  },
+  {
+    "id": 324,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Công thức R.C.T.C",
+    "display_order": 10
+  },
+  {
+    "id": 325,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Là một bộ khung thực hành trong kỹ năng Mô tả (Description), giúp bạn xây dựng những câu lệnh (prompt) hiệu quả. Nó bao gồm 4 thành phần: Role (Vai trò), Context (Bối cảnh), Task (Nhiệm vụ), và Constraints (Ràng buộc).",
+    "display_order": 11
+  },
+  {
+    "id": 326,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Hồ sơ Năng lực Số (Digital Competency Profile)",
+    "display_order": 12
+  },
+  {
+    "id": 327,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Đây là một tính năng độc đáo của AI Lab Việt. Thay vì một chứng chỉ thông thường, đây là một \"bằng chứng sống\" trưng bày các dự án bạn đã hoàn thành, các sản phẩm bạn đã tạo ra và cả những câu lệnh mẫu mực bạn đã sử dụng. Nó là một minh chứng xác thực cho năng lực thực chiến của bạn.",
+    "display_order": 13
+  },
+  {
+    "id": 328,
+    "chapter": 7,
+    "block_type": "title",
+    "content": "Các Khái niệm Kỹ thuật Chung",
+    "display_order": 14
+  },
+  {
+    "id": 329,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "LLM (Large Language Model - Mô hình Ngôn ngữ Lớn) Hãy tưởng tượng dạy là một \"bộ não\"AI cực kỳ lớn, đã đọc gắn như toàn bộ tri",
+    "display_order": 15
+  },
+  {
+    "id": 330,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "thức trên internet. Nó có khả năng hiểu và tạo ra ngôn ngữ của con người một cách đáng kinh ngạc. Trợ lý ALVA của chúng ta sử dụng sức mạnh của các LLM hàng đầu thế giới để có thể trò chuyện và hợp tác cùng bạn.",
+    "display_order": 1
+  },
+  {
+    "id": 331,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "RAG (Retrieval- Augmented Generation - Tạo sinh Tăng cường Truy xuất) Đây là một kỹ thuật thông minh để giúp LLM trả lời chính xác hơn. Hãy tưởng tượng, trước khi trả lời một câu hỏi khó, ALVA có khả năng \"đọc\" một cuốn sách chuyên môn mà chúng ta đưa cho nó (ví dụ: nội dung giáo trình này). Nó sẽ truy xuất thông tin liên quan từ cuốn sách đó trước, rồi mới tạo sinh ra câu trả lời. Kỹ thuật này giúp Tutor ALVA trả lời cực kỳ chính xác trong phạm vi bài học.",
+    "display_order": 2
+  },
+  {
+    "id": 332,
+    "chapter": 7,
+    "block_type": "title",
+    "content": "Hallucination (Ảo giác)",
+    "display_order": 3
+  },
+  {
+    "id": 333,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Đây là một hiện tượng khi AI \"bịa\" ra thông tin, tạo ra những sự thật, số liệu, hoặc sự kiện không hề tồn tại. Nó giống như một người rất tự tin nhưng lại không biết câu trả lời, thay vì nói \"tôi không biết\", họ lại sáng tạo ra một câu trả lời nghe rất hợp lý. Đây là lý do kỹ năng Nhận định (Discernment) lại cực kỳ quan trọng.",
+    "display_order": 4
+  },
+  {
+    "id": 334,
+    "chapter": 7,
+    "block_type": "title",
+    "content": "Prompt (Câu lệnh)",
+    "display_order": 5
+  },
+  {
+    "id": 335,
+    "chapter": 7,
+    "block_type": "text",
+    "content": "Đây không chỉ là một câu hỏi. Trong AI Lab Việt, chúng tôi xem prompt là một lời \"đề bài\", một yêu cầu công việc mà bạn, với vai trò là \"người giao việc\", đưa cho người đồng nghiệp AI của mình. Một prompt tốt là khởi đầu cho một kết quả tốt.",
+    "display_order": 6
+  }
+]
