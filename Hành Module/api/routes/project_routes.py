@@ -166,7 +166,7 @@ async def end_project_api(
                 
                 # Extract thông tin từ analysis result
                 summary = analysis_result.get("summary", "Không có tóm tắt")
-                skills = analysis_result.get("skills", [])
+                skills = mission_detail.get("alv_skills", [])
                 featured_prompts = analysis_result.get("featured_prompts", [])
                 
                 # DEBUG: Kiểm tra featured_prompts
