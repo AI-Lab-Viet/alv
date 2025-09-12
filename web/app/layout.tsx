@@ -37,7 +37,6 @@ export default async function RootLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log("User in RootLayout:", user);
   return (
     <html
       lang="vi"

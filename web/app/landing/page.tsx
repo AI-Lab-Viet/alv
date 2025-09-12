@@ -19,19 +19,18 @@ export default function LandingPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     // Here you would typically send data to your registration API
-    console.log("Registration data:", formData);
-    
+
     // Show success message and close modal
     alert("Đăng ký thành công! Chào mừng bạn đến với AI Lab Việt! 🎉");
     setIsModalOpen(false);
     setFormData({ email: "", password: "" });
     setIsSubmitting(false);
-    
+
     // Optionally redirect to dashboard
     // window.location.href = "/dashboard";
   };
@@ -47,7 +46,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen">
       {/* Section 1: Hero Section - "Lời Chào Từ Tương Lai" */}
-      <section className="relative overflow-hidden min-h-screen flex items-center" style={{background: 'linear-gradient(135deg, #d6eaf8 0%, #a9cce3 50%, #7fb3d3 100%)'}}>
+      <section className="relative overflow-hidden min-h-screen flex items-center" style={{ background: 'linear-gradient(135deg, #d6eaf8 0%, #a9cce3 50%, #7fb3d3 100%)' }}>
         {/* Background decorative elements */}
         {/* Background decorative elements */}
         <div className="absolute inset-0">
@@ -110,7 +109,7 @@ export default function LandingPage() {
                           Chỉ cần 30 giây để bắt đầu hành trình AI của bạn
                         </DialogDescription>
                       </DialogHeader>
-                      
+
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="email" className="text-sm font-medium text-gray-700">
@@ -127,7 +126,7 @@ export default function LandingPage() {
                             className="w-full"
                           />
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="password" className="text-sm font-medium text-gray-700">
                             Mật khẩu <span className="text-red-500">*</span>
@@ -144,7 +143,7 @@ export default function LandingPage() {
                             className="w-full"
                           />
                         </div>
-                        
+
                         <Button
                           type="submit"
                           disabled={isSubmitting}
@@ -159,7 +158,7 @@ export default function LandingPage() {
                             "🚀 Tạo tài khoản miễn phí"
                           )}
                         </Button>
-                        
+
                         <div className="text-center">
                           <p className="text-xs text-gray-500">
                             Bằng việc đăng ký, bạn đồng ý với{" "}
@@ -172,13 +171,13 @@ export default function LandingPage() {
                             </span>
                           </p>
                         </div>
-                        
+
                         <div className="flex items-center gap-4 my-4">
                           <div className="flex-1 h-px bg-gray-200"></div>
                           <span className="text-sm text-gray-500">hoặc</span>
                           <div className="flex-1 h-px bg-gray-200"></div>
                         </div>
-                        
+
                         <div className="text-center">
                           <p className="text-sm text-gray-600">
                             Đã có tài khoản?{" "}
@@ -231,21 +230,21 @@ export default function LandingPage() {
                   <div className="absolute -top-8 -right-8 w-16 h-16 bg-gradient-to-br from-blue-400/30 to-blue-600/30 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce">
                     <span className="text-white text-2xl">🧠</span>
                   </div>
-                  
+
                   <div
                     className="absolute top-1/4 -left-8 w-12 h-12 bg-gradient-to-br from-blue-500/30 to-blue-700/30 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce"
                     style={{ animationDelay: "1s" }}
                   >
                     <span className="text-white text-xl">💡</span>
                   </div>
-                  
+
                   <div
                     className="absolute bottom-1/4 -right-6 w-14 h-14 bg-gradient-to-br from-blue-600/30 to-blue-800/30 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce"
                     style={{ animationDelay: "2s" }}
                   >
                     <span className="text-white text-xl">🚀</span>
                   </div>
-                  
+
                   <div
                     className="absolute bottom-8 -left-6 w-10 h-10 bg-gradient-to-br from-blue-500/30 to-blue-600/30 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce"
                     style={{ animationDelay: "0.5s" }}
@@ -298,12 +297,12 @@ export default function LandingPage() {
                 <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-white text-3xl">🚫</span>
                 </div>
-                
+
                 {/* Title */}
                 <h3 className="font-bold text-2xl text-gray-900 mb-4">
                   Lang thang không bản đồ
                 </h3>
-                
+
                 {/* Description */}
                 <p className="text-gray-700 leading-relaxed text-lg">
                   Bạn dùng AI một cách tự phát, không có phương pháp. Kết quả lúc tốt lúc xấu, bạn không hiểu tại sao và không thể lặp lại thành công một cách có chủ đích.
@@ -318,12 +317,12 @@ export default function LandingPage() {
                 <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-white text-3xl">🎮</span>
                 </div>
-                
+
                 {/* Title */}
                 <h3 className="font-bold text-2xl text-gray-900 mb-4">
                   Trở thành "trợ lý" cho AI
                 </h3>
-                
+
                 {/* Description */}
                 <p className="text-gray-700 leading-relaxed text-lg">
                   Thay vì dẫn dắt, bạn lại trở thành người làm các công việc phụ cho AI: sửa lỗi sai, chấp vá các đoạn văn rời rạc. Bạn mất đi vai trò chủ động và tự duy phán biến.
@@ -338,12 +337,12 @@ export default function LandingPage() {
                 <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-white text-3xl">📄</span>
                 </div>
-                
+
                 {/* Title */}
                 <h3 className="font-bold text-2xl text-gray-900 mb-4">
                   Sản phẩm thiếu góc nhìn riêng
                 </h3>
-                
+
                 {/* Description */}
                 <p className="text-gray-700 leading-relaxed text-lg">
                   Sản phẩm cuối cùng có thể dùng, nhưng lại chung chung, thiếu đi góc nhìn độc đáo và dấu ấn cá nhân. Nó giống như hàng ngàn sản phẩm khác do AI tạo ra và khó có thể đạt điểm cao hay gây ấn tượng mạnh.
@@ -359,7 +358,7 @@ export default function LandingPage() {
                 Đây có phải là câu chuyện của bạn?
               </h3>
               <p className="text-lg text-gray-700 mb-6 max-w-3xl mx-auto">
-                Nếu bạn nhận ra mình trong một trong những tình huống trên, đừng lo lắng. 
+                Nếu bạn nhận ra mình trong một trong những tình huống trên, đừng lo lắng.
                 Hàng nghìn người đã vượt qua và thành công với phương pháp đúng đắn.
               </p>
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -390,13 +389,13 @@ export default function LandingPage() {
 
           {/* Comparison Layout - 2 Parts */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
+
             {/* Bên trái (Vấn đề) */}
             <div className="relative">
               <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-2xl border border-gray-200 relative overflow-hidden">
                 {/* Background decoration */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-100 to-orange-100 rounded-full opacity-50 transform translate-x-16 -translate-y-16"></div>
-                
+
                 {/* Content */}
                 <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-6">
@@ -405,12 +404,12 @@ export default function LandingPage() {
                     </div>
                     <h3 className="font-bold text-2xl text-gray-900">Vấn đề hiện tại</h3>
                   </div>
-                  
+
                   <p className="text-lg text-gray-700 leading-relaxed">
-                    Các công cụ AI như ChatGPT là một <strong className="text-red-600">phòng gym</strong> đầy đủ máy móc. 
+                    Các công cụ AI như ChatGPT là một <strong className="text-red-600">phòng gym</strong> đầy đủ máy móc.
                     Nhưng nếu không có người hướng dẫn, bạn sẽ chỉ dám chạy bộ và không bao giờ xây dựng được cơ bắp thực sự.
                   </p>
-                  
+
                   {/* Visual elements */}
                   <div className="mt-8 flex justify-center">
                     <div className="text-6xl opacity-20">🏃‍♂️💨</div>
@@ -425,7 +424,7 @@ export default function LandingPage() {
                 {/* Background decoration */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full transform translate-x-16 -translate-y-16"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full transform -translate-x-12 translate-y-12"></div>
-                
+
                 {/* Content */}
                 <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-6">
@@ -434,14 +433,14 @@ export default function LandingPage() {
                     </div>
                     <h3 className="font-bold text-2xl text-white">Giải pháp AI Lab Việt</h3>
                   </div>
-                  
+
                   <p className="text-lg text-blue-100 leading-relaxed mb-8">
-                    AI Lab Việt chính là <strong className="text-white">Huấn luyện viên Cá nhân (PT)</strong> của bạn. 
-                    Chúng tôi cung cấp lịch tập <span className="text-cyan-200">(Giáo trình)</span>, 
-                    sửa form cho bạn tức thì <span className="text-cyan-200">(ALVA)</span>, 
+                    AI Lab Việt chính là <strong className="text-white">Huấn luyện viên Cá nhân (PT)</strong> của bạn.
+                    Chúng tôi cung cấp lịch tập <span className="text-cyan-200">(Giáo trình)</span>,
+                    sửa form cho bạn tức thì <span className="text-cyan-200">(ALVA)</span>,
                     và ghi lại sự tiến bộ của bạn <span className="text-cyan-200">(Hồ sơ Năng lực)</span>.
                   </p>
-                  
+
                   {/* Feature highlights */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
@@ -463,7 +462,7 @@ export default function LandingPage() {
                       <span className="text-white font-medium">Theo dõi tiến bộ (Hồ sơ Năng lực)</span>
                     </div>
                   </div>
-                  
+
                   {/* Visual elements */}
                   <div className="mt-8 flex justify-center">
                     <div className="text-6xl opacity-30">💪✨</div>
@@ -506,7 +505,7 @@ export default function LandingPage() {
           <div className="relative">
             {/* Steps Container - 3 Equal Boxes with Arrows */}
             <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 items-center">
-              
+
               {/* Bước 1: HỌC (Learn) */}
               <div className="relative">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-8 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 relative h-full">
@@ -514,26 +513,26 @@ export default function LandingPage() {
                   <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">1</span>
                   </div>
-                  
+
                   {/* Content */}
                   <div className="pt-8 text-center">
                     {/* Icon */}
                     <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
                       <span className="text-white text-3xl">📚</span>
                     </div>
-                    
+
                     {/* Title */}
                     <h3 className="font-bold text-2xl text-gray-900 mb-4">
                       HỌC <span className="text-blue-600">(Learn)</span>
                     </h3>
-                    
+
                     {/* Description */}
                     <p className="text-gray-700 leading-relaxed mb-6">
                       Rèn luyện tư duy nền tảng và các kỹ năng cốt lõi trong{" "}
                       <strong className="text-blue-600">Võ đường Huấn luyện</strong>{" "}
                       cùng Sư phụ ALVA.
                     </p>
-                    
+
                     {/* Features */}
                     <div className="space-y-3 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
@@ -551,7 +550,7 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Arrow 1: HỌC -> HÀNH */}
                 <div className="hidden lg:block absolute -right-6 top-1/2 transform -translate-y-1/2 z-10">
                   <div className="flex items-center">
@@ -568,26 +567,26 @@ export default function LandingPage() {
                   <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">2</span>
                   </div>
-                  
+
                   {/* Content */}
                   <div className="pt-8 text-center">
                     {/* Icon */}
                     <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                       <span className="text-white text-3xl">🛠️</span>
                     </div>
-                    
+
                     {/* Title */}
                     <h3 className="font-bold text-2xl text-gray-900 mb-4">
                       HÀNH <span className="text-green-600">(Practice)</span>
                     </h3>
-                    
+
                     {/* Description */}
                     <p className="text-gray-700 leading-relaxed mb-6">
                       Áp dụng kiến thức vào các dự án thực tế trong{" "}
                       <strong className="text-green-600">Xưởng Thực chiến</strong>{" "}
                       cùng Cộng sự ALVA.
                     </p>
-                    
+
                     {/* Features */}
                     <div className="space-y-3 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
@@ -605,7 +604,7 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Arrow 2: HÀNH -> CHỨNG MINH */}
                 <div className="hidden lg:block absolute -right-6 top-1/2 transform -translate-y-1/2 z-10">
                   <div className="flex items-center">
@@ -622,26 +621,26 @@ export default function LandingPage() {
                   <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">3</span>
                   </div>
-                  
+
                   {/* Content */}
                   <div className="pt-8 text-center">
                     {/* Icon */}
                     <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
                       <span className="text-white text-3xl">🏆</span>
                     </div>
-                    
+
                     {/* Title */}
                     <h3 className="font-bold text-2xl text-gray-900 mb-4">
                       CHỨNG MINH <span className="text-purple-600">(Prove)</span>
                     </h3>
-                    
+
                     {/* Description */}
                     <p className="text-gray-700 leading-relaxed mb-6">
                       Xây dựng{" "}
-                      <strong className="text-purple-600">Hồ sơ Năng lực Số</strong>, 
+                      <strong className="text-purple-600">Hồ sơ Năng lực Số</strong>,
                       trưng bày các bằng chứng xác thực về sự trưởng thành của bạn.
                     </p>
-                    
+
                     {/* Features */}
                     <div className="space-y-3 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
@@ -705,7 +704,7 @@ export default function LandingPage() {
 
           {/* Main Content */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
+
             {/* Bên trái (Visual) - Framework Diagrams */}
             <div className="relative">
               <div className="space-y-8">
@@ -721,11 +720,11 @@ export default function LandingPage() {
                         className="w-full h-auto rounded-2xl"
                         priority
                       />
-                      
+
                       {/* Interactive Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
-                    
+
                     {/* Caption */}
                     <div className="mt-4 text-center">
                       <p className="font-semibold text-gray-700">Framework 4D+S Tổng quan</p>
@@ -745,7 +744,7 @@ export default function LandingPage() {
                         height={300}
                         className="w-full h-auto rounded-2xl"
                       />
-                      
+
                       {/* Interactive Hover Effect */}
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-lg">
@@ -753,7 +752,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Caption */}
                     <div className="mt-4 text-center">
                       <p className="font-semibold text-gray-700">"+S" - Mảnh ghép Việt Nam</p>
@@ -821,13 +820,13 @@ export default function LandingPage() {
 
                   {/* CTA */}
                   <div className="pt-6">
-                  <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-                        🌟 Khám phá Framework 4D+S
-                      </Button>
-                    </DialogTrigger>
-                  </Dialog>
+                    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+                          🌟 Khám phá Framework 4D+S
+                        </Button>
+                      </DialogTrigger>
+                    </Dialog>
                   </div>
                 </div>
               </div>
@@ -867,7 +866,7 @@ export default function LandingPage() {
 
           {/* Main Content */}
           <div className="grid lg:grid-cols-5 gap-12 items-start">
-            
+
             {/* Left Side - Portfolio Preview (3 columns) */}
             <div className="lg:col-span-3">
               <div className="relative group">
@@ -882,7 +881,7 @@ export default function LandingPage() {
                       className="w-full h-auto transform group-hover:scale-105 transition-transform duration-500"
                       priority
                     />
-                    
+
                     {/* Overlay with zoom hint */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
@@ -893,7 +892,7 @@ export default function LandingPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Portfolio Caption */}
                   <div className="mt-6 text-center">
                     <h3 className="font-bold text-xl text-gray-900 mb-2">
@@ -913,13 +912,13 @@ export default function LandingPage() {
 
             {/* Right Side - Features & Benefits (2 columns) */}
             <div className="lg:col-span-2 space-y-8">
-              
+
               {/* What's Included */}
               <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl p-8 border border-gray-200">
                 <h3 className="font-bold text-2xl text-gray-900 mb-6">
                   📋 Nội dung Hồ sơ
                 </h3>
-                
+
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -968,7 +967,7 @@ export default function LandingPage() {
                 <h3 className="font-bold text-2xl mb-6">
                   🌟 Giá trị Thực tế
                 </h3>
-                
+
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">✅</span>
@@ -990,7 +989,7 @@ export default function LandingPage() {
 
                 <div className="mt-6 pt-6 border-t border-white/20">
                   <p className="text-purple-100 text-sm italic">
-                    "Hơn 85% nhà tuyển dụng tìm kiếm ứng viên có kỹ năng AI. 
+                    "Hơn 85% nhà tuyển dụng tìm kiếm ứng viên có kỹ năng AI.
                     Hồ sơ của bạn sẽ là minh chứng mạnh mẽ nhất."
                   </p>
                 </div>
@@ -1028,28 +1027,28 @@ export default function LandingPage() {
       </section>
 
       {/* Section 7: Final Call-to-Action - "Lời Mời Cuối cùng" */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{background: 'linear-gradient(135deg, #0A1931 0%, #1B2951 50%, #2A4C7A 100%)'}}>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A1931 0%, #1B2951 50%, #2A4C7A 100%)' }}>
         {/* Animated Background Effects */}
         <div className="absolute inset-0">
           {/* Light rays */}
           <div className="absolute top-0 left-1/4 w-1 h-full bg-gradient-to-b from-blue-400/20 to-transparent transform rotate-12 animate-pulse"></div>
           <div className="absolute top-0 right-1/3 w-1 h-full bg-gradient-to-b from-cyan-400/15 to-transparent transform -rotate-12 animate-pulse" style={{ animationDelay: "1s" }}></div>
           <div className="absolute top-0 left-1/2 w-1 h-full bg-gradient-to-b from-blue-300/10 to-transparent animate-pulse" style={{ animationDelay: "2s" }}></div>
-          
+
           {/* Galaxy/star effects */}
           <div className="absolute top-20 left-20 w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
           <div className="absolute top-40 right-32 w-1 h-1 bg-blue-300 rounded-full animate-ping" style={{ animationDelay: "0.5s" }}></div>
           <div className="absolute bottom-32 left-1/3 w-1.5 h-1.5 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: "1.5s" }}></div>
           <div className="absolute top-60 right-20 w-1 h-1 bg-cyan-300 rounded-full animate-ping" style={{ animationDelay: "2.5s" }}></div>
           <div className="absolute bottom-48 right-1/4 w-2 h-2 bg-blue-200 rounded-full animate-ping" style={{ animationDelay: "3s" }}></div>
-          
+
           {/* Radial gradient overlay */}
           <div className="absolute inset-0 bg-gradient-radial from-blue-900/20 via-transparent to-transparent"></div>
         </div>
 
         <div className="relative z-10 px-4 lg:px-8 w-full max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
+
             {/* Left Side - Content */}
             <div className="text-center lg:text-left space-y-8">
               {/* Main Headline */}
@@ -1062,8 +1061,8 @@ export default function LandingPage() {
 
               {/* Sub-headline */}
               <p className="text-xl lg:text-2xl text-blue-100 leading-relaxed max-w-2xl">
-                Hành trình trở thành Nhà Kiến tạo bắt đầu chỉ với một cú click. 
-                Tham gia cộng đồng của chúng tôi, bắt đầu rèn luyện miễn phí và 
+                Hành trình trở thành Nhà Kiến tạo bắt đầu chỉ với một cú click.
+                Tham gia cộng đồng của chúng tôi, bắt đầu rèn luyện miễn phí và
                 xây dựng Hồ sơ Năng lực của riêng bạn ngay hôm nay.
               </p>
 
@@ -1087,7 +1086,7 @@ export default function LandingPage() {
               <div className="pt-8">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
-                    <button 
+                    <button
                       className="group relative bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-white font-bold text-xl lg:text-2xl px-12 py-6 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-cyan-500/50 overflow-hidden"
                       style={{
                         boxShadow: '0 0 30px rgba(34, 211, 238, 0.3), 0 0 60px rgba(59, 130, 246, 0.2)'
@@ -1101,7 +1100,7 @@ export default function LandingPage() {
                     >
                       {/* Animated background */}
                       <div className="absolute inset-0 bg-gradient-to-r from-cyan-300 to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      
+
                       {/* Button content */}
                       <span className="relative flex items-center gap-3">
                         <span className="text-3xl">🌟</span>
@@ -1141,21 +1140,21 @@ export default function LandingPage() {
                 <div className="absolute -top-8 -right-8 w-20 h-20 bg-gradient-to-br from-cyan-400/40 to-blue-500/40 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce">
                   <span className="text-white text-3xl">🚀</span>
                 </div>
-                
+
                 <div
                   className="absolute top-1/4 -left-12 w-16 h-16 bg-gradient-to-br from-blue-400/40 to-cyan-500/40 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce"
                   style={{ animationDelay: "1s" }}
                 >
                   <span className="text-white text-2xl">⭐</span>
                 </div>
-                
+
                 <div
                   className="absolute bottom-1/4 -right-10 w-18 h-18 bg-gradient-to-br from-cyan-500/40 to-blue-600/40 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce"
                   style={{ animationDelay: "2s" }}
                 >
                   <span className="text-white text-2xl">💎</span>
                 </div>
-                
+
                 <div
                   className="absolute bottom-12 -left-8 w-14 h-14 bg-gradient-to-br from-blue-500/40 to-cyan-400/40 backdrop-blur-sm rounded-full flex items-center justify-center animate-bounce"
                   style={{ animationDelay: "0.5s" }}
@@ -1195,7 +1194,7 @@ export default function LandingPage() {
           {/* Main Footer Content */}
           <div className="py-16">
             <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
-              
+
               {/* Column 1: Về AI Lab Việt */}
               <div className="space-y-6">
                 <div>
@@ -1204,7 +1203,7 @@ export default function LandingPage() {
                     Nền tảng đầu tiên tại Việt Nam giúp bạn rèn luyện tư duy và kỹ năng hợp tác sáng tạo cùng AI thông qua Framework 4D+S độc quyền.
                   </p>
                 </div>
-                
+
                 {/* Social Media */}
                 <div>
                   <h4 className="font-semibold text-white mb-3">Kết nối với chúng tôi</h4>
@@ -1334,7 +1333,7 @@ export default function LandingPage() {
                   Nhận thông tin về khóa học mới, tips AI hữu ích và các cập nhật quan trọng từ AI Lab Việt
                 </p>
               </div>
-              
+
               <div className="max-w-md mx-auto">
                 <div className="flex gap-2">
                   <Input
@@ -1353,7 +1352,7 @@ export default function LandingPage() {
           {/* Bottom Footer */}
           <div className="py-8 border-t border-gray-800">
             <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
-              
+
               {/* Copyright */}
               <div className="text-gray-400 text-sm text-center lg:text-left">
                 <p>© 2025 AI Lab Việt. Tất cả quyền được bảo lưu.</p>

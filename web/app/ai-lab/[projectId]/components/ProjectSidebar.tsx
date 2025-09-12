@@ -28,7 +28,6 @@ export default function ProjectSidebar({
   const [isOpen, setIsOpen] = useState(true);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  console.log({ completedObjective, totalCompletedObjectives })
 
   useEffect(() => {
     if (completedObjective.trim() !== "" && project.learning_objectives.includes(completedObjective)) {

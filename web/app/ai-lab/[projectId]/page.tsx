@@ -73,30 +73,23 @@ export default function AILabPage(props: PageProps) {
   // Initialize welcome message and fetch session data
   useEffect(() => {
     if (!userId || hasFetchedData) {
-      console.log("Skipping fetch - userId:", userId, "hasFetchedData:", hasFetchedData);
       return;
     }
 
-    console.log("🔄 Starting data fetch for sessionId:", sessionId, "missionId:", missionId);
-
     const fetchData = async () => {
-      console.log("📡 Fetching session details...");
       await fetchSessionDetails(sessionId, setMessages);
 
       // If mission details are not available from chat history, fetch them separately
       if (!currentMissionDetail && missionId) {
-        console.log("📡 Fetching mission details...");
         await fetchMissionDetails(missionId);
       }
 
-      console.log("✅ Data fetch complete");
       setHasFetchedData(true);
     };
     fetchData();
   }, [userId, sessionId, missionId, hasFetchedData]);
 
   useEffect(() => {
-    console.log("analysis:", analysis);
     // Only show analysis modal if:
     // 1. Analysis data exists
     // 2. Modal is not already showing
@@ -123,7 +116,6 @@ export default function AILabPage(props: PageProps) {
     if (!inputValue.trim()) return;
 
     if (!isConnected) {
-      console.warn("WebSocket not connected");
       return;
     }
 

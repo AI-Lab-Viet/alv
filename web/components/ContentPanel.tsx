@@ -49,7 +49,6 @@ export default function ContentPanel({
   const handleFinish = useCallback(() => {
     localStorage.setItem("hasCompletedChapter4", "true");
     localStorage.setItem("currentChapter", "5");
-    console.log("User has completed Chapter 4");
     onRouterPush("/skill-hub");
   }, [onRouterPush]);
 
@@ -229,13 +228,12 @@ export default function ContentPanel({
                 {contentDisplay.options.map((option: string, index: number) => (
                   <button
                     key={index}
-                    className={`w-full p-3 text-left border rounded-lg transition-colors ${
-                      selectedCriteria === option
+                    className={`w-full p-3 text-left border rounded-lg transition-colors ${selectedCriteria === option
                         ? option === contentDisplay.correct_answer
                           ? "bg-green-100 border-green-400"
                           : "bg-red-100 border-red-400"
                         : "bg-white border hover:border"
-                    }`}
+                      }`}
                     onClick={() => onMultipleChoice(option)}>
                     {option}
                   </button>
@@ -263,7 +261,6 @@ export default function ContentPanel({
     case "red_flags":
       return (
         <div className='space-y-6'>
-          {console.log("Rendering red_flags with wrongCriteria:", contentDisplay)}
           {contentDisplay.lessonBlocks && contentDisplay.lessonBlocks.length > 0 && (
             <Card className='bg-blue-50 border-blue-200'>
               <CardContent className='p-6'>
@@ -327,7 +324,6 @@ export default function ContentPanel({
     case "feedback_formula":
       return (
         <div className='space-y-6'>
-          {console.log("Rendering feedback_formula with contentDisplay:", contentDisplay)}
           {contentDisplay.lessonBlocks && contentDisplay.lessonBlocks.length > 0 && (
             <Card className='bg-blue-50 border-blue-200'>
               <CardContent className='p-6'>
