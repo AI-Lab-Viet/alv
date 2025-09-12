@@ -173,7 +173,7 @@ export default function AILabPage(props: PageProps) {
         toggleSubmissionForm={toggleShowSubmissionForm}
       />
 
-      <div className="flex-1 w-full mx-auto px-4 py-6 lg:px-8 min-h-0">
+      <div className="flex-1 w-full mx-auto px-0 py-0 md:px-4 md:py-6 lg:px-8 min-h-0">
         <ResizablePanelGroup
           direction="horizontal"
           className="h-full w-full rounded-2xl"
