@@ -56,18 +56,20 @@ export default function SubmissionModal({
             Bạn đã chắc chưa? Nếu nộp sẽ không thể sửa hoặc xóa sản phẩm cuối
             cùng này.
           </p>
-          <Textarea
-            placeholder="Nhập mô tả sản phẩm cuối cùng của bạn ở đây..."
-            value={finalSubmission}
-            className="resize-none"
-            onChange={(e) => setFinalSubmission(e.target.value)}
-          />
-          <Textarea
-            placeholder="Viết vài dòng cảm nghĩ của bạn ở đây..."
-            value={reflection}
-            className="resize-none"
-            onChange={(e) => setReflection(e.target.value)}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Textarea
+              placeholder="Nhập mô tả sản phẩm cuối cùng của bạn ở đây..."
+              value={finalSubmission}
+              className="resize-none min-h-[200px]"
+              onChange={(e) => setFinalSubmission(e.target.value)}
+            />
+            <Textarea
+              placeholder="Viết vài dòng cảm nghĩ của bạn ở đây..."
+              value={reflection}
+              className="resize-none min-h-[200px]"
+              onChange={(e) => setReflection(e.target.value)}
+            />
+          </div>
           <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={toggleSubmissionForm}>
               Hủy

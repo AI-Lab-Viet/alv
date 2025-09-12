@@ -19,23 +19,18 @@ export interface DetailedProject {
 }
 
 export interface IAnalysisResponse {
-  featured_prompts: string[];
-  skills: string[];
-  summary: string;
-}
-
-export interface IFinishSessionResponse {
-  status: string;
-  analysis: IAnalysisResponse;
-  mission: DetailedProject;
-  session_id: string;
+  analysis_data: {
+    featured_prompts: string[];
+    skills: string[];
+    summary: string;
+  };
 }
 
 export interface PortfolioProject {
   id: string;
   final_product: string;
-  key_prompts: string[];
-  skills_applied: string[];
+  featured_prompts: string[];
+  skills: string[];
   total_messages: number;
   created_at: string;
   mission_name: string;

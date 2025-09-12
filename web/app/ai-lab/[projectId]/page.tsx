@@ -26,7 +26,7 @@ interface PageProps {
 export default function AILabPage(props: PageProps) {
   const params = use(props.params);
   const sessionId = params.projectId; // This is actually sessionId from URL
-  const { currentMissionDetail, fetchSessionDetails, analysis } = useChatSession();
+  const { currentMissionDetail, fetchSessionDetails, fetchMissionDetails, missionId, analysis } = useChatSession();
   const { userId } = useAuth();
   const {
     sendMessage,
@@ -47,6 +47,7 @@ export default function AILabPage(props: PageProps) {
   >("chat");
   const [isNotePanelCollapsed, setIsNotePanelCollapsed] = useState(true);
   const [totalCompletedObjectives, setTotalCompletedObjectives] = useState<string[]>([]);
+  const [hasFetchedData, setHasFetchedData] = useState(false);
 
   const [
     showSubmissionForm,
@@ -68,15 +69,30 @@ export default function AILabPage(props: PageProps) {
   //   }
   // }, [contextSessionId, sessionId]);
 
-  // Initialize welcome message
-
+  // Initialize welcome message and fetch session data
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || hasFetchedData) {
+      console.log("Skipping fetch - userId:", userId, "hasFetchedData:", hasFetchedData);
+      return;
+    }
+
+    console.log("🔄 Starting data fetch for sessionId:", sessionId, "missionId:", missionId);
+
     const fetchData = async () => {
+      console.log("📡 Fetching session details...");
       await fetchSessionDetails(sessionId, setMessages);
+
+      // If mission details are not available from chat history, fetch them separately
+      if (!currentMissionDetail && missionId) {
+        console.log("📡 Fetching mission details...");
+        await fetchMissionDetails(missionId);
+      }
+
+      console.log("✅ Data fetch complete");
+      setHasFetchedData(true);
     };
     fetchData();
-  }, [userId]);
+  }, [userId, sessionId, missionId, hasFetchedData]);
 
   useEffect(() => {
     console.log("analysis:", analysis);

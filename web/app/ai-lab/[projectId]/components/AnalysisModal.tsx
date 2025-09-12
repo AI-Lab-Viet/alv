@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useChatSession } from "@/contexts/chat-session-context";
-import { IFinishSessionResponse } from "@/interfaces/project.interface";
+import { IFinishSessionResponse } from "@/interfaces/session.interface";
 import { useRouter } from "next/navigation";
 
 interface AnalysisModalProps {
@@ -38,7 +38,7 @@ export default function AnalysisModal({
 }: AnalysisModalProps) {
   const router = useRouter();
   const { clearSession, clearAnalysis } = useChatSession();
-
+  console.log("analysis:", analysis);
   const handleCloseAndRedirect = () => {
     toggleAnalysis();
     clearAnalysis(); // Clear analysis data when modal is closed
@@ -72,7 +72,7 @@ export default function AnalysisModal({
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  {analysis?.analysis.summary}
+                  {analysis?.portfolio.data_saved.final_product}
                 </p>
               </CardContent>
             </Card>
@@ -83,11 +83,14 @@ export default function AnalysisModal({
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {analysis?.analysis.skills.map((skill, idx) => (
-                    <Badge key={idx} variant="secondary">
-                      {skill}
-                    </Badge>
-                  ))}
+                  {analysis?.portfolio.data_saved.skills_applied &&
+                    analysis?.portfolio.data_saved.skills_applied.map(
+                      (skill, idx) => (
+                        <Badge key={idx} variant="secondary">
+                          {skill}
+                        </Badge>
+                      )
+                    )}
                 </div>
               </CardContent>
             </Card>
@@ -97,16 +100,19 @@ export default function AnalysisModal({
                 <CardTitle>Prompt nổi bật</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {analysis?.analysis.featured_prompts.map((prompt, index) => (
-                    <Textarea
-                      key={index}
-                      value={truncateText(prompt)}
-                      readOnly
-                      className="resize-none min-h-[100px] text-sm"
-                      placeholder=""
-                    />
-                  ))}
+                <div className="flex flex-wrap gap-2 w-full">
+                  {analysis?.portfolio.data_saved.key_prompts &&
+                    analysis?.portfolio.data_saved.key_prompts.map(
+                      (prompt, index) => (
+                        <Badge
+                          key={index}
+                          className="break-words whitespace-pre-line max-w-full text-sm h-fit px-3 py-2"
+                          style={{ wordBreak: "break-word", whiteSpace: "pre-line" }}
+                        >
+                          {prompt}
+                        </Badge>
+                      )
+                    )}
                 </div>
               </CardContent>
             </Card>

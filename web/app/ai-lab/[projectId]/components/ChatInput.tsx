@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PromptStarterType } from "@/interfaces/chat.interface";
-import { Send } from "lucide-react";
-import { useState } from "react";
+import { Lightbulb, Send } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ChatInputProps {
   onSendMessage: (inputValue: string) => void;
@@ -20,6 +20,28 @@ export default function ChatInput({
   hidePromptStarters,
 }: ChatInputProps) {
   const [inputValue, setInputValue] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltip, setTooltip] = useState<React.ReactNode>("");
+
+  useEffect(() => {
+    if (
+      inputValue.trim().toLowerCase() === "ok, hãy viết cho tôi về luận điểm 1"
+    ) {
+      setTooltip(
+        <span className="font-semibold">
+          Mẹo từ ALVA: Áp dụng công thức{" "}
+          <span className="font-semibold">R.C.T.C.</span> (Vai trò, Bối cảnh...)
+          để có kết quả sâu sắc hơn nhé!
+        </span>
+      );
+      setTimeout(() => {
+        setShowTooltip(true);
+      }, 500);
+    } else {
+      setShowTooltip(false);
+    }
+  }, [inputValue]);
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       handleSendMessage();
@@ -44,7 +66,7 @@ export default function ChatInput({
               <Button
                 variant={"outline"}
                 key={index}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer w-full h-fit text-left whitespace-normal break-words w-full"
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer  h-fit text-left whitespace-normal break-words w-full"
                 style={{ whiteSpace: "normal", wordBreak: "break-word" }}
                 onClick={() => {
                   setInputValue(starter.prompt);
@@ -55,6 +77,17 @@ export default function ChatInput({
               </Button>
             ))}
           </div>
+        </div>
+      )}
+      {showTooltip && (
+        <div className="absolute w-full h-fit flex flex-col items-start justify-center bottom-16 left-0 bg-gray-100 border-t border-gray-200 rounded-md mt-2 z-50">
+          <p className="text-sm tracking-tight text-gray-600 px-4 py-2 flex flex-row items-center">
+            <Lightbulb
+              className="w-4 h-4 mr-2 text-yellow-300"
+              fill="currentColor"
+            />
+            {tooltip}
+          </p>
         </div>
       )}
 

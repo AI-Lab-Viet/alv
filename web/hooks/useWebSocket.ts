@@ -115,7 +115,10 @@ const useWebSocket = () => {
                 "response.current_progress",
                 response.current_progress
               );
-              setCompletedObjective(response.current_progress);
+              // Add 2-second timeout before setting completedObjective
+              setTimeout(() => {
+                setCompletedObjective(response.current_progress);
+              }, 2000);
             }
           }
         } catch (error) {

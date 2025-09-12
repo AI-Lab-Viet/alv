@@ -16,11 +16,7 @@ import useToggleDialog from "@/hooks/useToggleDialog";
 import { DetailedProject } from "@/interfaces/project.interface";
 import { getProjectById } from "@/services/projects.service";
 import { Clock, Loader2, Play, Star, Users } from "lucide-react";
-import {
-  notFound,
-  useParams,
-  useRouter,
-} from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProjectAccordionItem from "../components/ProjectAccordionItem";
 import projectPageMascot from "@/public/images/mascot/project_page.png";
@@ -42,10 +38,10 @@ export default function ProjectDetailPage() {
     }
     try {
       setIsStartingSession(true);
-      const newSessionId = await startNewSession(missionId);
-      console.log("newSessionId:", newSessionId);
+      const sessionData = await startNewSession(missionId);
+      console.log("newSessionId:", sessionData.sessionId);
       setIsStartingSession(false);
-      router.push(`/ai-lab/${newSessionId}`);
+      router.push(`/ai-lab/${sessionData.sessionId}`);
       // sessionId will be set in the context and useEffect will handle navigation
     } catch (error) {
       console.error("Error starting new session:", error);
@@ -84,7 +80,6 @@ export default function ProjectDetailPage() {
     fetchProject();
   }, [missionId]);
 
-
   if (!project) {
     return <MissionPageSkeletion />;
   }
@@ -114,81 +109,94 @@ export default function ProjectDetailPage() {
           </div>
         </div>
       </header> */}
-      <header className="w-full h-48 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm relative overflow-hidden">
-        <h1 className="font-semibold text-4xl lg:text-5xl tracking-tighter mb-2 text-center">
+      <header className="w-full h-32 sm:h-40 lg:h-48 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm relative overflow-hidden px-4">
+        <h1 className="font-semibold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl tracking-tighter mb-2 text-center leading-tight">
           {project.title}
         </h1>
-        <p className="text-sm text-gray-500">#{project.category}</p>
+        <p className="text-xs sm:text-sm text-gray-500">#{project.category}</p>
       </header>
       <Separator />
-      <div className="mx-auto px-4 py-8 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 h-[calc(100vh-(6rem+var(--spacing)*48))]">
-        {/* Project Header */}
-        <div className=" border border-zinc-200  rounded-2xl p-2 h-full flex flex-col  bg-white/60 backdrop-blur-sm relative overflow-y-auto">
-          <div className="border border-zinc-100 h-full p-6 rounded-xl flex flex-col">
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <Badge className="bg-gradient-to-r from-sky-300 to-blue-500 text-white border-0">
-                {project.category}
-              </Badge>
-              <Badge className="bg-white/80 text-gray-700 border-white/40">
-                {project.difficulty}
-              </Badge>
-              <div className="flex items-center gap-4 text-xs text-gray-600">
+      <div className="mx-auto px-4 py-8 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 min-h-[calc(100vh-12rem)]">
+        {/* left project info */}
+        <div className="border border-zinc-200 rounded-2xl p-3 lg:p-2 h-fit lg:h-full flex flex-col bg-white/60 backdrop-blur-sm relative">
+          <div className="border border-zinc-100 h-full p-4 lg:p-6 rounded-xl flex flex-col space-y-4 lg:space-y-6">
+            {/* Badges and meta info */}
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 mb-2">
+              <div className="flex flex-wrap gap-2">
+                <Badge className="bg-gradient-to-r from-sky-300 to-blue-500 text-white border-0 text-xs lg:text-sm">
+                  {project.category}
+                </Badge>
+                <Badge className="bg-white/80 text-gray-700 border-white/40 text-xs lg:text-sm">
+                  {project.difficulty}
+                </Badge>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 lg:gap-4 text-xs lg:text-sm text-gray-600">
                 <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  {project.estimated_hours}
+                  <Clock className="w-3 h-3 lg:w-4 lg:h-4" />
+                  <span className="whitespace-nowrap">
+                    {project.estimated_hours}
+                  </span>
                 </span>
                 <span className="flex items-center gap-1">
-                  <Users className="w-4 h-4" />
-                  {project.participants.toLocaleString()} người tham gia
+                  <Users className="w-3 h-3 lg:w-4 lg:h-4" />
+                  <span className="whitespace-nowrap">
+                    {project.participants.toLocaleString()} người
+                  </span>
                 </span>
                 <span className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  {project.rating}
+                  <Star className="w-3 h-3 lg:w-4 lg:h-4 fill-yellow-400 text-yellow-400" />
+                  <span>{project.rating}</span>
                 </span>
               </div>
             </div>
 
-            <p className="text-xl text-gray-700 mb-6">{project.description}</p>
+            {/* Description */}
+            <p className="text-base lg:text-xl text-gray-700 leading-relaxed">
+              {project.description}
+            </p>
 
-            <div className="flex flex-wrap gap-2 mb-8">
+            {/* Skills */}
+            <div className="flex flex-wrap gap-2">
               {(project.skills_required || project.domain_skills).map(
                 (skill) => (
                   <Badge
                     key={skill}
                     variant={"outline"}
-                    className="bg-white/80 text-gray-700 rounded-full"
+                    className="bg-white/80 text-gray-700 rounded-full text-xs lg:text-sm"
                   >
                     {skill}
                   </Badge>
                 )
               )}
             </div>
-            {/* <ProjectAccordionItem
-              value="note"
-              title="Lưu ý quan trọng"
-              type="text"
-              content=""
-            /> */}
-            <div>
-              <h3 className="font-semibold text-lg lg:text-2xl tracking-tight pb-2">
+
+            {/* Important note */}
+            <div className="bg-blue-50/80 rounded-lg p-4 border border-blue-200/50">
+              <h3 className="font-semibold text-base lg:text-lg tracking-tight mb-2 text-blue-900">
                 Lưu ý quan trọng
               </h3>
-              <p>
+              <p className="text-sm lg:text-base text-blue-800 leading-relaxed">
                 Toàn bộ quá trình tương tác với AI sẽ được ghi lại để tạo thành
                 portfolio của bạn. Hãy thực hiện một cách chỉn chu và sáng tạo.
               </p>
             </div>
-            <Image
-              src={projectPageMascot}
-              alt="Project Page Mascot"
-              className="absolute bottom-20 right-20 translate-x-1/2 translate-y-1/2"
-              width={50}
-              height={50}
-            />
-            <div className="mt-auto">
+
+            {/* Mascot - hidden on mobile, positioned better on larger screens */}
+            <div className="hidden lg:block absolute bottom-4 right-4 pointer-events-none">
+              <Image
+                src={projectPageMascot}
+                alt="Project Page Mascot"
+                width={60}
+                height={60}
+                className="opacity-80"
+              />
+            </div>
+
+            {/* Start button */}
+            <div className="mt-auto pt-4">
               <Button
                 size="lg"
-                className="gap-2 bg-gradient-to-r from-sky-300 to-blue-500 hover:from-sky-400 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-fit gap-2 bg-gradient-to-r from-sky-300 to-blue-500 hover:from-sky-400 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-medium"
                 onClick={handleStartProject}
                 disabled={isLoading}
               >
@@ -203,11 +211,12 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        <div className="h-full col-span-1 md:overflow-y-auto pr-2 w-full">
+        {/* Right side - Project details */}
+        <div className="h-fit lg:h-full lg:overflow-y-auto lg:pr-2 w-full">
           <Accordion
             type="multiple"
             className="grid gap-4"
-            defaultValue={["context", "note"]}
+            defaultValue={["context", "objectives"]}
           >
             <ProjectAccordionItem
               value="context"

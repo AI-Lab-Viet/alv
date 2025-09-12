@@ -51,15 +51,14 @@ export default function ChatArea({
     onSendMessage(inputValue);
   };
 
-  console.log(promptStarters);
-  console.log("showPromptStarters:", showPromptStarters);
   return (
     <div className="w-full h-full overflow-hidden flex flex-row bg-white backdrop-blur-sm  shadow-lg rounded-none">
       <div
-        className={`transition-all duration-300 ${focusedPanel && focusedPanel !== "sidebar"
-          ? "opacity-50"
-          : "opacity-100"
-          }`}
+        className={`transition-all duration-300 ${
+          focusedPanel && focusedPanel !== "sidebar"
+            ? "opacity-50"
+            : "opacity-100"
+        }`}
         onClick={(e) => {
           e.stopPropagation();
           onPanelFocus("sidebar");
@@ -75,8 +74,9 @@ export default function ChatArea({
         />
       </div>
       <div
-        className={`flex flex-col h-full flex-1 transition-all duration-300 relative ${focusedPanel && focusedPanel !== "chat" ? "opacity-50" : "opacity-100"
-          }`}
+        className={`flex flex-col h-full flex-1 transition-all duration-300 relative ${
+          focusedPanel && focusedPanel !== "chat" ? "opacity-50" : "opacity-100"
+        }`}
         onClick={(e) => {
           e.stopPropagation();
           onPanelFocus("chat");
