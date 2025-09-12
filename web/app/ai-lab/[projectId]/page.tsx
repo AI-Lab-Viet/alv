@@ -205,6 +205,7 @@ export default function AILabPage(props: PageProps) {
                 <UserNote
                   focusedPanel={focusedPanel}
                   onPanelFocus={handlePanelFocus}
+                  missionId={missionId || ""}
                 />
               </ResizablePanel>
             </>
@@ -224,7 +225,7 @@ export default function AILabPage(props: PageProps) {
           isOpen={showAnalysis}
           toggleAnalysis={toggleShowAnalysis}
           analysis={analysis}
-          missionId={currentMissionDetail.id}
+          missionId={missionId || ""}
         />
       )}
     </div>
