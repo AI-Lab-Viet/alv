@@ -27,7 +27,7 @@ export default function ProjectSidebar({
   console.log({ completedObjective, totalCompletedObjectives })
 
   useEffect(() => {
-    if (completedObjective.trim() !== "") {
+    if (completedObjective.trim() !== "" && project.learning_objectives.includes(completedObjective)) {
       handleCompleteObjective(completedObjective)
     }
   }, [completedObjective])

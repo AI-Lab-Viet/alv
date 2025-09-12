@@ -87,11 +87,11 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
       const responseData = response.data as IStartSessionResponse;
       // Set sessionId and missionId immediately for WebSocket stability
       setSessionId(responseData.session_id);
-      setMissionId(responseData.mission.id);
+      setMissionId(responseData.mission_id);
       setIsLoading(false);
       return {
         sessionId: responseData.session_id,
-        missionId: responseData.mission.id,
+        missionId: responseData.mission_id,
       };
     } catch (error) {
       const errorMessage =
@@ -131,6 +131,7 @@ export function ChatSessionProvider({ children }: ChatSessionProviderProps) {
 
       // Always set the session ID
       setSessionId(sessionId);
+      setMissionId(response.mission_id);
 
       if (response.mission_detail) {
         setCurrentMissionDetail(response.mission_detail);

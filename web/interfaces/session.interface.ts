@@ -4,6 +4,7 @@ export interface IStartSessionResponse {
   session_id: string;
   user_id: string;
   mission: DetailedProject;
+  mission_id: string;
 }
 
 export interface IFinishSessionResponse {

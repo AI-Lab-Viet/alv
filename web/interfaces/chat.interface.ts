@@ -8,6 +8,8 @@ export interface Message {
 export interface ISessionHistoryResponse {
   mission_detail: DetailedProject;
   chat_history: Message[];
+  mission_id: string;
+  session_id: string;
 }
 
 export interface PromptStarterType {
