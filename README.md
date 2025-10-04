@@ -28,12 +28,15 @@ Thay vì chỉ cung cấp câu trả lời, ALV dẫn dắt người dùng qua m
 *Giao diện chính của AI Lab Việt*
 
 ## 🤝 Đội ngũ Phát triển
+
 TechEdu là một đội ngũ gồm 5 sinh viên đam mê, với sứ mệnh trao quyền cho sự sáng tạo của thế hệ trẻ Việt Nam trong kỷ nguyên AI.
-[Lê Minh Qúy] - Project Lead & Product Vision
-[Nguyễn Chí Nghĩa] - Lead Backend Engineer
-[Lê Thế Phương Minh] - Lead Frontend Engineer
-[Nguyễn Viết Hoàng] - Backend + AI Engineer
-[Nguyễn Viết Phong] - Frontend Engineer
+
+- **Lê Minh Qúy** - Project Lead & Product Vision  
+- **Nguyễn Chí Nghĩa** - Lead Backend Engineer  
+- **Lê Thế Phương Minh** - Lead Frontend Engineer  
+- **Nguyễn Viết Hoàng** - Backend + AI Engineer  
+- **Nguyễn Viết Phong** - Frontend Engineer  
+
 
 ## ✨ Trải nghiệm Cốt lõi
 
