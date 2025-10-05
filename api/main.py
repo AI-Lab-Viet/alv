@@ -415,72 +415,6 @@ def get_task_status(task_id: str):
     else:
         return {"status": async_result.status}
 
-@app.get("/health",
-         response_model=SystemHealth,
-         summary="Health check endpoint",
-         description="Kiểm tra trạng thái sức khỏe của hệ thống")
-def health_check():
-    """
-    Health check endpoint để monitor trạng thái hệ thống.
-    """
-    try:
-        # Lấy system status từ dispatcher
-        system_status = dispatcher.get_system_status()
-        
-        # Tính uptime
-        uptime = datetime.now() - app_stats["start_time"]
-        uptime_seconds = int(uptime.total_seconds())
-        
-        # Tạo agent status list
-        agent_statuses = []
-        
-        # Thêm orchestration agents
-        for agent_name, status in system_status["orchestration_agents"].items():
-            agent_statuses.append({
-                "agent_name": f"{agent_name.title()}Agent",
-                "status": status,
-                "last_activity": datetime.now().isoformat(),
-                "tasks_completed": 0,
-                "current_task": None
-            })
-        
-        # Thêm execution agents  
-        for agent_name, status in system_status["execution_agents"].items():
-            agent_statuses.append({
-                "agent_name": f"{agent_name.title()}Agent",
-                "status": status,
-                "last_activity": datetime.now().isoformat(),
-                "tasks_completed": 0,
-                "current_task": None
-            })
-        
-        # Thêm communication agents
-        for agent_name, status in system_status["communication_agents"].items():
-            agent_statuses.append({
-                "agent_name": f"{agent_name.title()}Agent", 
-                "status": status,
-                "last_activity": datetime.now().isoformat(),
-                "tasks_completed": 0,
-                "current_task": None
-            })
-        
-        health = SystemHealth(
-            status="healthy",
-            timestamp=datetime.now().isoformat(),
-            agents=agent_statuses,
-            version="1.0.0",
-            uptime_seconds=uptime_seconds
-        )
-        
-        return health
-        
-    except Exception as e:
-        print(f"[FastAPI] Health check failed: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Service temporarily unavailable"
-        )
-
 
 @app.get("/status",
          summary="System status endpoint",
@@ -588,24 +522,6 @@ async def test_tutor_flow(request: Dict[str, str]):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Lỗi khi test ALVA flow: {str(e)}"
         )
-
-
-@app.get("/test_ai_connection",
-         summary="Test AI Connection",
-         description="Kiểm tra kết nối với Gemini AI")
-def test_ai_connection():
-    """
-    Endpoint để test kết nối AI và trả về thông tin chi tiết.
-    """
-    try:
-        result = dispatcher.test_ai_connection()
-        return result
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error testing AI connection: {str(e)}"
-        )
-
 
 @app.post("/test_project_flow",
           summary="Test Complete Project Flow",

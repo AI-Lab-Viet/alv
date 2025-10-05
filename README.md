@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="URL_TO_YOUR_LOGO.png" alt="AI Lab Việt Logo" width="150"/>
+  <img src="assets/ALV.jpg" alt="AI Lab Việt Logo" width="150"/>
   <h1>AI Lab Việt</h1>
   <p>
     <strong>Đồng hành cùng AI - Dẫn lối sáng tạo Việt</strong>
@@ -24,7 +24,7 @@ Thay vì chỉ cung cấp câu trả lời, ALV dẫn dắt người dùng qua m
 | :--- | :--- | :--- |
 | Rèn luyện tư duy & kỹ năng 4D+S trong **"Võ đường Huấn luyện"** cùng Sư phụ ALVA. | Áp dụng kỹ năng vào các dự án thực tế trong **"Xưởng Thực chiến"** để tạo ra sản phẩm mang dấu ấn cá nhân. | Xây dựng **Hồ sơ Năng lực Số** - bằng chứng sống động về sự trưởng thành trong tư duy của bạn. |
 
-![Placeholder for Product Screenshot](URL_TO_YOUR_PRODUCT_OVERVIEW_SCREENSHOT.png)
+![Giao diện chính của AI Lab Việt](assets/main.jpg)
 *Giao diện chính của AI Lab Việt*
 
 ## 🤝 Đội ngũ Phát triển
@@ -45,13 +45,15 @@ AI Lab Việt mang đến một hành trình rèn luyện toàn diện, được
 ### Module HỌC: "Võ đường Huấn luyện"
 Nơi người dùng được Sư phụ ALVA huấn luyện 1-kèm-1, rèn luyện tư duy và các kỹ năng nền tảng thông qua các thử thách tương tác.
 
-![Placeholder for Dojo Screenshot](URL_TO_YOUR_DOJO_UI_SCREENSHOT.png)
+![Placeholder for Dojo Screenshot](assets/sec1.jpg)
+![Placeholder for Dojo Screenshot](assets/path.jpg)
 *Giao diện "Võ đường Huấn luyện" - Nơi lý thuyết được biến thành thực hành.*
 
 ### Module HÀNH: "Xưởng Thực chiến"
 Một không gian sáng tạo, nơi người dùng áp dụng kỹ năng vào các dự án thực tế, hợp tác cùng Cộng sự ALVA để kiến tạo nên những sản phẩm mang dấu ấn cá nhân.
 
-![Placeholder for Lab Screenshot](URL_TO_YOUR_LAB_UI_SCREENSHOT.png)
+![Placeholder for Lab Screenshot](assets/factory.jpg)
+![Placeholder for Lab Screenshot](assets/topic.jpg)
 *Giao diện "Xưởng Thực chiến" - Nơi ý tưởng được biến thành sản phẩm.*
 
 ---
@@ -62,7 +64,7 @@ Hệ thống được xây dựng dựa trên các tính năng thông minh, đư
 
 | Huấn luyện Tức thì | Phản tư & Đúc kết | Bằng chứng Năng lực |
 | :---: | :---: | :---: |
-| ![Placeholder for Tooltip Feature](URL_TO_YOUR_TOOLTIP_FEATURE_SCREENSHOT.png) | ![Placeholder for Reflection Feature](URL_TO_YOUR_REFLECTION_FEATURE_SCREENSHOT.png) | ![Placeholder for Portfolio Feature](URL_TO_YOUR_PORTFOLIO_FEATURE_SCREENSHOT.png) |
+| ![Placeholder for Tooltip Feature](assets/pro1.jpg) | ![Placeholder for Reflection Feature](assets/push.jpg) | ![Placeholder for Portfolio Feature](assets/hoso.jpg) |
 | ALVA chủ động đưa ra "Mẹo" (`💡`) để huấn luyện người dùng cách viết prompt tốt hơn ngay trong quá trình làm việc. | Sau mỗi dự án, người dùng được khuyến khích suy ngẫm và đúc kết bài học, biến kinh nghiệm thành tri thức. | Toàn bộ quá trình được ghi nhận thành một "Thẻ dự án" trong Hồ sơ Năng lực Số, một bằng chứng sống động về sự trưởng thành. |
 
 ---
@@ -71,7 +73,7 @@ Hệ thống được xây dựng dựa trên các tính năng thông minh, đư
 
 AI Lab Việt được xây dựng trên một kiến trúc **Hệ thống Đa Tác tử (Multi-Agent System)** tiên tiến, đảm bảo tính linh hoạt, khả năng mở rộng và sự phân tách vai trò rõ ràng.
 
-![Placeholder for System Architecture Diagram](URL_TO_YOUR_MULTI_AGENT_DIAGRAM.png)
+![Placeholder for System Architecture Diagram](assets/multi_agent_architecture.jpg)
 *Sơ đồ Kiến trúc Hệ thống Đa Tác tử của AI Lab Việt*
 
 Kiến trúc bao gồm 3 lớp chính:
@@ -83,7 +85,7 @@ Kiến trúc bao gồm 3 lớp chính:
 
 Trái tim của AI Lab Việt là Framework 4D+S và bộ giáo trình AI Fluency độc quyền.
 
-![Placeholder for Syllabus Screenshot](URL_TO_YOUR_SYLLABUS_COVER_PAGE.png)
+![Placeholder for Syllabus Screenshot](assets/giao.jpg)
 *Trang bìa Giáo trình AI Fluency của AI Lab Việt*
 
 Framework 4D+S là một khung tư duy nền tảng, bao gồm 5 kỹ năng cốt lõi:
