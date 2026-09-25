@@ -19,7 +19,5 @@ EXPOSE 8000
 # Set working directory to api
 WORKDIR /app
 
-# Command to run the application using uvicorn
-# We use --host 0.0.0.0 to make it accessible from outside the container
-
-CMD sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload & celery -A tasks.celery_queue worker -Q practice,quiz --loglevel=info"
+# API only; the Celery worker runs as a separate container (see deploy/docker-compose.yml)
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

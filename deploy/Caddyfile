@@ -1,0 +1,12 @@
+# TLS certificates are issued automatically by Let's Encrypt
+{$DOMAIN} {
+	reverse_proxy web:3000
+}
+
+api.{$DOMAIN} {
+	reverse_proxy api:8000
+}
+
+hanh.{$DOMAIN} {
+	reverse_proxy hanh:8000
+}

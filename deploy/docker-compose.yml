@@ -1,0 +1,54 @@
+# Runs on the COS VM in /var/lib/alv. REGISTRY, TAG, DOMAIN and app secrets come
+# from .env, written by .github/workflows/deploy.yml on every deploy.
+x-svc: &svc
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options: { max-size: 10m, max-file: "3" }
+
+x-backend: &backend
+  <<: *svc
+  env_file: .env
+  environment:
+    REDIS_HOST: redis
+    REDIS_PORT: "6379"
+    REDIS_DB: "0"
+
+services:
+  caddy:
+    <<: *svc
+    image: caddy:2
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+
+  web:
+    <<: *svc
+    image: ${REGISTRY}/web:${TAG}
+
+  api:
+    <<: *backend
+    image: ${REGISTRY}/api:${TAG}
+    depends_on: [redis]
+
+  worker:
+    <<: *backend
+    image: ${REGISTRY}/api:${TAG}
+    command: celery -A tasks.celery_queue worker -Q practice,quiz --loglevel=info
+    depends_on: [redis]
+
+  hanh:
+    <<: *backend
+    image: ${REGISTRY}/hanh:${TAG}
+
+  redis:
+    <<: *svc
+    image: redis:7-alpine
+    volumes: [redis_data:/data]
+
+volumes:
+  caddy_data:
+  redis_data:

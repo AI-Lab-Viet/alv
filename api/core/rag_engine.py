@@ -13,7 +13,7 @@ from typing import Dict, Any, List, Optional, Tuple
 import re, os        
 from dataclasses import dataclass
 
-from openai import BaseModel
+from pydantic import BaseModel
 from models.schemas import LearningChatHistory
 from constants.constants import TimeConstants
 from constants.enum import CacheKeys
